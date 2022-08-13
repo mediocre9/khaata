@@ -23,6 +23,7 @@ class _ManageInventoryScreenState extends State<ManageInventoryScreen> {
   static List<ProductModel?> searchList = [];
   static List<ProductModel?> productList = [];
 
+  _ManageInventoryScreenState();
   @override
   void initState() {
     fetchAllData();

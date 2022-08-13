@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:khata/screens/add_order_screen/add_order_screen.dart';
 import 'package:khata/screens/intro_screen/intro_screen.dart';
 import 'package:khata/screens/inventory_screen/inventory_screen.dart';
 import 'package:khata/screens/add_item_screen/add_item_screen.dart';
-import 'package:khata/screens/order_screen/order_screen_ref.dart';
-import 'package:khata/screens/user_screen/user_screen.dart';
 import 'package:khata/screens/order_screen/order_screen.dart';
+import 'package:khata/screens/user_screen/user_screen.dart';
 
 // Implemented routing system for future use and scalability.
 // if we want to build a web application from this codebase...

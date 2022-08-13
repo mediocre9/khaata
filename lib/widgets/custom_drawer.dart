@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:khata/constants.dart';
 import 'package:khata/routes/route_generator.dart';
+import 'package:khata/screens/order_screen/order_screen.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({Key? key}) : super(key: key);
@@ -70,9 +71,9 @@ class DrawerHeader extends StatelessWidget {
 
 class DrawerItems extends StatelessWidget {
   const DrawerItems({Key? key}) : super(key: key);
-  static bool flag = true;
   static List<String> drawerItems = [
     "ORDERS",
+    "SUBITEMS",
     "Inventory",
     "Users",
     "Finances",
@@ -86,15 +87,8 @@ class DrawerItems extends StatelessWidget {
       itemCount: drawerItems.length,
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        if (index == 0) {
-          return ExpansionTile(
-            collapsedIconColor: kDrawerItemColor,
-            collapsedTextColor: kDrawerItemColor,
-            initiallyExpanded: true,
-            title: Text(drawerItems[0].toUpperCase(),
-                style: const TextStyle(fontSize: kDrawerItemFontSize)),
-            children: const [DrawerSubItems()],
-          );
+        if (index == 1) {
+          return const DrawerSubItems();
         }
         return Material(
           color: Colors.transparent,
@@ -106,6 +100,15 @@ class DrawerItems extends StatelessWidget {
                   style: const TextStyle(fontSize: kDrawerItemFontSize)),
               onTap: () {
                 switch (drawerItems[index].toUpperCase()) {
+                  case 'ORDERS':
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ManageOrderScreen(),
+                        ),
+                        (route) => false);
+                    break;
+
                   case 'INVENTORY':
                     Navigator.pushNamedAndRemoveUntil(context,
                         Routes.kManageInventoryScreen, (route) => false);

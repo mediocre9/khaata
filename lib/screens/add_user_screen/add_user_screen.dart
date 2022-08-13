@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:khata/constants.dart';
 import 'package:khata/screens/add_user_screen/bloc/add_user_bloc.dart';
 import 'package:khata/screens/add_user_screen/bloc/add_user_event.dart';
+import 'package:khata/screens/user_screen/user_screen.dart';
 import 'package:khata/widgets/custom_app_bar.dart';
 import 'package:khata/widgets/custom_card.dart';
 import 'package:khata/widgets/custom_drawer.dart';
@@ -16,7 +17,7 @@ class AddUserScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        // resizeToAvoidBottomInset: false,
         appBar: CustomAppBar(
           title: "Order",
           titleFontSize: 23,
@@ -122,12 +123,12 @@ class SaveUserData extends StatelessWidget {
                       kSnackBarSuccessColor),
                 );
                 clearController();
-                Navigator.pop(context);
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  _showSnackBar("Please fill out all the given fields!",
-                      kSnackBarErrorColor),
-                );
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ManageUserScreen(),
+                    ),
+                    (route) => false);
               }
             },
             child: BlocBuilder<AddUserBloc, UserDataEntryState>(

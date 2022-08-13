@@ -38,13 +38,14 @@ class CustomCard extends StatelessWidget {
                 spreadRadius: 2,
                 offset: Offset(2, 2),
               )
-            : const BoxShadow(
-                color: Colors.black,
-                blurRadius: 7,
-                // blurStyle: BlurStyle.normal,
-                spreadRadius: 1,
-                offset: Offset(2, 2),
-              ),
+            : const BoxShadow(),
+        // const BoxShadow(
+        //     color: Colors.black,
+        //     blurRadius: 7,
+        //     // blurStyle: BlurStyle.normal,
+        //     spreadRadius: 1,
+        //     offset: Offset(2, 2),
+        //   ),
       ],
       borderRadius: BorderRadius.circular(borderRadius ?? 10),
       shape: BoxShape.rectangle,
