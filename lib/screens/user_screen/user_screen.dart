@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide BoxShadow, BoxDecoration;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:khata/constants.dart';
 import 'package:khata/models/model/user_model.dart';
@@ -8,6 +8,7 @@ import 'package:khata/widgets/custom_app_bar.dart';
 import 'package:khata/widgets/custom_card.dart';
 import 'package:khata/widgets/custom_drawer.dart';
 import 'package:khata/widgets/custom_text_field.dart';
+import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 
 class ManageUserScreen extends StatefulWidget {
   const ManageUserScreen({Key? key}) : super(key: key);
@@ -89,9 +90,33 @@ class _ManageUserScreenState extends State<ManageUserScreen> {
                   ),
                 ),
                 Expanded(
-                  child: searchList.isNotEmpty
-                      ? UsersFound(searchList: searchList)
-                      : const UserNotFound(),
+                  child: Container(
+                    padding: EdgeInsets.zero,
+                    margin: const EdgeInsets.only(top: 30),
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                      color: Color.fromARGB(255, 253, 253, 253),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.white,
+                          spreadRadius: 0.4,
+                          blurRadius: 1,
+                        ),
+                        BoxShadow(
+                          color: Color.fromARGB(255, 65, 65, 65),
+                          spreadRadius: 1.5,
+                          blurRadius: 4,
+                          offset: Offset(1, 4),
+                          inset: true,
+                        )
+                      ],
+                    ),
+                    child: userList.isEmpty
+                        ? const EmptyRecords()
+                        : searchList.isNotEmpty
+                            ? UsersFound(searchList: searchList)
+                            : const UserNotFound(),
+                  ),
                 ),
               ],
             ),
@@ -109,25 +134,75 @@ class _ManageUserScreenState extends State<ManageUserScreen> {
   }
 }
 
+class EmptyRecords extends StatelessWidget {
+  const EmptyRecords({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          Icon(
+            Icons.list,
+            color: Colors.grey,
+            size: 65,
+          ),
+          Text(
+            "RECORD LIST IS EMPTY!",
+            style: TextStyle(color: Colors.grey, fontSize: 18),
+          )
+        ],
+      ),
+    );
+  }
+}
+
 class UsersFound extends StatelessWidget {
-  const UsersFound({
+  UsersFound({
     Key? key,
     required this.searchList,
   }) : super(key: key);
 
   final List<UserModel?> searchList;
 
+  int userTotalOrders = 0;
+  List<String> totalUserPlacedOrdersList = [];
+
+  // individual total order calc for user...
+  List<String> countUserOrders(String user) {
+    for (int i = 0; i < orderBox!.values.length; i++) {
+      if (orderBox!.getAt(i)!.username!.toLowerCase() == user.toLowerCase()) {
+        userTotalOrders++;
+      }
+    }
+    totalUserPlacedOrdersList.add(userTotalOrders.toString());
+    userTotalOrders *= 0;
+    return totalUserPlacedOrdersList;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 17),
+      margin: const EdgeInsets.only(top: 5),
       child: ListView.builder(
         shrinkWrap: true,
         itemCount: searchList.length,
         itemBuilder: (_, index) {
-          return UserCard(
-            username: searchList[index]!.username,
-            address: searchList[index]!.address,
+          return Dismissible(
+            key: UniqueKey(),
+            direction: DismissDirection.endToStart,
+            onDismissed: (dismissEvent) {
+              userBox!.deleteAt(index);
+            },
+            child: UserCard(
+              username: searchList[index]!.username!.toUpperCase(),
+              address: searchList[index]!.address!.toUpperCase(),
+              orders: countUserOrders(searchList[index]!.username!)[index],
+            ),
           );
         },
       ),
@@ -190,9 +265,10 @@ class AddUserButtonPane extends StatelessWidget {
 }
 
 class UserCard extends StatelessWidget {
-  const UserCard({Key? key, required this.username, required this.address})
+  const UserCard(
+      {Key? key, required this.username, required this.address, this.orders})
       : super(key: key);
-  final String? username, address;
+  final String? username, address, orders;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -219,16 +295,40 @@ class UserCard extends StatelessWidget {
                 ),
               ),
               dense: true,
-              subtitle: Text(
-                address!,
-                style: const TextStyle(
-                  fontSize: 10,
-                  letterSpacing: 1,
-                  color: kCardTextColor,
-                  fontWeight: FontWeight.bold,
-                ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    address!,
+                    style: const TextStyle(
+                      fontSize: 10,
+                      letterSpacing: 1,
+                      color: kCardTextColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    "TOTAL PLACED ORDERS : ${orders!}",
+                    style: const TextStyle(
+                      fontSize: 10,
+                      letterSpacing: 1,
+                      color: kCardTextColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
-              onTap: () {},
+              onTap: () {
+                //                 Navigator.of(context).push(
+                //   MaterialPageRoute(
+                //     builder: (context) => UserDetailScreen(
+                //       username: username,
+                //       index: index,
+                //       totalOrders: tota,
+                //     ),
+                //   ),
+                // );
+              },
             ),
           ],
         ),

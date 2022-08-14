@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:khata/constants.dart';
 import 'package:khata/models/model/order_model.dart';
+import 'package:khata/models/model/product_model.dart';
 import 'package:khata/screens/order_screen/order_screen.dart';
 import 'package:khata/widgets/custom_app_bar.dart';
 import 'package:khata/widgets/custom_card.dart';
@@ -137,30 +138,141 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                       const Color.fromARGB(255, 218, 224, 236),
                                   text: "MARK COMPLETED",
                                   onPressed: () {
-                                    // int? pending = widget.pendingOrders;
                                     setState(
                                       () {
-                                        orderBox!.deleteAt(widget.index!);
-                                        orderBox!.add(
-                                          OrderModel(
-                                            widget.username,
-                                            widget.product,
-                                            int.parse(widget.cost!
-                                                .replaceAll(" PKR", "")),
-                                            DateTime.parse(widget.createdDate!),
-                                            DateTime.parse(
-                                                DateTime.now().toString()),
-                                            true,
-                                          ),
-                                        );
+                                        // orderBox!.deleteAt(widget.index!);
 
-                                        Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const ManageOrderScreen(),
-                                            ),
-                                            (route) => false);
+                                        for (var i = 0;
+                                            i < productBox!.values.length;
+                                            i++) {
+                                          // product exists...
+                                          if (productBox!
+                                                  .getAt(i)!
+                                                  .name!
+                                                  .toLowerCase() ==
+                                              widget.product!.toLowerCase()) {
+                                            // then decrease stock....
+                                            int currentStock = productBox!
+                                                    .getAt(i)!
+                                                    .initialStock! -
+                                                1;
+
+                                            // get object
+                                            var product = productBox!.getAt(i);
+
+                                            // show alert when item is less than 5....
+                                            if (productBox!
+                                                    .getAt(i)!
+                                                    .initialStock! <=
+                                                5) {
+                                              _showDialog("Alert",
+                                                  "Product ${productBox!.getAt(i)!.name!.toLowerCase()} stock is ${productBox!.getAt(i)!.initialStock!}");
+
+                                              // update description....
+                                              orderBox!.putAt(
+                                                widget.index!,
+                                                OrderModel(
+                                                  widget.username,
+                                                  widget.product,
+                                                  int.parse(widget.cost!
+                                                      .replaceAll(" PKR", "")),
+                                                  DateTime.parse(
+                                                      widget.createdDate!),
+                                                  DateTime.parse(DateTime.now()
+                                                      .toString()),
+                                                  true,
+                                                ),
+                                              );
+
+                                              // update item
+                                              productBox!.putAt(
+                                                i,
+                                                ProductModel(
+                                                  name: product!.name,
+                                                  initialStock: currentStock,
+                                                  cost: int.parse(widget.cost!
+                                                      .replaceAll(" PKR", "")),
+                                                ),
+                                              );
+
+                                              // go back
+                                              Navigator.pushAndRemoveUntil(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const ManageOrderScreen(),
+                                                  ),
+                                                  (route) => false);
+                                            }
+                                            // show alert when item is out of stock....
+                                            // else if (productBox!
+                                            //         .getAt(i)!
+                                            //         .initialStock! ==
+                                            //     0) {
+                                            //   _showDialog(
+                                            //     "Alert",
+                                            //     "Product ${productBox!.getAt(i)!.name!.toLowerCase()} is out of stock. Please refill your inventory.",
+                                            //   );
+                                            // }
+                                            else {
+                                              // update item
+                                              productBox!.putAt(
+                                                i,
+                                                ProductModel(
+                                                  name: product!.name,
+                                                  initialStock: currentStock,
+                                                  cost: int.parse(widget.cost!
+                                                      .replaceAll(" PKR", "")),
+                                                ),
+                                              );
+
+                                              // updated description....
+                                              orderBox!.putAt(
+                                                widget.index!,
+                                                OrderModel(
+                                                  widget.username,
+                                                  widget.product,
+                                                  int.parse(widget.cost!
+                                                      .replaceAll(" PKR", "")),
+                                                  DateTime.parse(
+                                                      widget.createdDate!),
+                                                  DateTime.parse(DateTime.now()
+                                                      .toString()),
+                                                  true,
+                                                ),
+                                              );
+
+                                              Navigator.pushAndRemoveUntil(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const ManageOrderScreen(),
+                                                  ),
+                                                  (route) => false);
+                                            }
+
+                                            // update inventory item....
+                                            // else {
+                                            // productBox!.putAt(
+                                            //   i,
+                                            //   ProductModel(
+                                            //     name: product!.name,
+                                            //     initialStock: currentStock,
+                                            //     cost: int.parse(widget.cost!
+                                            //         .replaceAll(" PKR", "")),
+                                            //   ),
+                                            // );
+                                            // }
+
+                                            // Navigator.pushAndRemoveUntil(
+                                            //     context,
+                                            //     MaterialPageRoute(
+                                            //       builder: (context) =>
+                                            //           const ManageOrderScreen(),
+                                            //     ),
+                                            //     (route) => false);
+                                          }
+                                        }
                                       },
                                     );
                                   },
@@ -226,6 +338,24 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Future _showDialog(String? title, String? description) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(title!),
+          content: Text(description!),
+          actions: [
+            TextButton(
+              child: const Text("Ok"),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ],
+        );
+      },
     );
   }
 }

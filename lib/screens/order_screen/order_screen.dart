@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:khata/constants.dart';
 import 'package:khata/models/model/order_model.dart';
@@ -477,18 +478,13 @@ class OrderCard extends StatelessWidget {
                       ),
                       orderBox!.getAt(index!)!.status!
                           ? const Icon(
-                              Icons.check_circle_outline_rounded,
+                              Icons.check_circle_rounded,
                               color: Colors.lightGreenAccent,
                             )
-                          : const Text(
-                              "PENDING",
-                              style: TextStyle(
-                                fontSize: 13,
-                                letterSpacing: 1,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                          : Icon(
+                              CupertinoIcons.exclamationmark_circle,
+                              color: Colors.yellow[300],
+                            )
                     ],
                   ),
                 ],

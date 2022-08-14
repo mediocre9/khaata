@@ -136,8 +136,10 @@ class _ManageInventoryScreenState extends State<ManageInventoryScreen> {
                                           .toUpperCase(),
                                       cost:
                                           '${searchList[index]!.cost.toString()} PKR',
-                                      stock:
-                                          "ITEMS IN STOCK : ${searchList[index]!.initialStock}",
+                                      stock: searchList[index]!.initialStock! >
+                                              0
+                                          ? "ITEMS IN STOCK : ${searchList[index]!.initialStock}"
+                                          : "OUT OF STOCK",
                                       index: index,
                                     );
                                   },
@@ -289,15 +291,32 @@ class ItemCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 7),
-                  Text(
-                    stock!,
-                    style: const TextStyle(
-                      fontSize: 10.5,
-                      letterSpacing: 1,
-                      color: Color.fromARGB(255, 218, 224, 236),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  stock! != "OUT OF STOCK"
+                      ? Text(
+                          stock!,
+                          style: const TextStyle(
+                            fontSize: 10.5,
+                            letterSpacing: 1,
+                            color: Color.fromARGB(255, 218, 224, 236),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              stock!,
+                              style: const TextStyle(
+                                fontSize: 10.5,
+                                letterSpacing: 1,
+                                color: Color.fromARGB(255, 218, 224, 236),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const Icon(Icons.warning_amber_outlined,
+                                color: Colors.redAccent),
+                          ],
+                        ),
                 ],
               ),
               enabled: true,

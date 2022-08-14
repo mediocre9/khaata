@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:khata/screens/add_order_screen/add_order_screen.dart';
+import 'package:khata/screens/finance_screen/finance_screen.dart';
 import 'package:khata/screens/intro_screen/intro_screen.dart';
 import 'package:khata/screens/inventory_screen/inventory_screen.dart';
 import 'package:khata/screens/add_item_screen/add_item_screen.dart';
+import 'package:khata/screens/order_completed_screen/order_completed_screen.dart';
+import 'package:khata/screens/order_pending_screen/order_pending_screen.dart';
 import 'package:khata/screens/order_screen/order_screen.dart';
 import 'package:khata/screens/user_screen/user_screen.dart';
 
@@ -37,8 +40,11 @@ class AppRouteGenerator {
       case Routes.kManageInventoryScreen:
         return pageRoute(const ManageInventoryScreen());
 
-      // case Routes.kAddUserSubScreen:
-      // return pageRoute(const AddUserScreen());
+      case Routes.kPendingScreen:
+        return pageRoute(const OrderPendingScreen());
+
+      case Routes.kCompletedScreen:
+        return pageRoute(const OrderCompletedScreen());
 
       case Routes.kAddItemSubScreen:
         return pageRoute(const AddItemScreen());
@@ -48,6 +54,9 @@ class AppRouteGenerator {
 
       case Routes.kAddOrderSubScreen:
         return pageRoute(const AddOrderScreen());
+
+      case Routes.kManageFinanceScreen:
+        return pageRoute(const FinanceScreen());
 
       default:
         return pageRoute(_undefinedRouteScreen);

@@ -21,6 +21,9 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
   int? itemCost = 0;
   int? cindex = 0, pindex = 0;
 
+  int? emptyStockIndex = 0;
+  bool? isStockEmpty = false;
+
   void fetchAll() {
     for (var i = 0; i < userBox!.values.length; i++) {
       customers.add(userBox!.getAt(i)!.username!.toUpperCase());
@@ -35,6 +38,11 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
   @override
   void initState() {
     fetchAll();
+    // for (int i = 0; i < productBox!.values.length; i++) {
+    //   if (productBox!.getAt(i)!.initialStock == 0) {
+    //     emptyStockIndex = i;
+    //   }
+    // }
     super.initState();
   }
 
@@ -81,26 +89,33 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  products.isNotEmpty
-                      ? DropdownButtonFormField(
-                          hint: const Text("select product",
-                              style: TextStyle(color: Colors.white)),
-                          items: products
-                              .map((e) => DropdownMenuItem(
-                                    value: e,
-                                    child: Text(e),
-                                  ))
-                              .toList(),
-                          iconEnabledColor: Colors.white,
-                          onChanged: (String? value) {
-                            setState(() {
-                              pindex = products.indexOf(value!);
-                              itemCost = cost[pindex!];
-                            });
-                          },
-                          isExpanded: true,
-                        )
-                      : DropdownButtonFormField(items: null, onChanged: null),
+                  if (products.isNotEmpty)
+                    DropdownButtonFormField(
+                      hint: const Text("select product",
+                          style: TextStyle(color: Colors.white)),
+                      items: products
+                          .map((e) => DropdownMenuItem(
+                                value: e,
+                                child: Text(e),
+                              ))
+                          .toList(),
+                      iconEnabledColor: Colors.white,
+                      onChanged: (String? value) {
+                        setState(() {
+                          pindex = products.indexOf(value!);
+
+                          if (productBox!.getAt(pindex!)!.initialStock! == 0) {
+                            // emptyStockIndex = pindex;
+                            isStockEmpty = true;
+                          }
+
+                          itemCost = cost[pindex!];
+                        });
+                      },
+                      isExpanded: true,
+                    )
+                  else
+                    DropdownButtonFormField(items: null, onChanged: null),
                   const SizedBox(height: 25),
 
                   // username textfield....
@@ -112,25 +127,26 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  customers.isNotEmpty
-                      ? DropdownButtonFormField(
-                          hint: const Text("select customer",
-                              style: TextStyle(color: Colors.white)),
-                          items: customers
-                              .map((e) => DropdownMenuItem(
-                                    value: e,
-                                    child: Text(e),
-                                  ))
-                              .toList(),
-                          onChanged: (String? value) {
-                            setState(() {
-                              cindex = customers.indexOf(value!);
-                            });
-                          },
-                          isExpanded: true,
-                          iconEnabledColor: Colors.white,
-                        )
-                      : DropdownButtonFormField(onChanged: null, items: null),
+                  if (customers.isNotEmpty)
+                    DropdownButtonFormField(
+                      hint: const Text("select customer",
+                          style: TextStyle(color: Colors.white)),
+                      items: customers
+                          .map((e) => DropdownMenuItem(
+                                value: e,
+                                child: Text(e),
+                              ))
+                          .toList(),
+                      onChanged: (String? value) {
+                        setState(() {
+                          cindex = customers.indexOf(value!);
+                        });
+                      },
+                      isExpanded: true,
+                      iconEnabledColor: Colors.white,
+                    )
+                  else
+                    DropdownButtonFormField(onChanged: null, items: null),
 
                   const SizedBox(height: 25),
 
@@ -150,25 +166,49 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                             text: "ADD ORDER",
                             textColor: Colors.white,
                             onPressed: () {
-                              DateTime now = DateTime.now();
-                              orderBox!.add(
-                                OrderModel(
-                                  customers[cindex!],
-                                  products[pindex!],
-                                  cost[pindex!],
-                                  DateTime(now.year, now.month, now.day),
-                                  DateTime(now.year, now.month, now.day),
-                                  false,
-                                ),
-                              );
+                              // get product name
+                              // var productName =
+                              //     productBox!.getAt(emptyStockIndex!)!.name!;
 
-                              Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const ManageOrderScreen(),
+                              // product name
+                              if (isStockEmpty == false) {
+                                DateTime now = DateTime.now();
+
+                                orderBox!.add(
+                                  OrderModel(
+                                    customers[cindex!],
+                                    products[pindex!],
+                                    cost[pindex!],
+                                    DateTime(now.year, now.month, now.day),
+                                    DateTime(now.year, now.month, now.day),
+                                    false,
                                   ),
-                                  (route) => false);
+                                );
+
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ManageOrderScreen(),
+                                    ),
+                                    (route) => false);
+                              } else {
+                                isStockEmpty = false;
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: const Text("Alert"),
+                                    content: Text(
+                                        "Product ${productBox!.getAt(pindex!)!.name} is out of stock."),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                          child: const Text("Yes"))
+                                    ],
+                                  ),
+                                );
+                              }
                             },
                           )
                         : CustomOutlinedButton(

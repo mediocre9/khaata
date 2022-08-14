@@ -5,6 +5,7 @@ import 'package:khata/models/model/order_model.dart';
 import 'package:khata/models/model/product_model.dart';
 import 'package:khata/models/model/user_model.dart';
 import 'package:khata/routes/route_generator.dart';
+// import 'package:khata/routes/route_generator.dart';
 import 'package:path_provider/path_provider.dart';
 
 void main() async {
@@ -19,13 +20,11 @@ void main() async {
   productBox = await Hive.openBox<ProductModel>('product_box');
   orderBox = await Hive.openBox<OrderModel>('order_box');
 
-  // for (var i = 0; i < userBox!.values.length; i++) {
-  //   await userBox!.deleteAt(i);
-  // }
   runApp(
     const MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: Routes.kManageOrderScreen,
+      showPerformanceOverlay: true,
+      initialRoute: Routes.kManageFinanceScreen,
       onGenerateRoute: AppRouteGenerator.generateScreen,
     ),
   );
