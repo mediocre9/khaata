@@ -10,10 +10,6 @@
 - [ ] Profiling and Optimization
 - [ ] Doxygen comment documentation 
 
-
-
-
-
 ## 1. **Project Dependencies:**
 
 - build_runner: 2.2.0
@@ -21,7 +17,9 @@
 - hive_generator: 1.1.3
 - hive: 2.2.3
 - hive_flutter: 1.1.0
-
+- flutter_inset_box_shadow: 1.0.8
+- fl_chart: 0.55.1
+  
 ## 2. **Project Structure and Guidelines:**
 - `snake-case` naming convention for files and folder **e.g** `sub-screen`.
 - **camelCase** `kConstantValue` for constant values.
