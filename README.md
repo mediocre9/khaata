@@ -4,9 +4,9 @@
 - **Description:** *Project Description here. . .*
 
 ## **NOTE :**
-### **Do not commit files to master (main) branch directly. Contributors are only allowed to commit files to development branch, quick and dirty code is also acceptable...**
+**Do not commit files to master (main) branch directly. Contributors are only allowed to commit files to development branch, quick and dirty code is also acceptable...**
 
-## **Development Progress**
+## **Development Progress :**
 ![Progress](https://progress-bar.dev/33/?title=progress)
 
 ## **Task-List**
