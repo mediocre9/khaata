@@ -59,7 +59,8 @@ class _FinanceScreenState extends State<FinanceScreen> {
                         ],
                       ),
                       const SizedBox(height: 10),
-                      const LineChartSample5(),
+                      const Text("Finance Graph Area"),
+                      // const LineChartSample5(),
                     ],
                   ),
                 ),
@@ -93,12 +94,21 @@ class CurrentGain extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            Text("${currentGain.toString()} PKR",
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 25,
-                  fontWeight: FontWeight.w600,
-                )),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "${currentGain.toString()} PKR",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 25,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const Icon(Icons.arrow_upward,
+                    color: Colors.lightGreenAccent, size: 30)
+              ],
+            ),
           ],
         ),
       ),

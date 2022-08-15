@@ -31,12 +31,22 @@ class AddUserScreen extends StatelessWidget {
             innerMainAlignment: MainAxisAlignment.center,
             width: double.maxFinite,
             height: 310,
-            verticalMargin: 10,
+            verticalMargin: 3,
             horizontalMargin: 30,
             elevationLevel: 5,
             borderRadius: 5,
             child: Column(
               children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      color: Colors.white60,
+                      icon: const Icon(Icons.close_outlined),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
+                ),
                 const Text(
                   "ADD USER",
                   style: TextStyle(
@@ -73,7 +83,7 @@ class SaveUserData extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          const SizedBox(height: 35),
+          const SizedBox(height: 20),
           const Text(
             "NAME",
             style: TextStyle(
@@ -96,7 +106,7 @@ class SaveUserData extends StatelessWidget {
             onChanged: (s) {},
             isDense: true,
           ),
-          const SizedBox(height: 25),
+          const SizedBox(height: 20),
           const Text(
             "ADDRESS",
             style: TextStyle(
@@ -112,7 +122,7 @@ class SaveUserData extends StatelessWidget {
             onChanged: (s) {},
             isDense: true,
           ),
-          const SizedBox(height: 25),
+          const SizedBox(height: 20),
 
           // outside scope activity listener or visit bloclibrary.dev documentation
           BlocListener<AddUserBloc, UserDataEntryState>(
@@ -136,7 +146,7 @@ class SaveUserData extends StatelessWidget {
                 return Center(
                   child: CustomOutlinedButton(
                     textColor: kCardTextColor,
-                    text: "ADD TO USER LIST",
+                    text: "ADD USER",
                     onPressed: () {
                       BlocProvider.of<AddUserBloc>(context).add(
                         AddUserButtonEvent(

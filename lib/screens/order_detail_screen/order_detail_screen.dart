@@ -50,7 +50,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               width: double.maxFinite,
               shadow: true,
               height: 340,
-              verticalMargin: 5,
+              // verticalMargin: 5,
               horizontalMargin: 30,
               elevationLevel: 5,
               borderRadius: 5,
@@ -69,7 +69,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 5),
+                    // const SizedBox(height: 5),
                     Container(
                       padding: const EdgeInsets.only(bottom: 30, left: 20),
                       child: Column(
@@ -128,7 +128,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           fontWeight: FontWeight.w500),
                     ),
                     Container(
-                      padding: const EdgeInsets.only(top: 20),
+                      padding: const EdgeInsets.only(top: 30),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

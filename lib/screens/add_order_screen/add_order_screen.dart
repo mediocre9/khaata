@@ -19,9 +19,9 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
   final List<String> products = [];
   final List<int> cost = [];
   int? itemCost = 0;
-  int? cindex = 0, pindex = 0;
+  int? cindex = 0, pindex;
 
-  int? emptyStockIndex = 0;
+  int? emptyStockIndex;
   bool? isStockEmpty = false;
 
   void fetchAll() {
@@ -58,8 +58,8 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
       body: CustomCard(
         innerMainAlignment: MainAxisAlignment.center,
         width: double.maxFinite,
-        height: double.maxFinite,
-        verticalMargin: 50,
+        height: 350,
+        verticalMargin: 10,
         horizontalMargin: 30,
         elevationLevel: 5,
         borderRadius: 5,
@@ -105,7 +105,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                           pindex = products.indexOf(value!);
 
                           if (productBox!.getAt(pindex!)!.initialStock! == 0) {
-                            // emptyStockIndex = pindex;
+                            emptyStockIndex = pindex;
                             isStockEmpty = true;
                           }
 
@@ -193,18 +193,18 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                                     ),
                                     (route) => false);
                               } else {
-                                isStockEmpty = false;
+                                setState(() {});
                                 showDialog(
                                   context: context,
                                   builder: (context) => AlertDialog(
                                     title: const Text("Alert"),
                                     content: Text(
-                                        "Product ${productBox!.getAt(pindex!)!.name} is out of stock."),
+                                        "Product ${productBox!.getAt(pindex!)!.name!.toLowerCase()} is out of stock."),
                                     actions: [
                                       TextButton(
                                           onPressed: () =>
                                               Navigator.pop(context),
-                                          child: const Text("Yes"))
+                                          child: const Text("Ok"))
                                     ],
                                   ),
                                 );

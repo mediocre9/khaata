@@ -1,7 +1,4 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
-import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:khata/constants.dart';
 import 'package:khata/models/model/order_model.dart';
@@ -67,16 +64,13 @@ class _OrderPendingScreenState extends State<OrderCompletedScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           TotalCompletedOrder(completedOrder: completedOrders),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 30),
-                            child: const Text(
-                              "COMPLETED",
-                              style: TextStyle(
-                                color: Color.fromRGBO(58, 52, 98, 1),
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 1.5,
-                              ),
+                          const Text(
+                            "COMPLETED",
+                            style: TextStyle(
+                              color: Color.fromRGBO(58, 52, 98, 1),
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 1,
                             ),
                           ),
                         ],
@@ -95,7 +89,7 @@ class _OrderPendingScreenState extends State<OrderCompletedScreen> {
                 Expanded(
                   child: Container(
                     padding: EdgeInsets.zero,
-                    margin: const EdgeInsets.only(top: 5),
+                    margin: const EdgeInsets.only(top: 3),
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(8)),
                       color: Color.fromARGB(255, 253, 253, 253),
@@ -116,33 +110,24 @@ class _OrderPendingScreenState extends State<OrderCompletedScreen> {
                     ),
                     child: completedOrderList.isEmpty
                         ? const EmptyRecords()
-                        : ScrollConfiguration(
-                            behavior: ScrollConfiguration.of(context)
-                                .copyWith(dragDevices: {
-                              PointerDeviceKind.mouse,
-                              PointerDeviceKind.touch,
-                            }),
-                            child: ListView.builder(
-                              physics: const BouncingScrollPhysics(
-                                  parent: AlwaysScrollableScrollPhysics()),
-                              shrinkWrap: true,
-                              itemCount: completedOrderList.length,
-                              itemBuilder: (_, index) {
-                                return CompletedOrderCard(
-                                  product: completedOrderList[index]!
-                                      .productname!
-                                      .toUpperCase(),
-                                  cost:
-                                      '${completedOrderList[index]!.cost.toString()} PKR',
-                                  username: completedOrderList[index]!.username,
-                                  index: index,
-                                  createdDate:
-                                      completedOrderList[index]!.createdDate,
-                                  completedDate:
-                                      completedOrderList[index]!.completedDate,
-                                );
-                              },
-                            ),
+                        : ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: completedOrderList.length,
+                            itemBuilder: (_, index) {
+                              return CompletedOrderCard(
+                                product: completedOrderList[index]!
+                                    .productname!
+                                    .toUpperCase(),
+                                cost:
+                                    '${completedOrderList[index]!.cost.toString()} PKR',
+                                username: completedOrderList[index]!.username,
+                                index: index,
+                                createdDate:
+                                    completedOrderList[index]!.createdDate,
+                                completedDate:
+                                    completedOrderList[index]!.completedDate,
+                              );
+                            },
                           ),
                   ),
                 ),
@@ -166,14 +151,14 @@ class TotalCompletedOrder extends StatelessWidget {
       child: CustomCard(
         shadow: false,
         borderRadius: 0,
-        height: 110,
+        height: 100,
         child: Column(
           children: [
             Text(
               completedOrder.toString(),
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 35,
+                fontSize: 30,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -201,7 +186,7 @@ class TotalCompletedGain extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
         color: const Color.fromRGBO(22, 60, 98, 1),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -210,7 +195,7 @@ class TotalCompletedGain extends StatelessWidget {
               "TOTAL COMPLETED",
               style: TextStyle(
                 color: Color.fromRGBO(215, 215, 255, 1),
-                fontSize: 16,
+                fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -278,7 +263,7 @@ class CompletedOrderCard extends StatelessWidget {
         borderRadius: 7,
         shadow: false,
         width: double.maxFinite,
-        height: 120,
+        height: 110,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -289,7 +274,7 @@ class CompletedOrderCard extends StatelessWidget {
               title: Text(
                 product!,
                 style: const TextStyle(
-                  fontSize: 18,
+                  fontSize: 17,
                   letterSpacing: 1.3,
                   color: Color.fromARGB(255, 218, 224, 236),
                   fontWeight: FontWeight.bold,
@@ -303,34 +288,29 @@ class CompletedOrderCard extends StatelessWidget {
                   Text(
                     cost!,
                     style: const TextStyle(
-                      fontSize: 17.5,
-                      letterSpacing: 1,
+                      fontSize: 16,
+                      letterSpacing: 1.2,
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 7),
+                  // const SizedBox(height: 3),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         username!,
                         style: const TextStyle(
-                          fontSize: 10.5,
-                          letterSpacing: 1,
+                          fontSize: 13,
+                          letterSpacing: 1.1,
                           color: Color.fromARGB(255, 218, 224, 236),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      orderBox!.getAt(index!)!.status! == true
-                          ? const Icon(
-                              Icons.check_circle_rounded,
-                              color: Colors.lightGreenAccent,
-                            )
-                          : Icon(
-                              CupertinoIcons.exclamationmark_circle,
-                              color: Colors.yellow[300],
-                            )
+                      const Icon(
+                        Icons.check_circle_rounded,
+                        color: Colors.lightGreenAccent,
+                      )
                     ],
                   ),
                 ],

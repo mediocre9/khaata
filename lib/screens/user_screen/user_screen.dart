@@ -175,7 +175,8 @@ class UsersFound extends StatelessWidget {
   // individual total order calc for user...
   List<String> countUserOrders(String user) {
     for (int i = 0; i < orderBox!.values.length; i++) {
-      if (orderBox!.getAt(i)!.username!.toLowerCase() == user.toLowerCase()) {
+      if (orderBox!.getAt(i)!.username!.toLowerCase() == user.toLowerCase() &&
+          orderBox!.getAt(i)!.status! == true) {
         userTotalOrders++;
       }
     }
@@ -298,37 +299,28 @@ class UserCard extends StatelessWidget {
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const SizedBox(height: 3),
                   Text(
-                    address!,
+                    "ADDRESS : ${address!}",
                     style: const TextStyle(
                       fontSize: 10,
-                      letterSpacing: 1,
+                      letterSpacing: 1.1,
                       color: kCardTextColor,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  const SizedBox(height: 3),
                   Text(
                     "TOTAL PLACED ORDERS : ${orders!}",
                     style: const TextStyle(
                       fontSize: 10,
-                      letterSpacing: 1,
+                      letterSpacing: 1.1,
                       color: kCardTextColor,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],
               ),
-              onTap: () {
-                //                 Navigator.of(context).push(
-                //   MaterialPageRoute(
-                //     builder: (context) => UserDetailScreen(
-                //       username: username,
-                //       index: index,
-                //       totalOrders: tota,
-                //     ),
-                //   ),
-                // );
-              },
             ),
           ],
         ),

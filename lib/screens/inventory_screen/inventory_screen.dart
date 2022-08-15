@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -118,32 +117,21 @@ class _ManageInventoryScreenState extends State<ManageInventoryScreen> {
                         ? const EmptyRecords()
                         : searchList.isEmpty
                             ? const ItemNotFound()
-                            : ScrollConfiguration(
-                                behavior: ScrollConfiguration.of(context)
-                                    .copyWith(dragDevices: {
-                                  PointerDeviceKind.mouse,
-                                  PointerDeviceKind.touch,
-                                }),
-                                child: ListView.builder(
-                                  physics: const BouncingScrollPhysics(
-                                      parent: AlwaysScrollableScrollPhysics()),
-                                  shrinkWrap: true,
-                                  itemCount: searchList.length,
-                                  itemBuilder: (_, index) {
-                                    return ItemCard(
-                                      itemName: searchList[index]!
-                                          .name!
-                                          .toUpperCase(),
-                                      cost:
-                                          '${searchList[index]!.cost.toString()} PKR',
-                                      stock: searchList[index]!.initialStock! >
-                                              0
-                                          ? "ITEMS IN STOCK : ${searchList[index]!.initialStock}"
-                                          : "OUT OF STOCK",
-                                      index: index,
-                                    );
-                                  },
-                                ),
+                            : ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: searchList.length,
+                                itemBuilder: (_, index) {
+                                  return ItemCard(
+                                    itemName:
+                                        searchList[index]!.name!.toUpperCase(),
+                                    cost:
+                                        '${searchList[index]!.cost.toString()} PKR',
+                                    stock: searchList[index]!.initialStock! > 0
+                                        ? "ITEMS IN STOCK : ${searchList[index]!.initialStock}"
+                                        : "OUT OF STOCK",
+                                    index: index,
+                                  );
+                                },
                               ),
                   ),
                 ),
