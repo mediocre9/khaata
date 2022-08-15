@@ -70,13 +70,12 @@ class DrawerHeader extends StatelessWidget {
 
 class DrawerItems extends StatelessWidget {
   const DrawerItems({Key? key}) : super(key: key);
-  static bool flag = true;
   static List<String> drawerItems = [
     "ORDERS",
     "Inventory",
     "Users",
-    "Finances",
-    "Settings",
+    "Finance",
+    // "Settings",
     "About",
   ];
 
@@ -115,7 +114,12 @@ class DrawerItems extends StatelessWidget {
                     Navigator.pushNamedAndRemoveUntil(
                         context, Routes.kManageUserScreen, (route) => false);
                     break;
+
                   case 'FINANCE':
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, Routes.kManageFinanceScreen, (route) => false);
+                    break;
+
                   case 'ABOUT':
                 }
               },
@@ -156,8 +160,18 @@ class DrawerSubItems extends StatelessWidget {
                 onTap: () {
                   switch (subItems[index].toUpperCase()) {
                     case 'MANAGE':
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, Routes.kManageOrderScreen, (route) => false);
+                      break;
                     case 'PENDING':
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, Routes.kPendingScreen, (route) => false);
+                      break;
+
                     case 'COMPLETED':
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, Routes.kCompletedScreen, (route) => false);
+                      break;
                   }
                 },
               ),

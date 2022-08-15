@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:khata/constants.dart';
-import 'package:khata/models/model/user_model.dart';
+import 'package:khata/screens/add_user_screen/bloc/add_user_bloc.dart';
+import 'package:khata/screens/add_user_screen/bloc/add_user_event.dart';
+import 'package:khata/screens/user_screen/user_screen.dart';
 import 'package:khata/widgets/custom_app_bar.dart';
 import 'package:khata/widgets/custom_card.dart';
 import 'package:khata/widgets/custom_drawer.dart';
@@ -14,29 +17,41 @@ class AddUserScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        // resizeToAvoidBottomInset: false,
         appBar: CustomAppBar(
           title: "Order",
           titleFontSize: 23,
           subTitle: "Book",
         ),
+
+        // Drawer
         endDrawer: const CustomDrawer(),
         body: SafeArea(
           child: CustomCard(
             innerMainAlignment: MainAxisAlignment.center,
             width: double.maxFinite,
-            height: double.maxFinite,
-            verticalMargin: 50,
+            height: 310,
+            verticalMargin: 3,
             horizontalMargin: 30,
             elevationLevel: 5,
             borderRadius: 5,
             child: Column(
               children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      color: Colors.white60,
+                      icon: const Icon(Icons.close_outlined),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
+                ),
                 const Text(
                   "ADD USER",
                   style: TextStyle(
                       color: kCardTextColor,
-                      fontSize: 20,
+                      fontSize: 24,
                       fontWeight: FontWeight.w600),
                 ),
                 Container(
@@ -68,23 +83,30 @@ class SaveUserData extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          const SizedBox(height: 35),
-          const Text("NAME",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold)),
+          const SizedBox(height: 20),
+          const Text(
+            "NAME",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           CustomTextField(
             controller: _usernameController,
             contentPadding: 10,
             color: kCardTextColor,
             inputType: TextInputType.name,
             borderStyle: const UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.white, width: 3)),
+              borderSide: BorderSide(
+                color: Colors.white,
+                width: 3,
+              ),
+            ),
             onChanged: (s) {},
             isDense: true,
           ),
-          const SizedBox(height: 45),
+          const SizedBox(height: 20),
           const Text(
             "ADDRESS",
             style: TextStyle(
@@ -100,51 +122,60 @@ class SaveUserData extends StatelessWidget {
             onChanged: (s) {},
             isDense: true,
           ),
-          const SizedBox(height: 45),
-          Center(
-            child: CustomOutlinedButton(
-              textColor: kCardTextColor,
-              onPressed: () {
-                _saveDataToDatabase(context);
+          const SizedBox(height: 20),
+
+          // outside scope activity listener or visit bloclibrary.dev documentation
+          BlocListener<AddUserBloc, UserDataEntryState>(
+            listener: (context, state) {
+              if (state == UserDataEntryState.validState) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  _showSnackBar("User has been successfully added!",
+                      kSnackBarSuccessColor),
+                );
+                clearController();
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ManageUserScreen(),
+                    ),
+                    (route) => false);
+              }
+            },
+            child: BlocBuilder<AddUserBloc, UserDataEntryState>(
+              builder: (context, state) {
+                return Center(
+                  child: CustomOutlinedButton(
+                    textColor: kCardTextColor,
+                    text: "ADD USER",
+                    onPressed: () {
+                      BlocProvider.of<AddUserBloc>(context).add(
+                        AddUserButtonEvent(
+                          _usernameController.text,
+                          _addressController.text,
+                        ),
+                      );
+                    },
+                  ),
+                );
               },
-              text: "ADD TO USER LIST",
             ),
-          )
+          ),
         ],
       ),
     );
   }
 
-  void _saveDataToDatabase(BuildContext context) {
-    if (_usernameController.text.isEmpty || _addressController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(_showErrorSnackBar());
-    } else {
-      var user = UserModel(
-        username: _usernameController.text,
-        address: _addressController.text,
-      );
-      userBox!.add(user);
-      ScaffoldMessenger.of(context).showSnackBar(_showSuccessSnackBar());
-      _usernameController.clear();
-      _addressController.clear();
-    }
+  void clearController() {
+    _addressController.clear();
+    _usernameController.clear();
   }
 
-  SnackBar _showSuccessSnackBar() {
+  SnackBar _showSnackBar(String? message, Color? color) {
     return SnackBar(
       key: UniqueKey(),
-      content: const Text("User has been addded successfully!",
-          style: TextStyle(fontWeight: FontWeight.w600)),
-      backgroundColor: kSnackBarSuccessColor,
-    );
-  }
-
-  SnackBar _showErrorSnackBar() {
-    return SnackBar(
-      key: UniqueKey(),
-      content: const Text("Please fill all the required fields!",
-          style: TextStyle(fontWeight: FontWeight.w600)),
-      backgroundColor: kSnackBarErrorColor,
+      content: Text(message ?? "Value not defined",
+          style: const TextStyle(fontWeight: FontWeight.w600)),
+      backgroundColor: color ?? Colors.blueAccent,
     );
   }
 }
