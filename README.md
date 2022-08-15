@@ -3,6 +3,16 @@
 - **Version:** 0.0
 - **Description:** *Project Description here. . .*
 
+## **Task-List**
+- [ ] **Bloc Pattern Implementation** 
+- [ ] Code Refactoring
+- [ ] Bug Hunting
+- [ ] Profiling and Optimization
+- [ ] Doxygen comment documentation 
+
+
+
+
 
 ## 1. **Project Dependencies:**
 
