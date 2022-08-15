@@ -4,8 +4,8 @@
 - **Description:** *Project Description here. . .*
 
 ## **NOTE : **
-Do not commit files to master (main) branch directly, if you want to commit then commit those files to development branch quick and dirty code is acceptable...
-Refactoring branch should be use if you have refactored some parts of code....
+### **Do not commit files to master (main) branch directly, if you want to commit then commit those files to development branch quick and dirty code is acceptable...
+Refactoring branch should be use if you have refactored some parts of code....**
 ## **Task-List**
 - [ ] **Bloc Pattern Implementation** 
 - [ ] Code Refactoring
