@@ -11,8 +11,8 @@
 
 ## **Task-List**
 - [ ] **Bloc Pattern Implementation** 
-- [ ] Code Refactoring
-- [ ] Bug Hunting
+- [ ] Refactoring
+- [ ] Testing
 - [ ] Profiling and Optimization
 - [ ] Doxygen comment documentation 
 
