@@ -1,14 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:khata/constants.dart';
-import 'package:khata/screens/add_item_screen/bloc/add_item_bloc.dart';
-import 'package:khata/screens/add_item_screen/bloc/add_item_event.dart';
-import 'package:khata/screens/inventory_screen/inventory_screen.dart';
-import 'package:khata/widgets/custom_app_bar.dart';
-import 'package:khata/widgets/custom_card.dart';
-import 'package:khata/widgets/custom_drawer.dart';
+import 'package:khata/screens/add_item_screen/cubit/add_item_cubit.dart';
+import 'package:khata/screens/user_home_screen/user_home_exports.dart';
 import 'package:khata/widgets/custom_outlined_button.dart';
-import 'package:khata/widgets/custom_text_field.dart';
 
 class AddItemScreen extends StatelessWidget {
   const AddItemScreen({Key? key}) : super(key: key);
@@ -43,7 +35,10 @@ class AddItemScreen extends StatelessWidget {
                       color: Colors.white60,
                       iconSize: 22,
                       icon: const Icon(Icons.close_outlined),
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(
+                            context, '/manageInventoryScreen');
+                      },
                     ),
                   ],
                 ),
@@ -82,133 +77,129 @@ class SaveItemData extends StatelessWidget {
     return Container(
       margin: EdgeInsets.zero,
       padding: EdgeInsets.zero,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 15, left: 5, right: 5),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text("NAME",
+      child: BlocListener<AddItemCubit, AddItemState>(
+        listener: (context, state) {
+          if (state is ItemAddedState) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              _showSnackBar(
+                state.message,
+                state.color,
+              ),
+            );
+            clearController();
+          } else if (state is ItemNotAddedState) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              _showSnackBar(
+                state.message,
+                state.color,
+              ),
+            );
+          }
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 15, left: 5, right: 5),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("NAME",
+                      style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold)),
+                  CustomTextField(
+                    isDense: true,
+                    contentPadding: 10,
+                    color: kCardTextColor,
+                    inputType: TextInputType.name,
+                    controller: _itemNameController,
+                    borderStyle: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white, width: 3)),
+                    onChanged: (s) {},
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 15, left: 5, right: 5),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "INITIAL STOCK",
                     style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold)),
-                CustomTextField(
-                  isDense: true,
-                  contentPadding: 10,
-                  color: kCardTextColor,
-                  inputType: TextInputType.name,
-                  controller: _itemNameController,
-                  borderStyle: const UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white, width: 3)),
-                  onChanged: (s) {},
-                ),
-              ],
-            ),
-          ),
-// separation
-          Padding(
-            padding: const EdgeInsets.only(top: 15, left: 5, right: 5),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "INITIAL STOCK",
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                CustomTextField(
-                  isDense: true,
-                  contentPadding: 10,
-                  maxLength: 5,
-                  counterStyle: Colors.white,
-                  color: kCardTextColor,
-                  controller: _stockControlller,
-                  inputType: TextInputType.number,
-                  borderStyle: const UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 3),
-                  ),
-                  onChanged: (s) {},
-                ),
-              ],
-            ),
-          ),
-
-          // separation
-          Padding(
-            padding: const EdgeInsets.only(top: 5, left: 5, right: 5),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "COST",
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                CustomTextField(
-                  isDense: true,
-                  contentPadding: 10,
-                  maxLength: 5,
-                  color: kCardTextColor,
-                  counterStyle: Colors.white,
-                  controller: _costController,
-                  inputType: TextInputType.number,
-                  borderStyle: const UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 3),
-                  ),
-                  onChanged: (s) {},
-                ),
-              ],
-            ),
-          ),
-
-          // separation
-          BlocListener<ItemBloc, ItemState>(
-            listener: (context, state) {
-              if (state == ItemState.validState) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  _showSnackBar("Item has been successfully added!",
-                      kSnackBarSuccessColor),
-                );
-                clearController();
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ManageInventoryScreen(),
+                      fontSize: 15,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
-                    (route) => false);
-              }
-            },
-            child: BlocBuilder<ItemBloc, ItemState>(
-              builder: (BuildContext context, state) {
-                return Center(
-                  child: CustomOutlinedButton(
-                    text: "ADD ITEM",
-                    textColor: kCardTextColor,
-                    onPressed: () {
-                      BlocProvider.of<ItemBloc>(context).add(
-                        AddItemButtonEvent(
-                          _itemNameController.text,
-                          int.parse(_stockControlller.text),
-                          int.parse(_costController.text),
-                        ),
-                      );
-                    },
                   ),
-                );
-              },
+                  CustomTextField(
+                    isDense: true,
+                    contentPadding: 10,
+                    maxLength: 10,
+                    counterStyle: Colors.white,
+                    color: kCardTextColor,
+                    controller: _stockControlller,
+                    inputType: TextInputType.number,
+                    borderStyle: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white, width: 3),
+                    ),
+                    onChanged: (s) {},
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+
+            // separation
+            Padding(
+              padding: const EdgeInsets.only(top: 5, left: 5, right: 5),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "COST",
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  CustomTextField(
+                    isDense: true,
+                    contentPadding: 10,
+                    maxLength: 10,
+                    color: kCardTextColor,
+                    counterStyle: Colors.white,
+                    controller: _costController,
+                    inputType: TextInputType.number,
+                    borderStyle: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white, width: 3),
+                    ),
+                    onChanged: (s) {},
+                  ),
+                ],
+              ),
+            ),
+
+            // separation
+            Center(
+              child: CustomOutlinedButton(
+                text: "ADD ITEM",
+                textColor: kCardTextColor,
+                onPressed: () {
+                  BlocProvider.of<AddItemCubit>(context).addItem(
+                    _itemNameController.text,
+                    _stockControlller.text,
+                    _costController.text,
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -221,6 +212,7 @@ class SaveItemData extends StatelessWidget {
 
   SnackBar _showSnackBar(String? message, Color? color) {
     return SnackBar(
+      duration: const Duration(milliseconds: 600),
       key: UniqueKey(),
       content: Text(message ?? "Value not defined",
           style: const TextStyle(fontWeight: FontWeight.w600)),

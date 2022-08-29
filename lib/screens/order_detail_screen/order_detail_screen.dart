@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:khata/constants.dart';
-import 'package:khata/models/model/order_model.dart';
-import 'package:khata/models/model/product_model.dart';
+import 'package:khata/screens/order_screen/cubit/order_home_cubit.dart';
 import 'package:khata/screens/order_screen/order_screen.dart';
+import 'package:khata/screens/user_home_screen/user_home_exports.dart';
 import 'package:khata/widgets/custom_app_bar.dart';
 import 'package:khata/widgets/custom_card.dart';
 import 'package:khata/widgets/custom_drawer.dart';
@@ -50,7 +50,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               width: double.maxFinite,
               shadow: true,
               height: 340,
-              verticalMargin: 5,
+              // verticalMargin: 5,
               horizontalMargin: 30,
               elevationLevel: 5,
               borderRadius: 5,
@@ -69,7 +69,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 5),
+                    // const SizedBox(height: 5),
                     Container(
                       padding: const EdgeInsets.only(bottom: 30, left: 20),
                       child: Column(
@@ -128,7 +128,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           fontWeight: FontWeight.w500),
                     ),
                     Container(
-                      padding: const EdgeInsets.only(top: 20),
+                      padding: const EdgeInsets.only(top: 30),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -137,145 +137,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                   textColor:
                                       const Color.fromARGB(255, 218, 224, 236),
                                   text: "MARK COMPLETED",
-                                  onPressed: () {
-                                    setState(
-                                      () {
-                                        // orderBox!.deleteAt(widget.index!);
-
-                                        for (var i = 0;
-                                            i < productBox!.values.length;
-                                            i++) {
-                                          // product exists...
-                                          if (productBox!
-                                                  .getAt(i)!
-                                                  .name!
-                                                  .toLowerCase() ==
-                                              widget.product!.toLowerCase()) {
-                                            // then decrease stock....
-                                            int currentStock = productBox!
-                                                    .getAt(i)!
-                                                    .initialStock! -
-                                                1;
-
-                                            // get object
-                                            var product = productBox!.getAt(i);
-
-                                            // show alert when item is less than 5....
-                                            if (productBox!
-                                                    .getAt(i)!
-                                                    .initialStock! <=
-                                                5) {
-                                              _showDialog("Alert",
-                                                  "Product ${productBox!.getAt(i)!.name!.toLowerCase()} stock is ${productBox!.getAt(i)!.initialStock!}");
-
-                                              // update description....
-                                              orderBox!.putAt(
-                                                widget.index!,
-                                                OrderModel(
-                                                  widget.username,
-                                                  widget.product,
-                                                  int.parse(widget.cost!
-                                                      .replaceAll(" PKR", "")),
-                                                  DateTime.parse(
-                                                      widget.createdDate!),
-                                                  DateTime.parse(DateTime.now()
-                                                      .toString()),
-                                                  true,
-                                                ),
-                                              );
-
-                                              // update item
-                                              productBox!.putAt(
-                                                i,
-                                                ProductModel(
-                                                  name: product!.name,
-                                                  initialStock: currentStock,
-                                                  cost: int.parse(widget.cost!
-                                                      .replaceAll(" PKR", "")),
-                                                ),
-                                              );
-
-                                              // go back
-                                              Navigator.pushAndRemoveUntil(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const ManageOrderScreen(),
-                                                  ),
-                                                  (route) => false);
-                                            }
-                                            // show alert when item is out of stock....
-                                            // else if (productBox!
-                                            //         .getAt(i)!
-                                            //         .initialStock! ==
-                                            //     0) {
-                                            //   _showDialog(
-                                            //     "Alert",
-                                            //     "Product ${productBox!.getAt(i)!.name!.toLowerCase()} is out of stock. Please refill your inventory.",
-                                            //   );
-                                            // }
-                                            else {
-                                              // update item
-                                              productBox!.putAt(
-                                                i,
-                                                ProductModel(
-                                                  name: product!.name,
-                                                  initialStock: currentStock,
-                                                  cost: int.parse(widget.cost!
-                                                      .replaceAll(" PKR", "")),
-                                                ),
-                                              );
-
-                                              // updated description....
-                                              orderBox!.putAt(
-                                                widget.index!,
-                                                OrderModel(
-                                                  widget.username,
-                                                  widget.product,
-                                                  int.parse(widget.cost!
-                                                      .replaceAll(" PKR", "")),
-                                                  DateTime.parse(
-                                                      widget.createdDate!),
-                                                  DateTime.parse(DateTime.now()
-                                                      .toString()),
-                                                  true,
-                                                ),
-                                              );
-
-                                              Navigator.pushAndRemoveUntil(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const ManageOrderScreen(),
-                                                  ),
-                                                  (route) => false);
-                                            }
-
-                                            // update inventory item....
-                                            // else {
-                                            // productBox!.putAt(
-                                            //   i,
-                                            //   ProductModel(
-                                            //     name: product!.name,
-                                            //     initialStock: currentStock,
-                                            //     cost: int.parse(widget.cost!
-                                            //         .replaceAll(" PKR", "")),
-                                            //   ),
-                                            // );
-                                            // }
-
-                                            // Navigator.pushAndRemoveUntil(
-                                            //     context,
-                                            //     MaterialPageRoute(
-                                            //       builder: (context) =>
-                                            //           const ManageOrderScreen(),
-                                            //     ),
-                                            //     (route) => false);
-                                          }
-                                        }
-                                      },
-                                    );
-                                  },
+                                  onPressed: () {},
                                 )
                               : Container(),
                           const SizedBox(height: 9),
@@ -296,13 +158,15 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                         child: const Text("Yes"),
                                         onPressed: () {
                                           orderBox!.deleteAt(widget.index!);
-                                          Navigator.pushAndRemoveUntil(
+                                          Navigator.pushReplacement(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const ManageOrderScreen(),
-                                              ),
-                                              (route) => false);
+                                                builder: (context) => BlocProvider(
+                                                    create: (context) =>
+                                                        OrderHomeCubit(),
+                                                    child:
+                                                        const ManageOrderScreen()),
+                                              ));
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(
                                             SnackBar(

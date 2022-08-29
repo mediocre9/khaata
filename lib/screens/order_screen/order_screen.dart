@@ -1,60 +1,52 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
-import 'package:flutter/cupertino.dart' show CupertinoIcons;
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:khata/constants.dart';
-import 'package:khata/models/model/order_model.dart';
 
 import 'package:khata/screens/add_order_screen/add_order_screen.dart';
 import 'package:khata/screens/order_detail_screen/order_detail_screen.dart';
+import 'package:khata/screens/order_screen/cubit/order_home_cubit.dart';
 
 import 'package:khata/widgets/custom_app_bar.dart';
 import 'package:khata/widgets/custom_card.dart';
 import 'package:khata/widgets/custom_drawer.dart';
 import 'package:khata/widgets/custom_text_field.dart';
 
-class ManageOrderScreen extends StatefulWidget {
+class ManageOrderScreen extends StatelessWidget {
   const ManageOrderScreen({Key? key}) : super(key: key);
+  // static List<OrderModel?> searchList = [];
+  // static List<OrderModel?> orderList = [];
 
-  @override
-  State<ManageOrderScreen> createState() => _ManageOrderScreenState();
-}
+  // int totalOrders = 0;
+  // int pendingOrders = 0;
+  // int totalGain = 0;
 
-class _ManageOrderScreenState extends State<ManageOrderScreen> {
-  static List<OrderModel?> searchList = [];
-  static List<OrderModel?> orderList = [];
+  // _ManageOrderScreenState();
 
-  int totalOrders = 0;
-  int pendingOrders = 0;
-  int totalGain = 0;
+  // fetchAllData() {
+  //   orderList.clear();
+  //   for (var i = 0; i < orderBox!.values.length; i++) {
+  //     orderList.add(orderBox!.getAt(i));
+  //     totalOrders = totalOrders + 1;
 
-  _ManageOrderScreenState();
+  //     // if not orders are not completed increment pending orders!
+  //     if (orderBox!.getAt(i)!.status == false) {
+  //       pendingOrders = pendingOrders + 1;
+  //     }
 
-  fetchAllData() {
-    orderList.clear();
-    for (var i = 0; i < orderBox!.values.length; i++) {
-      orderList.add(orderBox!.getAt(i));
-      totalOrders = totalOrders + 1;
+  //     // if  orders are  completed increment total gain!
+  //     if (orderBox!.getAt(i)!.status == true) {
+  //       totalGain = totalGain + orderBox!.getAt(i)!.cost!;
+  //     }
+  //   }
+  //   searchList = orderList;
+  // }
 
-      // if not orders are not completed increment pending orders!
-      if (orderBox!.getAt(i)!.status == false) {
-        pendingOrders = pendingOrders + 1;
-      }
-
-      // if  orders are  completed increment total gain!
-      if (orderBox!.getAt(i)!.status == true) {
-        totalGain = totalGain + orderBox!.getAt(i)!.cost!;
-      }
-    }
-    searchList = orderList;
-  }
-
-  @override
-  void initState() {
-    fetchAllData();
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   fetchAllData();
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -97,27 +89,23 @@ class _ManageOrderScreenState extends State<ManageOrderScreen> {
                         borderRadius: 4,
                         isDense: true,
                         contentPadding: 8,
-                        onChanged: (searchOrder) {
-                          searchList = orderList
-                              .where((user) => user!.username!
-                                  .toLowerCase()
-                                  .startsWith(searchOrder.toLowerCase()))
-                              .toList();
-                          setState(() {});
+                        onChanged: (search) {
+                          BlocProvider.of<OrderHomeCubit>(context)
+                              .searchOrder(search);
                         },
                         controller: null,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TotalOrders(totalOrders: totalOrders),
-                          PendingOrders(pendingOrders: pendingOrders),
+                        children: const [
+                          TotalOrders(totalOrders: 0),
+                          PendingOrders(pendingOrders: 0),
                         ],
                       ),
                       Row(
-                        children: [
+                        children: const [
                           TotalGain(
-                            totalGain: totalGain,
+                            totalGain: 0,
                           ),
                         ],
                       ),
@@ -157,38 +145,58 @@ class _ManageOrderScreenState extends State<ManageOrderScreen> {
                         )
                       ],
                     ),
-                    child: orderList.isEmpty
-                        ? const EmptyRecords()
-                        : searchList.isEmpty
-                            ? const OrderNotFound()
-                            : ScrollConfiguration(
-                                behavior: ScrollConfiguration.of(context)
-                                    .copyWith(dragDevices: {
-                                  PointerDeviceKind.mouse,
-                                  PointerDeviceKind.touch,
-                                }),
-                                child: ListView.builder(
-                                  physics: const BouncingScrollPhysics(
-                                      parent: AlwaysScrollableScrollPhysics()),
-                                  shrinkWrap: true,
-                                  itemCount: searchList.length,
-                                  itemBuilder: (_, index) {
-                                    return OrderCard(
-                                      product: searchList[index]!
-                                          .productname!
-                                          .toUpperCase(),
-                                      cost:
-                                          '${searchList[index]!.cost.toString()} PKR',
-                                      username: searchList[index]!.username,
-                                      index: index,
-                                      createdDate:
-                                          searchList[index]!.createdDate,
-                                      completedDate:
-                                          searchList[index]!.completedDate,
-                                    );
-                                  },
-                                ),
-                              ),
+                    child: BlocBuilder<OrderHomeCubit, OrderHomeState>(
+                      builder: (context, state) {
+                        if (state is OrderHomeInitial) {
+                          return EmptyRecords(
+                            message: state.message,
+                            iconData: state.iconData,
+                          );
+                        } else if (state is OrderLoadState) {
+                          return ListView.builder(
+                            itemCount: state.orderModel.length,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              return OrderCard(
+                                product: state.orderModel[index].productname!,
+                                cost: state.orderModel[index].cost.toString(),
+                                username: state.orderModel[index].username!,
+                                completedDate: state
+                                    .orderModel[index].completedDate
+                                    .toString(),
+                                createdDate: state.orderModel[index].createdDate
+                                    .toString(),
+                                index: index,
+                              );
+                            },
+                          );
+                        } else if (state is OrderSearchState) {
+                          return ListView.builder(
+                            itemCount: state.orderModel.length,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              return OrderCard(
+                                product: state.orderModel[index].productname!,
+                                cost: state.orderModel[index].cost.toString(),
+                                username: state.orderModel[index].username!,
+                                completedDate: state
+                                    .orderModel[index].completedDate
+                                    .toString(),
+                                createdDate: state.orderModel[index].createdDate
+                                    .toString(),
+                                index: index,
+                              );
+                            },
+                          );
+                        } else if (state is OrderFoundState) {
+                          return OrderNotFound(
+                            message: state.message,
+                            iconData: state.iconData,
+                          );
+                        }
+                        return Container();
+                      },
+                    ),
                   ),
                 ),
               ],
@@ -222,7 +230,7 @@ class TotalOrders extends StatelessWidget {
               ),
             ),
             Text(
-              totalOrders.toString(),
+              BlocProvider.of<OrderHomeCubit>(context).totalOrders.toString(),
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 28,
@@ -265,7 +273,8 @@ class TotalGain extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            Text("${totalGain.toString()} PKR",
+            Text(
+                "${BlocProvider.of<OrderHomeCubit>(context).totalGain.toString()} PKR",
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 25,
@@ -304,7 +313,9 @@ class PendingOrders extends StatelessWidget {
                 ),
               ),
               Text(
-                pendingOrders.toString(),
+                BlocProvider.of<OrderHomeCubit>(context)
+                    .totalPendingOrders
+                    .toString(),
                 style: const TextStyle(
                   color: Color.fromRGBO(58, 52, 98, 1),
                   fontSize: 28,
@@ -328,8 +339,13 @@ class PendingOrders extends StatelessWidget {
 }
 
 class EmptyRecords extends StatelessWidget {
+  final String message;
+  final IconData iconData;
+
   const EmptyRecords({
     Key? key,
+    required this.message,
+    required this.iconData,
   }) : super(key: key);
 
   @override
@@ -338,15 +354,15 @@ class EmptyRecords extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
+        children: [
           Icon(
-            Icons.list,
+            iconData,
             color: Colors.grey,
             size: 65,
           ),
           Text(
-            "RECORD LIST IS EMPTY!",
-            style: TextStyle(color: Colors.grey, fontSize: 18),
+            message,
+            style: const TextStyle(color: Colors.grey, fontSize: 18),
           )
         ],
       ),
@@ -355,8 +371,13 @@ class EmptyRecords extends StatelessWidget {
 }
 
 class OrderNotFound extends StatelessWidget {
+  final String message;
+  final IconData iconData;
+
   const OrderNotFound({
     Key? key,
+    required this.message,
+    required this.iconData,
   }) : super(key: key);
 
   @override
@@ -365,15 +386,15 @@ class OrderNotFound extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
+        children: [
           Icon(
-            Icons.search_off_rounded,
+            iconData,
             color: Colors.grey,
             size: 65,
           ),
           Text(
-            "ORDER NOT FOUND!",
-            style: TextStyle(color: Colors.grey, fontSize: 20),
+            message,
+            style: const TextStyle(color: Colors.grey, fontSize: 20),
           )
         ],
       ),
@@ -415,14 +436,13 @@ class OrderCard extends StatelessWidget {
     required this.product,
     required this.cost,
     required this.username,
-    this.createdDate,
-    this.index,
-    this.completedDate,
-    this.pendingOrders,
+    required this.createdDate,
+    required this.index,
+    required this.completedDate,
   }) : super(key: key);
-  final String? product, cost, username;
-  final int? index, pendingOrders;
-  final DateTime? createdDate, completedDate;
+  final String product, cost, username;
+  final int index;
+  final String createdDate, completedDate;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -441,7 +461,7 @@ class OrderCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(7),
               ),
               title: Text(
-                product!,
+                product,
                 style: const TextStyle(
                   fontSize: 18,
                   letterSpacing: 1.3,
@@ -455,7 +475,7 @@ class OrderCard extends StatelessWidget {
                 children: [
                   const SizedBox(height: 5),
                   Text(
-                    cost!,
+                    cost,
                     style: const TextStyle(
                       fontSize: 17.5,
                       letterSpacing: 1,
@@ -468,7 +488,7 @@ class OrderCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        username!,
+                        username,
                         style: const TextStyle(
                           fontSize: 10.5,
                           letterSpacing: 1,
@@ -476,15 +496,29 @@ class OrderCard extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      orderBox!.getAt(index!)!.status!
-                          ? const Icon(
-                              Icons.check_circle_rounded,
-                              color: Colors.lightGreenAccent,
-                            )
-                          : Icon(
-                              CupertinoIcons.exclamationmark_circle,
-                              color: Colors.yellow[300],
-                            )
+                      // BlocProvider.of<OrderHomeCubit>(context)
+                      //             .orderListObject[index]
+                      //             .status ==
+                      //         false
+                      //     ? const OrderStatusIcon(
+                      //         iconData: Icons.check_circle_outline,
+                      //         color: Colors.lightGreenAccent)
+                      //     : const OrderStatusIcon(
+                      //         iconData: Icons.warning, color: Colors.redAccent)
+                      // BlocBuilder<OrderHomeCubit, OrderHomeState>(
+                      //   builder: (context, state) {
+                      //     if (state is OrderCompletedState) {
+                      //       return const OrderStatusIcon(
+                      //           iconData: Icons.check_circle_outline,
+                      //           color: Colors.lightGreenAccent);
+                      //     } else if (state is OrderNotCompletedState) {
+                      //       return const OrderStatusIcon(
+                      //           iconData: Icons.warning,
+                      //           color: Colors.redAccent);
+                      //     }
+                      //     return Container();
+                      //   },
+                      // ),
                     ],
                   ),
                 ],
@@ -497,10 +531,9 @@ class OrderCard extends StatelessWidget {
                       username: username,
                       product: product,
                       cost: cost,
-                      createdDate: createdDate!.toString(),
-                      completedDate: createdDate!.toString(),
+                      createdDate: createdDate.toString(),
+                      completedDate: createdDate.toString(),
                       index: index,
-                      pendingOrders: pendingOrders,
                     ),
                   ),
                 );
@@ -509,6 +542,24 @@ class OrderCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class OrderStatusIcon extends StatelessWidget {
+  final Color color;
+  final IconData iconData;
+  const OrderStatusIcon({
+    Key? key,
+    required this.color,
+    required this.iconData,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Icon(
+      iconData,
+      color: color,
     );
   }
 }

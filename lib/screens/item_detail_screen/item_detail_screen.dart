@@ -1,30 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:khata/constants.dart';
-import 'package:khata/screens/inventory_screen/inventory_screen.dart';
 import 'package:khata/widgets/custom_app_bar.dart';
 import 'package:khata/widgets/custom_card.dart';
 import 'package:khata/widgets/custom_drawer.dart';
 import 'package:khata/widgets/custom_outlined_button.dart';
 
-class ItemDetailScreen extends StatefulWidget {
+class ItemDetailScreen extends StatelessWidget {
+  final String itemName, cost, stock;
+  final int index;
   const ItemDetailScreen(
-      {Key? key, this.itemName, this.cost, this.stock, this.index})
+      {Key? key,
+      this.itemName = "nil",
+      this.cost = "nil",
+      this.stock = 'nil',
+      this.index = 0})
       : super(key: key);
-  final String? itemName, cost, stock;
-  final int? index;
 
-  @override
-  State<ItemDetailScreen> createState() => _ItemDetailScreenState();
-}
-
-class _ItemDetailScreenState extends State<ItemDetailScreen> {
-  final TextEditingController _stockController = TextEditingController();
-
-  @override
-  void dispose() {
-    _stockController.clear();
-    super.dispose();
-  }
+  static final TextEditingController _stockController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -40,13 +32,14 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
         // Drawer
         endDrawer: const CustomDrawer(),
         body: SafeArea(
-          child: Center(
+          child: Container(
+            margin: const EdgeInsets.only(top: 30),
             child: CustomCard(
               innerMainAlignment: MainAxisAlignment.start,
               innerCrossAlignment: CrossAxisAlignment.start,
               width: double.maxFinite,
               shadow: true,
-              height: 340,
+              height: 270,
               verticalMargin: 5,
               horizontalMargin: 30,
               elevationLevel: 5,
@@ -66,37 +59,37 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 5),
+                    const SizedBox(height: 3),
                     Text(
-                      widget.itemName!,
+                      itemName,
                       style: const TextStyle(
                         color: kCardTextColor,
                         fontSize: 24,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(height: 9),
+                    const SizedBox(height: 5),
                     Text(
-                      "RS. ${widget.cost!.replaceAll("PKR", "")}",
+                      "RS. ${cost.replaceAll("PKR", "")}",
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 7),
                     Text(
-                      widget.stock!,
+                      "ITEMS IN STOCK: $stock",
                       style: const TextStyle(color: Colors.white, fontSize: 13),
                     ),
                     Container(
-                      padding: const EdgeInsets.only(top: 70),
+                      padding: const EdgeInsets.only(top: 40),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           CustomOutlinedButton(
                             textColor: const Color.fromARGB(255, 218, 224, 236),
-                            text: "ADD MORE TO STOCK",
+                            text: "ADD MORE",
                             onPressed: () {
                               showDialog(
                                 context: context,
@@ -114,18 +107,13 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                                     actions: [
                                       TextButton(
                                         onPressed: () {
-                                          var object =
-                                              productBox!.getAt(widget.index!);
+                                          var object = productBox!.getAt(index);
                                           object!.initialStock = object
                                                   .initialStock! +
                                               int.parse(_stockController.text);
-                                          Navigator.pushAndRemoveUntil(
+                                          Navigator.pushReplacementNamed(
                                               context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const ManageInventoryScreen(),
-                                              ),
-                                              (route) => false);
+                                              '/manageInventoryScreen');
                                         },
                                         child: const Text("Add"),
                                       ),
@@ -155,14 +143,10 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                                     actions: [
                                       TextButton(
                                           onPressed: () {
-                                            productBox!.deleteAt(widget.index!);
-                                            Navigator.pushAndRemoveUntil(
+                                            productBox!.deleteAt(index);
+                                            Navigator.pushReplacementNamed(
                                                 context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const ManageInventoryScreen(),
-                                                ),
-                                                (route) => false);
+                                                '/manageInventoryScreen');
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(
                                               SnackBar(

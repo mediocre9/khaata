@@ -19,9 +19,9 @@ class CustomDrawer extends StatelessWidget {
         ),
         child: Column(
           children: const [
-            DrawerHeader(),
-            DrawerItems(),
-            DrawerFooter(),
+            CustomDrawerHeader(),
+            CustomDrawerItems(),
+            CustomDrawerFooter(),
           ],
         ),
       ),
@@ -29,8 +29,8 @@ class CustomDrawer extends StatelessWidget {
   }
 }
 
-class DrawerHeader extends StatelessWidget {
-  const DrawerHeader({Key? key}) : super(key: key);
+class CustomDrawerHeader extends StatelessWidget {
+  const CustomDrawerHeader({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -68,8 +68,8 @@ class DrawerHeader extends StatelessWidget {
   }
 }
 
-class DrawerItems extends StatelessWidget {
-  const DrawerItems({Key? key}) : super(key: key);
+class CustomDrawerItems extends StatelessWidget {
+  const CustomDrawerItems({Key? key}) : super(key: key);
   static List<String> drawerItems = [
     "ORDERS",
     "Inventory",
@@ -106,8 +106,7 @@ class DrawerItems extends StatelessWidget {
               onTap: () {
                 switch (drawerItems[index].toUpperCase()) {
                   case 'INVENTORY':
-                    Navigator.pushNamedAndRemoveUntil(context,
-                        Routes.kManageInventoryScreen, (route) => false);
+                    Navigator.pushReplacementNamed(context, '/manageInventoryScreen');
                     break;
 
                   case 'USERS':
@@ -160,12 +159,10 @@ class DrawerSubItems extends StatelessWidget {
                 onTap: () {
                   switch (subItems[index].toUpperCase()) {
                     case 'MANAGE':
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, Routes.kManageOrderScreen, (route) => false);
+                      Navigator.pushReplacementNamed(context, '/manageOrderScreen');
                       break;
                     case 'PENDING':
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, Routes.kPendingScreen, (route) => false);
+                      Navigator.pushReplacementNamed(context, '/pendingScreen');
                       break;
 
                     case 'COMPLETED':
@@ -183,8 +180,8 @@ class DrawerSubItems extends StatelessWidget {
   }
 }
 
-class DrawerFooter extends StatelessWidget {
-  const DrawerFooter({Key? key}) : super(key: key);
+class CustomDrawerFooter extends StatelessWidget {
+  const CustomDrawerFooter({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

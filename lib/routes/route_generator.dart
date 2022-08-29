@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:khata/screens/add_order_screen/add_order_screen.dart';
 import 'package:khata/screens/finance_screen/finance_screen.dart';
 import 'package:khata/screens/intro_screen/intro_screen.dart';
-import 'package:khata/screens/inventory_screen/inventory_screen.dart';
+import 'package:khata/screens/inventory_home_screen/cubit/inventory_home_cubit.dart';
+import 'package:khata/screens/inventory_home_screen/inventory_home_screen.dart';
 import 'package:khata/screens/add_item_screen/add_item_screen.dart';
 import 'package:khata/screens/order_completed_screen/order_completed_screen.dart';
+import 'package:khata/screens/order_pending_screen/cubit/pending_order_cubit.dart';
 import 'package:khata/screens/order_pending_screen/order_pending_screen.dart';
+import 'package:khata/screens/order_screen/cubit/order_home_cubit.dart';
 import 'package:khata/screens/order_screen/order_screen.dart';
-import 'package:khata/screens/user_screen/user_screen.dart';
+import 'package:khata/screens/user_home_screen/cubit/user_home_cubit.dart';
+import 'package:khata/screens/user_home_screen/user_home_screen.dart';
 
 // Implemented routing system for future use and scalability.
 // if we want to build a web application from this codebase...
@@ -31,31 +36,43 @@ class Routes {
 class AppRouteGenerator {
   static Route<dynamic> generateScreen(RouteSettings routeSettings) {
     switch (routeSettings.name) {
-      case Routes.kIntroScreen:
+      case '/introScreen':
         return pageRoute(const IntroScreen());
 
-      case Routes.kManageUserScreen:
-        return pageRoute(const ManageUserScreen());
+      case '/manageUserScreen':
+        return pageRoute(BlocProvider(
+          create: (context) => UserHomeCubit(),
+          child: UserHomeScreen(),
+        ));
 
-      case Routes.kManageInventoryScreen:
-        return pageRoute(const ManageInventoryScreen());
+      case '/manageInventoryScreen':
+        return pageRoute(BlocProvider(
+          create: (context) => InventoryHomeCubit(),
+          child: InventoryHomeScreen(),
+        ));
 
-      case Routes.kPendingScreen:
-        return pageRoute(const OrderPendingScreen());
+      case '/pendingScreen':
+        return pageRoute(BlocProvider(
+          create: (context) => PendingOrderCubit(),
+          child: const OrderPendingScreen(),
+        ));
 
-      case Routes.kCompletedScreen:
+      case '/completedScreen':
         return pageRoute(const OrderCompletedScreen());
 
-      case Routes.kAddItemSubScreen:
+      case '/addItemScreen':
         return pageRoute(const AddItemScreen());
 
-      case Routes.kManageOrderScreen:
-        return pageRoute(const ManageOrderScreen());
+      case '/manageOrderScreen':
+        return pageRoute(BlocProvider(
+          create: (context) => OrderHomeCubit(),
+          child: const ManageOrderScreen(),
+        ));
 
-      case Routes.kAddOrderSubScreen:
+      case '/addOrderScreen':
         return pageRoute(const AddOrderScreen());
 
-      case Routes.kManageFinanceScreen:
+      case '/manageFinanceScreen':
         return pageRoute(const FinanceScreen());
 
       default:
