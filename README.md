@@ -3,6 +3,18 @@
 - **Version:** 0.0
 - **Description:** *Project Description here. . .*
 
+## **NOTE :**
+**Do not commit files to master (main) branch directly. Contributors are only allowed to commit files to development branch, quick and dirty code is also acceptable...**
+
+## **Development Progress :**
+![Progress](https://progress-bar.dev/75/?title=progress)
+
+## **Task-List**
+- [x] **Bloc Pattern Implementation** 
+- [ ] Refactoring
+- [ ] Testing
+- [x] Profiling and Optimization
+- [ ] Doxygen comment documentation 
 
 ## 1. **Project Dependencies:**
 
@@ -11,7 +23,9 @@
 - hive_generator: 1.1.3
 - hive: 2.2.3
 - hive_flutter: 1.1.0
-
+- flutter_inset_box_shadow: 1.0.8
+- fl_chart: 0.55.1
+  
 ## 2. **Project Structure and Guidelines:**
 - `snake-case` naming convention for files and folder **e.g** `sub-screen`.
 - **camelCase** `kConstantValue` for constant values.
