@@ -55,7 +55,7 @@ class OrderHomeCubit extends Cubit<OrderHomeState> {
   void searchOrder(String search) {
     List<OrderModel> searchOrders = orders
         .where((order) =>
-            order.username!.toLowerCase().startsWith(search.toLowerCase()))
+            order.productname!.toLowerCase().startsWith(search.toLowerCase()))
         .toList();
 
     if (searchOrders.isNotEmpty) {

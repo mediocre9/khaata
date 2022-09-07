@@ -1,9 +1,12 @@
+import 'package:flutter/cupertino.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:khata/constants.dart';
 
 import 'package:khata/screens/add_order_screen/add_order_screen.dart';
+import 'package:khata/screens/add_order_screen/cubit/add_order_cubit.dart';
+import 'package:khata/screens/order_detail_screen/cubit/order_detail_cubit.dart';
 import 'package:khata/screens/order_detail_screen/order_detail_screen.dart';
 import 'package:khata/screens/order_screen/cubit/order_home_cubit.dart';
 
@@ -11,42 +14,12 @@ import 'package:khata/widgets/custom_app_bar.dart';
 import 'package:khata/widgets/custom_card.dart';
 import 'package:khata/widgets/custom_drawer.dart';
 import 'package:khata/widgets/custom_text_field.dart';
+import 'package:khata/widgets/data_not_found.dart';
+import 'package:khata/widgets/empty_record.dart';
+import 'package:khata/widgets/neumorphic_tray_mixin.dart';
 
 class ManageOrderScreen extends StatelessWidget {
   const ManageOrderScreen({Key? key}) : super(key: key);
-  // static List<OrderModel?> searchList = [];
-  // static List<OrderModel?> orderList = [];
-
-  // int totalOrders = 0;
-  // int pendingOrders = 0;
-  // int totalGain = 0;
-
-  // _ManageOrderScreenState();
-
-  // fetchAllData() {
-  //   orderList.clear();
-  //   for (var i = 0; i < orderBox!.values.length; i++) {
-  //     orderList.add(orderBox!.getAt(i));
-  //     totalOrders = totalOrders + 1;
-
-  //     // if not orders are not completed increment pending orders!
-  //     if (orderBox!.getAt(i)!.status == false) {
-  //       pendingOrders = pendingOrders + 1;
-  //     }
-
-  //     // if  orders are  completed increment total gain!
-  //     if (orderBox!.getAt(i)!.status == true) {
-  //       totalGain = totalGain + orderBox!.getAt(i)!.cost!;
-  //     }
-  //   }
-  //   searchList = orderList;
-  // }
-
-  // @override
-  // void initState() {
-  //   fetchAllData();
-  //   super.initState();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -123,87 +96,107 @@ class ManageOrderScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.zero,
-                    margin: const EdgeInsets.only(top: 5),
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                      color: Color.fromARGB(255, 253, 253, 253),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.white,
-                          spreadRadius: 0.4,
-                          blurRadius: 1,
-                        ),
-                        BoxShadow(
-                          color: Color.fromARGB(255, 65, 65, 65),
-                          spreadRadius: 1.5,
-                          blurRadius: 4,
-                          offset: Offset(1, 4),
-                          inset: true,
-                        )
-                      ],
-                    ),
-                    child: BlocBuilder<OrderHomeCubit, OrderHomeState>(
-                      builder: (context, state) {
-                        if (state is OrderHomeInitial) {
-                          return EmptyRecords(
-                            message: state.message,
-                            iconData: state.iconData,
-                          );
-                        } else if (state is OrderLoadState) {
-                          return ListView.builder(
-                            itemCount: state.orderModel.length,
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              return OrderCard(
-                                product: state.orderModel[index].productname!,
-                                cost: state.orderModel[index].cost.toString(),
-                                username: state.orderModel[index].username!,
-                                completedDate: state
-                                    .orderModel[index].completedDate
-                                    .toString(),
-                                createdDate: state.orderModel[index].createdDate
-                                    .toString(),
-                                index: index,
-                              );
-                            },
-                          );
-                        } else if (state is OrderSearchState) {
-                          return ListView.builder(
-                            itemCount: state.orderModel.length,
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              return OrderCard(
-                                product: state.orderModel[index].productname!,
-                                cost: state.orderModel[index].cost.toString(),
-                                username: state.orderModel[index].username!,
-                                completedDate: state
-                                    .orderModel[index].completedDate
-                                    .toString(),
-                                createdDate: state.orderModel[index].createdDate
-                                    .toString(),
-                                index: index,
-                              );
-                            },
-                          );
-                        } else if (state is OrderFoundState) {
-                          return OrderNotFound(
-                            message: state.message,
-                            iconData: state.iconData,
-                          );
-                        }
-                        return Container();
-                      },
-                    ),
-                  ),
-                ),
+                const OrderListView(),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class OrderListView extends StatelessWidget with NeumorphicTray {
+  const OrderListView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.zero,
+        margin: const EdgeInsets.only(top: 5),
+        decoration: neumorphicTrayDecoration(),
+        child: BlocBuilder<OrderHomeCubit, OrderHomeState>(
+          builder: (context, state) {
+            if (state is OrderHomeInitial) {
+              return EmptyRecordsWidget(
+                message: state.message,
+                icon: state.iconData,
+              );
+            } else if (state is OrderLoadState) {
+              return ListView.builder(
+                itemCount: state.orderModel.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return OrderCard(
+                    product: state.orderModel[index].productname!,
+                    cost: state.orderModel[index].cost.toString(),
+                    username: state.orderModel[index].username!,
+                    completedDate:
+                        state.orderModel[index].completedDate.toString(),
+                    createdDate: state.orderModel[index].createdDate.toString(),
+                    index: index,
+                    status: state.orderModel[index].status!,
+                  );
+                },
+              );
+            } else if (state is OrderSearchState) {
+              return ListView.builder(
+                itemCount: state.orderModel.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return OrderCard(
+                    product: state.orderModel[index].productname!,
+                    cost: state.orderModel[index].cost.toString(),
+                    username: state.orderModel[index].username!,
+                    completedDate:
+                        state.orderModel[index].completedDate.toString(),
+                    createdDate: state.orderModel[index].createdDate.toString(),
+                    status: state.orderModel[index].status!,
+                    index: index,
+                  );
+                },
+              );
+            } else if (state is OrderFoundState) {
+              return DataNotFoundWidget(
+                message: state.message,
+                // iconData: state.iconData,
+              );
+            }
+            return const Center(child: CircularProgressIndicator());
+          },
+        ),
+      ),
+    );
+  }
+}
+
+// user navigator button....
+class AddUserButtonPane extends StatelessWidget {
+  const AddUserButtonPane({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        TextButton.icon(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlocProvider(
+                  create: (context) => AddOrderCubit(),
+                  child: const AddOrderScreen(),
+                ),
+              ),
+            );
+          },
+          label:
+              const Text("CREATE ORDER", style: TextStyle(color: kTextColor)),
+          icon: const Icon(Icons.add, color: kTextColor),
+        )
+      ],
     );
   }
 }
@@ -245,41 +238,6 @@ class TotalOrders extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class TotalGain extends StatelessWidget {
-  final int totalGain;
-  const TotalGain({Key? key, required this.totalGain}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-        color: const Color.fromRGBO(22, 60, 98, 1),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "TOTAL GAIN",
-              style: TextStyle(
-                color: Color.fromRGBO(215, 215, 255, 1),
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            Text(
-                "${BlocProvider.of<OrderHomeCubit>(context).totalGain.toString()} PKR",
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 25,
-                  fontWeight: FontWeight.w600,
-                )),
           ],
         ),
       ),
@@ -338,98 +296,42 @@ class PendingOrders extends StatelessWidget {
   }
 }
 
-class EmptyRecords extends StatelessWidget {
-  final String message;
-  final IconData iconData;
-
-  const EmptyRecords({
-    Key? key,
-    required this.message,
-    required this.iconData,
-  }) : super(key: key);
+class TotalGain extends StatelessWidget {
+  final int totalGain;
+  const TotalGain({Key? key, required this.totalGain}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            iconData,
-            color: Colors.grey,
-            size: 65,
-          ),
-          Text(
-            message,
-            style: const TextStyle(color: Colors.grey, fontSize: 18),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class OrderNotFound extends StatelessWidget {
-  final String message;
-  final IconData iconData;
-
-  const OrderNotFound({
-    Key? key,
-    required this.message,
-    required this.iconData,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            iconData,
-            color: Colors.grey,
-            size: 65,
-          ),
-          Text(
-            message,
-            style: const TextStyle(color: Colors.grey, fontSize: 20),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-// user navigator button....
-class AddUserButtonPane extends StatelessWidget {
-  const AddUserButtonPane({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        TextButton.icon(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const AddOrderScreen(),
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        color: const Color.fromRGBO(22, 60, 98, 1),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "TOTAL GAIN",
+              style: TextStyle(
+                color: Color.fromRGBO(215, 215, 255, 1),
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
               ),
-            );
-          },
-          label:
-              const Text("CREATE ORDER", style: TextStyle(color: kTextColor)),
-          icon: const Icon(Icons.add, color: kTextColor),
-        )
-      ],
+            ),
+            Text(
+              "${BlocProvider.of<OrderHomeCubit>(context).totalGain.toString()} PKR",
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 25,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
 
-// TODO: refactor later DRY PRINCIPLE VIOLATION......
 class OrderCard extends StatelessWidget {
   const OrderCard({
     Key? key,
@@ -439,9 +341,11 @@ class OrderCard extends StatelessWidget {
     required this.createdDate,
     required this.index,
     required this.completedDate,
+    required this.status,
   }) : super(key: key);
   final String product, cost, username;
   final int index;
+  final bool status;
   final String createdDate, completedDate;
   @override
   Widget build(BuildContext context) {
@@ -461,7 +365,7 @@ class OrderCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(7),
               ),
               title: Text(
-                product,
+                product.toUpperCase(),
                 style: const TextStyle(
                   fontSize: 18,
                   letterSpacing: 1.3,
@@ -475,7 +379,7 @@ class OrderCard extends StatelessWidget {
                 children: [
                   const SizedBox(height: 5),
                   Text(
-                    cost,
+                    "RS. $cost",
                     style: const TextStyle(
                       fontSize: 17.5,
                       letterSpacing: 1,
@@ -484,56 +388,35 @@ class OrderCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 7),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        username,
-                        style: const TextStyle(
-                          fontSize: 10.5,
-                          letterSpacing: 1,
-                          color: Color.fromARGB(255, 218, 224, 236),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      // BlocProvider.of<OrderHomeCubit>(context)
-                      //             .orderListObject[index]
-                      //             .status ==
-                      //         false
-                      //     ? const OrderStatusIcon(
-                      //         iconData: Icons.check_circle_outline,
-                      //         color: Colors.lightGreenAccent)
-                      //     : const OrderStatusIcon(
-                      //         iconData: Icons.warning, color: Colors.redAccent)
-                      // BlocBuilder<OrderHomeCubit, OrderHomeState>(
-                      //   builder: (context, state) {
-                      //     if (state is OrderCompletedState) {
-                      //       return const OrderStatusIcon(
-                      //           iconData: Icons.check_circle_outline,
-                      //           color: Colors.lightGreenAccent);
-                      //     } else if (state is OrderNotCompletedState) {
-                      //       return const OrderStatusIcon(
-                      //           iconData: Icons.warning,
-                      //           color: Colors.redAccent);
-                      //     }
-                      //     return Container();
-                      //   },
-                      // ),
-                    ],
-                  ),
+                  if (status) ...[
+                    OrderStatusIcon(
+                      iconData: CupertinoIcons.exclamationmark_circle,
+                      color: Colors.yellow,
+                      data: username,
+                    ),
+                  ] else ...[
+                    OrderStatusIcon(
+                      iconData: Icons.check_circle_rounded,
+                      color: Colors.lightGreenAccent,
+                      data: username,
+                    ),
+                  ],
                 ],
               ),
               enabled: true,
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => OrderDetailScreen(
-                      username: username,
-                      product: product,
-                      cost: cost,
-                      createdDate: createdDate.toString(),
-                      completedDate: createdDate.toString(),
-                      index: index,
+                    builder: (context) => BlocProvider(
+                      create: (context) => OrderDetailCubit(),
+                      child: OrderDetailScreen(
+                        username: username,
+                        product: product,
+                        cost: cost,
+                        createdDate: createdDate.toString(),
+                        completedDate: createdDate.toString(),
+                        index: index,
+                      ),
                     ),
                   ),
                 );
@@ -549,17 +432,30 @@ class OrderCard extends StatelessWidget {
 class OrderStatusIcon extends StatelessWidget {
   final Color color;
   final IconData iconData;
+  final String data;
   const OrderStatusIcon({
     Key? key,
     required this.color,
     required this.iconData,
+    required this.data,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Icon(
-      iconData,
-      color: color,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          data,
+          style: const TextStyle(
+            fontSize: 10.5,
+            letterSpacing: 1,
+            color: Color.fromARGB(255, 218, 224, 236),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Icon(iconData, color: color),
+      ],
     );
   }
 }

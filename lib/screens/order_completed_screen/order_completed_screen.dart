@@ -1,43 +1,16 @@
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
-import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:khata/constants.dart';
-import 'package:khata/models/model/order_model.dart';
+import 'package:khata/screens/order_completed_screen/cubit/order_complete_cubit.dart';
 
 import 'package:khata/widgets/custom_app_bar.dart';
 import 'package:khata/widgets/custom_card.dart';
 import 'package:khata/widgets/custom_drawer.dart';
+import 'package:khata/widgets/empty_record.dart';
+import 'package:khata/widgets/neumorphic_tray_mixin.dart';
 
-class OrderCompletedScreen extends StatefulWidget {
+class OrderCompletedScreen extends StatelessWidget {
   const OrderCompletedScreen({Key? key}) : super(key: key);
-
-  @override
-  State<OrderCompletedScreen> createState() => _OrderPendingScreenState();
-}
-
-class _OrderPendingScreenState extends State<OrderCompletedScreen> {
-  static List<OrderModel?> completedOrderList = [];
-
-  int completedOrders = 0;
-  int totalCompletedOrders = 0;
-
-  _OrderPendingScreenState();
-
-  fetchAllData() {
-    completedOrderList.clear();
-    for (var i = 0; i < orderBox!.values.length; i++) {
-      if (orderBox!.getAt(i)!.status! == true) {
-        completedOrderList.add(orderBox!.getAt(i));
-        completedOrders = completedOrders + 1;
-        totalCompletedOrders = totalCompletedOrders + orderBox!.getAt(i)!.cost!;
-      }
-    }
-  }
-
-  @override
-  void initState() {
-    fetchAllData();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +36,10 @@ class _OrderPendingScreenState extends State<OrderCompletedScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          TotalCompletedOrder(completedOrder: completedOrders),
+                          TotalCompletedOrder(
+                              completedOrder:
+                                  BlocProvider.of<OrderCompleteCubit>(context)
+                                      .totalCompletedOrders),
                           const Text(
                             "COMPLETED",
                             style: TextStyle(
@@ -78,7 +54,9 @@ class _OrderPendingScreenState extends State<OrderCompletedScreen> {
                       Row(
                         children: [
                           TotalCompletedGain(
-                            totalCompletedOrders: totalCompletedOrders,
+                            totalCompletedOrders:
+                                BlocProvider.of<OrderCompleteCubit>(context)
+                                    .completedGainMoney,
                           ),
                         ],
                       ),
@@ -86,54 +64,48 @@ class _OrderPendingScreenState extends State<OrderCompletedScreen> {
                     ],
                   ),
                 ),
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.zero,
-                    margin: const EdgeInsets.only(top: 3),
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                      color: Color.fromARGB(255, 253, 253, 253),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.white,
-                          spreadRadius: 0.4,
-                          blurRadius: 1,
-                        ),
-                        BoxShadow(
-                          color: Color.fromARGB(255, 65, 65, 65),
-                          spreadRadius: 1.5,
-                          blurRadius: 4,
-                          offset: Offset(1, 4),
-                          inset: true,
-                        )
-                      ],
-                    ),
-                    child: completedOrderList.isEmpty
-                        ? const EmptyRecords()
-                        : ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: completedOrderList.length,
-                            itemBuilder: (_, index) {
-                              return CompletedOrderCard(
-                                product: completedOrderList[index]!
-                                    .productname!
-                                    .toUpperCase(),
-                                cost:
-                                    '${completedOrderList[index]!.cost.toString()} PKR',
-                                username: completedOrderList[index]!.username,
-                                index: index,
-                                createdDate:
-                                    completedOrderList[index]!.createdDate,
-                                completedDate:
-                                    completedOrderList[index]!.completedDate,
-                              );
-                            },
-                          ),
-                  ),
-                ),
+                const OrderCompletedListView(),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class OrderCompletedListView extends StatelessWidget with NeumorphicTray {
+  const OrderCompletedListView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.zero,
+        margin: const EdgeInsets.only(top: 3),
+        decoration: neumorphicTrayDecoration(),
+        child: BlocBuilder<OrderCompleteCubit, OrderCompleteState>(
+          builder: (context, state) {
+            if (state is OrderCompleteInitial) {
+              return EmptyRecordsWidget(
+                icon: state.iconData,
+                message: state.message,
+              );
+            } else if (state is CompletedOrdersState) {
+              return ListView.builder(
+                itemCount: state.orders.length,
+                shrinkWrap: true,
+                itemBuilder: (_, index) {
+                  return CompletedOrderCard(
+                    username: state.orders[index].username!,
+                    product: state.orders[index].productname!,
+                    cost: state.orders[index].cost.toString(),
+                  );
+                },
+              );
+            }
+            return const Center(child: CircularProgressIndicator());
+          },
         ),
       ),
     );
@@ -192,14 +164,15 @@ class TotalCompletedGain extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              "TOTAL COMPLETED",
+              "TOTAL GAIN",
               style: TextStyle(
                 color: Color.fromRGBO(215, 215, 255, 1),
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),
             ),
-            Text("${totalCompletedOrders.toString()} PKR",
+            Text(
+                "${BlocProvider.of<OrderCompleteCubit>(context).completedGainMoney.toString()} PKR",
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 25,
@@ -212,48 +185,14 @@ class TotalCompletedGain extends StatelessWidget {
   }
 }
 
-class EmptyRecords extends StatelessWidget {
-  const EmptyRecords({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          Icon(
-            Icons.list,
-            color: Colors.grey,
-            size: 65,
-          ),
-          Text(
-            "RECORD LIST IS EMPTY!",
-            style: TextStyle(color: Colors.grey, fontSize: 18),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-// TODO: refactor later DRY PRINCIPLE VIOLATION......
 class CompletedOrderCard extends StatelessWidget {
   const CompletedOrderCard({
     Key? key,
     required this.product,
     required this.cost,
     required this.username,
-    this.createdDate,
-    this.index,
-    this.completedDate,
-    this.completedOrders,
   }) : super(key: key);
-  final String? product, cost, username;
-  final int? index, completedOrders;
-  final DateTime? createdDate, completedDate;
+  final String product, cost, username;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -272,7 +211,7 @@ class CompletedOrderCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(7),
               ),
               title: Text(
-                product!,
+                product.toUpperCase(),
                 style: const TextStyle(
                   fontSize: 17,
                   letterSpacing: 1.3,
@@ -286,7 +225,7 @@ class CompletedOrderCard extends StatelessWidget {
                 children: [
                   const SizedBox(height: 5),
                   Text(
-                    cost!,
+                    "RS. $cost",
                     style: const TextStyle(
                       fontSize: 16,
                       letterSpacing: 1.2,
@@ -294,12 +233,11 @@ class CompletedOrderCard extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  // const SizedBox(height: 3),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        username!,
+                        username,
                         style: const TextStyle(
                           fontSize: 13,
                           letterSpacing: 1.1,

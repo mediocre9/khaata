@@ -8,6 +8,8 @@ part 'pending_order_state.dart';
 
 class PendingOrderCubit extends Cubit<PendingOrderState> {
   final List<OrderModel> pendingOrders = [];
+  final bool isOrderPending = true;
+
   PendingOrderCubit()
       : super(const PendingOrderInitial(
             message: "PENDING ORDER LIST IS EMPTY!", iconData: Icons.list)) {
@@ -19,7 +21,7 @@ class PendingOrderCubit extends Cubit<PendingOrderState> {
   get pendingMoney {
     int remainingMoney = 0;
     for (int i = 0; i < orderBox!.values.length; i++) {
-      if (orderBox!.getAt(i)!.status == true) {
+      if (orderBox!.getAt(i)!.status == isOrderPending) {
         remainingMoney = remainingMoney + orderBox!.getAt(i)!.cost!;
       }
     }
@@ -28,7 +30,7 @@ class PendingOrderCubit extends Cubit<PendingOrderState> {
 
   _loadPendingOrders() {
     for (int i = 0; i < orderBox!.values.length; i++) {
-      if (orderBox!.getAt(i)!.status == true) {
+      if (orderBox!.getAt(i)!.status == isOrderPending) {
         pendingOrders.add(orderBox!.getAt(i)!);
       }
     }

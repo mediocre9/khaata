@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:khata/constants.dart';
+import 'package:khata/screens/item_detail_screen/cubit/add_more_cubit.dart';
 import 'package:khata/widgets/custom_app_bar.dart';
 import 'package:khata/widgets/custom_card.dart';
 import 'package:khata/widgets/custom_drawer.dart';
@@ -8,13 +10,13 @@ import 'package:khata/widgets/custom_outlined_button.dart';
 class ItemDetailScreen extends StatelessWidget {
   final String itemName, cost, stock;
   final int index;
-  const ItemDetailScreen(
-      {Key? key,
-      this.itemName = "nil",
-      this.cost = "nil",
-      this.stock = 'nil',
-      this.index = 0})
-      : super(key: key);
+  const ItemDetailScreen({
+    Key? key,
+    this.itemName = "nil",
+    this.cost = "nil",
+    this.stock = 'nil',
+    this.index = 0,
+  }) : super(key: key);
 
   static final TextEditingController _stockController = TextEditingController();
 
@@ -55,7 +57,10 @@ class ItemDetailScreen extends StatelessWidget {
                         IconButton(
                           color: Colors.white60,
                           icon: const Icon(Icons.close_outlined),
-                          onPressed: () => Navigator.pop(context),
+                          onPressed: () {
+                            Navigator.pushNamedAndRemoveUntil(context,
+                                '/manageInventoryScreen', (route) => false);
+                          },
                         ),
                       ],
                     ),
@@ -83,7 +88,7 @@ class ItemDetailScreen extends StatelessWidget {
                       style: const TextStyle(color: Colors.white, fontSize: 13),
                     ),
                     Container(
-                      padding: const EdgeInsets.only(top: 40),
+                      padding: const EdgeInsets.only(top: 25),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -93,7 +98,7 @@ class ItemDetailScreen extends StatelessWidget {
                             onPressed: () {
                               showDialog(
                                 context: context,
-                                builder: (context) {
+                                builder: (_) {
                                   return AlertDialog(
                                     title: const Text("Add Stock"),
                                     content: TextField(
@@ -107,10 +112,11 @@ class ItemDetailScreen extends StatelessWidget {
                                     actions: [
                                       TextButton(
                                         onPressed: () {
-                                          var object = productBox!.getAt(index);
-                                          object!.initialStock = object
-                                                  .initialStock! +
-                                              int.parse(_stockController.text);
+                                          BlocProvider.of<AddMoreCubit>(context)
+                                              .addMore(
+                                            _stockController.text,
+                                            itemName,
+                                          );
                                           Navigator.pushReplacementNamed(
                                               context,
                                               '/manageInventoryScreen');

@@ -15,6 +15,13 @@ class ItemAddedState extends AddItemState {
   ItemAddedState(this.message, this.color);
 }
 
+class ItemAlreadyExist extends AddItemState {
+  final String message;
+  final Color color;
+
+  ItemAlreadyExist(this.message, this.color);
+}
+
 class ItemNotAddedState extends AddItemState {
   final String message;
   final Color color;

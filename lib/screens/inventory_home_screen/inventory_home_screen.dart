@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
-import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:khata/constants.dart';
 import 'package:khata/screens/add_item_screen/add_item_screen.dart';
 import 'package:khata/screens/add_item_screen/cubit/add_item_cubit.dart';
 import 'package:khata/screens/inventory_home_screen/cubit/inventory_home_cubit.dart';
+import 'package:khata/screens/item_detail_screen/cubit/add_more_cubit.dart';
 import 'package:khata/screens/item_detail_screen/item_detail_screen.dart';
 import 'package:khata/widgets/custom_app_bar.dart';
 import 'package:khata/widgets/custom_card.dart';
 import 'package:khata/widgets/custom_drawer.dart';
 import 'package:khata/widgets/custom_text_field.dart';
+import 'package:khata/widgets/data_not_found.dart';
+import 'package:khata/widgets/empty_record.dart';
+import 'package:khata/widgets/neumorphic_tray_mixin.dart';
 
 class InventoryHomeScreen extends StatelessWidget {
-  InventoryHomeScreen({Key? key}) : super(key: key);
-  final TextEditingController _search = TextEditingController();
+  const InventoryHomeScreen({Key? key}) : super(key: key);
+  static final TextEditingController _search = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -92,145 +95,6 @@ class InventoryHomeScreen extends StatelessWidget {
   }
 }
 
-class ProductListView extends StatelessWidget {
-  const ProductListView({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        padding: EdgeInsets.zero,
-        margin: const EdgeInsets.only(top: 30),
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-          color: Color.fromARGB(255, 253, 253, 253),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.white,
-              spreadRadius: 0.4,
-              blurRadius: 1,
-            ),
-            BoxShadow(
-              color: Color.fromARGB(255, 65, 65, 65),
-              spreadRadius: 1.5,
-              blurRadius: 4,
-              offset: Offset(1, 4),
-              inset: true,
-            )
-          ],
-        ),
-        child: BlocBuilder<InventoryHomeCubit, InventoryHomeState>(
-          builder: (context, state) {
-            if (state is InventoryInititalState) {
-              return EmptyRecordsWidget(
-                icon: Icons.list,
-                message: state.message,
-              );
-            } else if (state is LoadInventoryDataState) {
-              var product = state.products;
-              var length = state.products.length;
-              return ListView.builder(
-                shrinkWrap: true,
-                itemCount: length,
-                itemBuilder: (context, index) {
-                  return ProductCardWidget(
-                    itemName: product[index].name!.toUpperCase(),
-                    cost: product[index].cost.toString(),
-                    stock: product[index].initialStock.toString().toUpperCase(),
-                    index: index,
-                  );
-                },
-              );
-            } else if (state is ProductFoundState) {
-              return ListView.builder(
-                shrinkWrap: true,
-                itemCount: state.products.length,
-                itemBuilder: (context, index) {
-                  return ProductCardWidget(
-                    itemName: state.products[index].name!.toUpperCase(),
-                    cost: state.products[index].cost.toString(),
-                    stock: state.products[index].initialStock
-                        .toString()
-                        .toUpperCase(),
-                    index: index,
-                  );
-                },
-              );
-            } else if (state is ProductNotFoundState) {
-              return ProductNotFoundWidget(message: state.message);
-            }
-            return const Center(child: CircularProgressIndicator());
-          },
-        ),
-      ),
-    );
-  }
-}
-
-class ProductNotFoundWidget extends StatelessWidget {
-  const ProductNotFoundWidget({
-    Key? key,
-    required this.message,
-  }) : super(key: key);
-
-  final String message;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            Icons.search_off_rounded,
-            color: Colors.grey,
-            size: 65,
-          ),
-          Text(
-            message,
-            style: const TextStyle(color: Colors.grey, fontSize: 20),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class EmptyRecordsWidget extends StatelessWidget {
-  const EmptyRecordsWidget({
-    Key? key,
-    required this.icon,
-    required this.message,
-  }) : super(key: key);
-
-  final IconData icon;
-  final String message;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            color: Colors.grey,
-            size: 65,
-          ),
-          Text(
-            message,
-            style: const TextStyle(color: Colors.grey, fontSize: 18),
-          )
-        ],
-      ),
-    );
-  }
-}
-
 class ProductCardWidget extends StatelessWidget {
   const ProductCardWidget({
     Key? key,
@@ -238,8 +102,10 @@ class ProductCardWidget extends StatelessWidget {
     required this.cost,
     required this.stock,
     required this.index,
+    this.isItemInStock,
   }) : super(key: key);
   final String itemName, cost, stock;
+  final bool? isItemInStock;
   final int index;
   @override
   Widget build(BuildContext context) {
@@ -273,7 +139,7 @@ class ProductCardWidget extends StatelessWidget {
                 children: [
                   const SizedBox(height: 5),
                   Text(
-                    cost,
+                    "RS. $cost",
                     style: const TextStyle(
                       fontSize: 17.5,
                       letterSpacing: 1,
@@ -282,78 +148,52 @@ class ProductCardWidget extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 7),
-                  // BlocProvider.of<InventoryHomeCubit>(context).stockStatus(index),
-                  BlocBuilder<InventoryHomeCubit, InventoryHomeState>(
-                    builder: (context, state) {
-                      if (state is ProductInStockState) {
-                        return Text(
-                          state.message,
-                          style: const TextStyle(
+                  if (isItemInStock!) ...[
+                    Text(
+                      "STOCK : $stock",
+                      style: const TextStyle(
+                        fontSize: 10.5,
+                        letterSpacing: 1,
+                        color: Color.fromARGB(255, 218, 224, 236),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  ] else ...[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: const [
+                        Text(
+                          "OUT OF STOCK",
+                          style: TextStyle(
                             fontSize: 10.5,
                             letterSpacing: 1,
                             color: Color.fromARGB(255, 218, 224, 236),
                             fontWeight: FontWeight.bold,
                           ),
-                        );
-                      } else if (state is ProductOutOfStockState) {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              state.message,
-                              style: const TextStyle(
-                                fontSize: 10.5,
-                                letterSpacing: 1,
-                                color: Color.fromARGB(255, 218, 224, 236),
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Icon(state.iconData, color: state.color),
-                          ],
-                        );
-                      }
-                      return Container();
-                    },
-                  )
-                  // stock! != "OUT OF STOCK"
-                  //     ? Text(
-                  //         stock!,
-                  //         style: const TextStyle(
-                  //           fontSize: 10.5,
-                  //           letterSpacing: 1,
-                  //           color: Color.fromARGB(255, 218, 224, 236),
-                  //           fontWeight: FontWeight.bold,
-                  //         ),
-                  //       )
-                  //     : Row(
-                  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //         children: [
-                  //           Text(
-                  //             stock!,
-                  //             style: const TextStyle(
-                  //               fontSize: 10.5,
-                  //               letterSpacing: 1,
-                  //               color: Color.fromARGB(255, 218, 224, 236),
-                  //               fontWeight: FontWeight.bold,
-                  //             ),
-                  //           ),
-                  //           const Icon(Icons.warning_amber_outlined,
-                  //               color: Colors.redAccent),
-                  //         ],
-                  //       ),
+                        ),
+                        Icon(Icons.warning_amber_outlined,
+                            color: Colors.redAccent),
+                      ],
+                    ),
+                  ]
                 ],
               ),
               enabled: true,
               onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => ItemDetailScreen(
-                        itemName: itemName,
-                        cost: cost,
-                        stock: stock,
-                        index: index),
-                  ),
-                );
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BlocProvider(
+                        create: (context) => AddMoreCubit(),
+                        child: ItemDetailScreen(
+                          itemName: itemName,
+                          cost: cost,
+                          stock: stock,
+                          index: index,
+                        ),
+                      ),
+                    ),
+                    (route) => false);
               },
             ),
           ],
@@ -362,3 +202,72 @@ class ProductCardWidget extends StatelessWidget {
     );
   }
 }
+
+class ProductListView extends StatelessWidget with NeumorphicTray{
+  const ProductListView({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.zero,
+        margin: const EdgeInsets.only(top: 30),
+        decoration: neumorphicTrayDecoration(),
+        child: BlocBuilder<InventoryHomeCubit, InventoryHomeState>(
+          builder: (context, state) {
+            if (state is InventoryInititalState) {
+              return EmptyRecordsWidget(
+                icon: Icons.list,
+                message: state.message,
+              );
+            } else if (state is LoadInventoryDataState) {
+              var product = state.products;
+              var length = state.products.length;
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: length,
+                itemBuilder: (_, index) {
+                  return ProductCardWidget(
+                    itemName: product[index].name!.toUpperCase(),
+                    cost: product[index].cost.toString(),
+                    stock: product[index].initialStock.toString().toUpperCase(),
+                    index: index,
+                    isItemInStock: BlocProvider.of<InventoryHomeCubit>(context)
+                        .getStockStatus(index),
+                  );
+                },
+              );
+            } else if (state is ProductFoundState) {
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: state.products.length,
+                itemBuilder: (_, index) {
+                  return ProductCardWidget(
+                    itemName: state.products[index].name!.toUpperCase(),
+                    cost: state.products[index].cost.toString(),
+                    stock: state.products[index].initialStock
+                        .toString()
+                        .toUpperCase(),
+                    index: index,
+                    isItemInStock: BlocProvider.of<InventoryHomeCubit>(context)
+                        .getStockStatus(index),
+                  );
+                },
+              );
+            } else if (state is ProductNotFoundState) {
+              return DataNotFoundWidget(message: state.message);
+            }
+            return const Center(child: CircularProgressIndicator());
+          },
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
+

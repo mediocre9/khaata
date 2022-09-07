@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:khata/screens/order_pending_screen/cubit/pending_order_cubit.dart';
 import 'package:khata/screens/user_home_screen/user_home_exports.dart';
+import 'package:khata/widgets/empty_record.dart';
+import 'package:khata/widgets/neumorphic_tray_mixin.dart';
 
 class OrderPendingScreen extends StatelessWidget {
   const OrderPendingScreen({Key? key}) : super(key: key);
@@ -52,56 +54,48 @@ class OrderPendingScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.zero,
-                    margin: const EdgeInsets.only(top: 5),
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                      color: Color.fromARGB(255, 253, 253, 253),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.white,
-                          spreadRadius: 0.4,
-                          blurRadius: 1,
-                        ),
-                        BoxShadow(
-                          color: Color.fromARGB(255, 65, 65, 65),
-                          spreadRadius: 1.5,
-                          blurRadius: 4,
-                          offset: Offset(1, 4),
-                          inset: true,
-                        )
-                      ],
-                    ),
-                    child: BlocBuilder<PendingOrderCubit, PendingOrderState>(
-                      builder: (context, state) {
-                        if (state is PendingOrderInitial) {
-                          return EmptyRecords(
-                            message: state.message,
-                            iconData: state.iconData,
-                          );
-                        } else if (state is PendingOrderStateCard) {
-                          return ListView.builder(
-                            itemCount: state.orders.length,
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              return PendingOrderCard(
-                                product: state.orders[index].productname!,
-                                cost: state.orders[index].cost.toString(),
-                                username: state.orders[index].username!,
-                              );
-                            },
-                          );
-                        }
-                        return Container();
-                      },
-                    ),
-                  ),
-                ),
+                const PendingOrderListView(),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class PendingOrderListView extends StatelessWidget with NeumorphicTray {
+  const PendingOrderListView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.zero,
+        margin: const EdgeInsets.only(top: 5),
+        decoration: neumorphicTrayDecoration(),
+        child: BlocBuilder<PendingOrderCubit, PendingOrderState>(
+          builder: (context, state) {
+            if (state is PendingOrderInitial) {
+              return EmptyRecordsWidget(
+                message: state.message,
+                icon: state.iconData,
+              );
+            } else if (state is PendingOrderStateCard) {
+              return ListView.builder(
+                itemCount: state.orders.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return PendingOrderCard(
+                    product: state.orders[index].productname!,
+                    cost: state.orders[index].cost.toString(),
+                    username: state.orders[index].username!,
+                  );
+                },
+              );
+            }
+            return Container();
+          },
         ),
       ),
     );
@@ -170,39 +164,15 @@ class TotalPendingGain extends StatelessWidget {
               ),
             ),
             Text(
-                "${BlocProvider.of<PendingOrderCubit>(context).pendingMoney.toString().toString()} PKR",
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 25,
-                  fontWeight: FontWeight.w600,
-                )),
+              "${BlocProvider.of<PendingOrderCubit>(context).pendingMoney.toString()} PKR",
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 25,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class EmptyRecords extends StatelessWidget {
-  final String message;
-  final IconData iconData;
-
-  const EmptyRecords({Key? key, required this.message, required this.iconData})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(iconData, color: Colors.grey, size: 55),
-          Text(
-            message,
-            style: const TextStyle(color: Colors.grey, fontSize: 15),
-          )
-        ],
       ),
     );
   }
@@ -235,7 +205,7 @@ class PendingOrderCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(7),
               ),
               title: Text(
-                product,
+                product.toUpperCase(),
                 style: const TextStyle(
                   fontSize: 17,
                   letterSpacing: 1.3,
@@ -249,7 +219,7 @@ class PendingOrderCard extends StatelessWidget {
                 children: [
                   const SizedBox(height: 5),
                   Text(
-                    cost,
+                    "RS. $cost",
                     style: const TextStyle(
                       fontSize: 16,
                       letterSpacing: 1.2,

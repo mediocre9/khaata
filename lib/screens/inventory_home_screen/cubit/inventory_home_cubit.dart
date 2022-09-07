@@ -5,22 +5,19 @@ part 'inventory_home_state.dart';
 
 class InventoryHomeCubit extends Cubit<InventoryHomeState> {
   final List<ProductModel> _products = [];
+  List<ProductModel> _searchedProducts = [];
   InventoryHomeCubit() : super(InventoryInititalState(message: "EMPTY LIST")) {
+    _searchedProducts = _products;
     _loadInventory();
   }
 
-  stockStatus(int index) {
-    if (productBox!.getAt(index)!.initialStock == 0) {
-      emit(
-        ProductOutOfStockState(
-          "OUT OF STOCK",
-          Icons.warning_amber_outlined,
-          Colors.redAccent,
-        ),
-      );
-    } else {
-      emit(ProductInStockState(productBox!.getAt(index)!.initialStock.toString()));
+  getStockStatus(int index) {
+    bool isProductInStock = _searchedProducts[index].initialStock! > 0;
+
+    if (isProductInStock) {
+      return true;
     }
+    return false;
   }
 
   void _loadInventory() {
@@ -36,13 +33,13 @@ class InventoryHomeCubit extends Cubit<InventoryHomeState> {
   }
 
   searchProduct(String search) {
-    List<ProductModel> searchedProducts = _products
+    _searchedProducts = _products
         .where((product) =>
             product.name!.toLowerCase().startsWith(search.toLowerCase()))
         .toList();
 
-    if (searchedProducts.isNotEmpty) {
-      emit(ProductFoundState(products: searchedProducts));
+    if (_searchedProducts.isNotEmpty) {
+      emit(ProductFoundState(products: _searchedProducts));
     } else {
       emit(const ProductNotFoundState(message: "PRODUCT NOT FOUND!"));
     }

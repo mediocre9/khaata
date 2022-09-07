@@ -22,7 +22,7 @@ class AddItemScreen extends StatelessWidget {
           horizontalMargin: 30,
           elevationLevel: 5,
           borderRadius: 5,
-          height: 410,
+          height: 400,
           width: double.maxFinite,
           child: Column(
             children: [
@@ -94,6 +94,13 @@ class SaveItemData extends StatelessWidget {
                 state.color,
               ),
             );
+          } else if (state is ItemAlreadyExist) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              _showSnackBar(
+                state.message,
+                state.color,
+              ),
+            );
           }
         },
         child: Column(
@@ -155,7 +162,7 @@ class SaveItemData extends StatelessWidget {
 
             // separation
             Padding(
-              padding: const EdgeInsets.only(top: 5, left: 5, right: 5),
+              padding: const EdgeInsets.only(top: 1, left: 5, right: 5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
