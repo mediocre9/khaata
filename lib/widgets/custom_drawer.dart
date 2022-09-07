@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:khata/constants.dart';
-import 'package:khata/routes/route_generator.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({Key? key}) : super(key: key);
@@ -8,6 +7,7 @@ class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      width: 263,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 5),
         decoration: const BoxDecoration(
@@ -60,7 +60,7 @@ class CustomDrawerHeader extends StatelessWidget {
                 label: const Text("HOME",
                     style: TextStyle(color: kDrawerItemColor)),
                 onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                    context, Routes.kManageUserScreen, (route) => false)),
+                    context, '/manageUserScreen', (route) => false)),
           ),
         ],
       ),
@@ -106,17 +106,18 @@ class CustomDrawerItems extends StatelessWidget {
               onTap: () {
                 switch (drawerItems[index].toUpperCase()) {
                   case 'INVENTORY':
-                    Navigator.pushReplacementNamed(context, '/manageInventoryScreen');
+                    Navigator.pushReplacementNamed(
+                        context, '/manageInventoryScreen');
                     break;
 
                   case 'USERS':
                     Navigator.pushNamedAndRemoveUntil(
-                        context, Routes.kManageUserScreen, (route) => false);
+                        context, '/manageUserScreen', (route) => false);
                     break;
 
                   case 'FINANCE':
                     Navigator.pushNamedAndRemoveUntil(
-                        context, Routes.kManageFinanceScreen, (route) => false);
+                        context,'/manageUserScreen', (route) => false);
                     break;
 
                   case 'ABOUT':
@@ -159,7 +160,8 @@ class DrawerSubItems extends StatelessWidget {
                 onTap: () {
                   switch (subItems[index].toUpperCase()) {
                     case 'MANAGE':
-                      Navigator.pushReplacementNamed(context, '/manageOrderScreen');
+                      Navigator.pushReplacementNamed(
+                          context, '/manageOrderScreen');
                       break;
                     case 'PENDING':
                       Navigator.pushReplacementNamed(context, '/pendingScreen');
@@ -167,7 +169,7 @@ class DrawerSubItems extends StatelessWidget {
 
                     case 'COMPLETED':
                       Navigator.pushNamedAndRemoveUntil(
-                          context, Routes.kCompletedScreen, (route) => false);
+                          context, '/completedScreen', (route) => false);
                       break;
                   }
                 },

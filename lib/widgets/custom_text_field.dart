@@ -16,6 +16,7 @@ class CustomTextField extends StatelessWidget {
     this.isFilled,
     this.maxLength,
     this.counterStyle,
+    this.focusNode,
   })  : assert(contentPadding != null),
         super(key: key);
 
@@ -30,6 +31,7 @@ class CustomTextField extends StatelessWidget {
   final TextInputType? inputType;
   final InputBorder? borderStyle;
   final TextEditingController? controller;
+  final FocusNode? focusNode;
   final int? maxLength;
   final void Function(String) onChanged;
 
@@ -41,6 +43,7 @@ class CustomTextField extends StatelessWidget {
       onChanged: onChanged,
       // autocorrect: true,
       // enableSuggestions: true,
+      focusNode: focusNode,
       keyboardType: inputType ?? TextInputType.text,
       controller: controller,
       maxLength: maxLength,
