@@ -28,7 +28,7 @@
 
 
 ## 2. **Build Preview:**
-![](preview/order_screen.png?raw=true)
+![](preview/order_screen.png?raw=true "manage-order-screen")
 
 ## 3. **Project Structure and Guidelines:**
 - `snake-case` naming convention for files and folder **e.g** `sub-screen`.
