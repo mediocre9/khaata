@@ -29,6 +29,7 @@
 
 ## 2. **Build Preview:**
 ![](preview/order_screen.png?raw=true "manage-order-screen")
+<br/>
 ![](preview/inventory_screen.png?raw=true "manage-inventory-screen")
 
 ## 3. **Project Structure and Guidelines:**
