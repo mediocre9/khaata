@@ -34,7 +34,7 @@
 ![](preview/inventory_screen.png?raw=true "manage-inventory-screen")
 
 ## 3. **Project Structure and Guidelines:**
-- `snake-case` naming convention for files and folder **e.g** `sub-screen`.
+- `snake_case` naming convention for files and folder **e.g** `sub_screen`.
 - **camelCase** `kConstantValue` for constant values.
 - `camelCase` for variables naming convention.
 - According to google docs, prefer **classes** over **methods** for widget separation and for better widget tree optimization.
