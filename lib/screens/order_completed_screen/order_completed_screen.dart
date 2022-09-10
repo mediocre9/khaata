@@ -1,149 +1,97 @@
-import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
-import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
-import 'package:khata/constants.dart';
-import 'package:khata/models/model/order_model.dart';
+import 'package:flutter/gestures.dart';
+import 'package:khata/screens/order_completed_screen/cubit/order_complete_cubit.dart';
+import 'package:khata/screens/user_home_screen/user_home_exports.dart';
 
-import 'package:khata/widgets/custom_app_bar.dart';
-import 'package:khata/widgets/custom_card.dart';
-import 'package:khata/widgets/custom_drawer.dart';
-
-class OrderCompletedScreen extends StatefulWidget {
+class OrderCompletedScreen extends StatelessWidget {
   const OrderCompletedScreen({Key? key}) : super(key: key);
 
   @override
-  State<OrderCompletedScreen> createState() => _OrderPendingScreenState();
-}
-
-class _OrderPendingScreenState extends State<OrderCompletedScreen> {
-  static List<OrderModel?> completedOrderList = [];
-
-  int completedOrders = 0;
-  int totalCompletedOrders = 0;
-
-  _OrderPendingScreenState();
-
-  fetchAllData() {
-    completedOrderList.clear();
-    for (var i = 0; i < orderBox!.values.length; i++) {
-      if (orderBox!.getAt(i)!.status! == true) {
-        completedOrderList.add(orderBox!.getAt(i));
-        completedOrders = completedOrders + 1;
-        totalCompletedOrders = totalCompletedOrders + orderBox!.getAt(i)!.cost!;
-      }
-    }
-  }
-
-  @override
-  void initState() {
-    fetchAllData();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        // resizeToAvoidBottomInset: false,
-        appBar: CustomAppBar(
-            title: "COMPLETED", titleFontSize: 23, subTitle: "ORDERS"),
-        endDrawer: const CustomDrawer(),
-        body: SafeArea(
-          child: Container(
-            color: kScaffoldColor,
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          TotalCompletedOrder(completedOrder: completedOrders),
-                          const Text(
-                            "COMPLETED",
-                            style: TextStyle(
-                              color: Color.fromRGBO(58, 52, 98, 1),
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 1,
-                            ),
-                          ),
-                        ],
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      appBar: CustomAppBar(title: "COMPLETED", subTitle: "ORDERS"),
+      endDrawer: const CustomDrawer(),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [
+                      TotalCompletedOrder(),
+                      Text(
+                        "COMPLETED",
+                        style: TextStyle(
+                          color: Color.fromRGBO(58, 52, 98, 1),
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 1,
+                        ),
                       ),
-                      Row(
-                        children: [
-                          TotalCompletedGain(
-                            totalCompletedOrders: totalCompletedOrders,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
                     ],
                   ),
-                ),
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.zero,
-                    margin: const EdgeInsets.only(top: 3),
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                      color: Color.fromARGB(255, 253, 253, 253),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.white,
-                          spreadRadius: 0.4,
-                          blurRadius: 1,
-                        ),
-                        BoxShadow(
-                          color: Color.fromARGB(255, 65, 65, 65),
-                          spreadRadius: 1.5,
-                          blurRadius: 4,
-                          offset: Offset(1, 4),
-                          inset: true,
-                        )
-                      ],
-                    ),
-                    child: completedOrderList.isEmpty
-                        ? const EmptyRecords()
-                        : ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: completedOrderList.length,
-                            itemBuilder: (_, index) {
-                              return CompletedOrderCard(
-                                product: completedOrderList[index]!
-                                    .productname!
-                                    .toUpperCase(),
-                                cost:
-                                    '${completedOrderList[index]!.cost.toString()} PKR',
-                                username: completedOrderList[index]!.username,
-                                index: index,
-                                createdDate:
-                                    completedOrderList[index]!.createdDate,
-                                completedDate:
-                                    completedOrderList[index]!.completedDate,
-                              );
-                            },
-                          ),
-                  ),
-                ),
-              ],
+                  const TotalCompletedGain(),
+                  const SizedBox(height: 10),
+                ],
+              ),
             ),
-          ),
+            const NeumorphicContainer(cubitStateManager: CompletedOrderInterfaceStateManager())
+          ],
         ),
       ),
     );
   }
 }
 
+class CompletedOrderInterfaceStateManager extends StatelessWidget {
+  const CompletedOrderInterfaceStateManager({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<OrderCompleteCubit, OrderCompleteState>(
+      builder: (context, state) {
+        if (state is OrderCompleteInitial) {
+          return EmptyRecordsWidget(
+            icon: state.iconData,
+            message: state.message,
+          );
+        } else if (state is CompletedOrdersState) {
+          return ScrollConfiguration(
+            behavior: ScrollConfiguration.of(context).copyWith(
+              dragDevices: {
+                PointerDeviceKind.touch,
+                PointerDeviceKind.mouse,
+              },
+            ),
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: state.orders.length,
+              physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+              itemBuilder: (_, index) {
+                return CompletedOrderCard(
+                  username: state.orders[index].username!,
+                  product: state.orders[index].productname!,
+                  cost: state.orders[index].cost.toString(),
+                );
+              },
+            ),
+          );
+        }
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
+  }
+}
+
 class TotalCompletedOrder extends StatelessWidget {
-  final int completedOrder;
-  const TotalCompletedOrder({Key? key, required this.completedOrder})
-      : super(key: key);
+  const TotalCompletedOrder({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -153,9 +101,10 @@ class TotalCompletedOrder extends StatelessWidget {
         borderRadius: 0,
         height: 100,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              completedOrder.toString(),
+              BlocProvider.of<OrderCompleteCubit>(context).totalCompletedOrders.toString(),
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 30,
@@ -178,146 +127,87 @@ class TotalCompletedOrder extends StatelessWidget {
 }
 
 class TotalCompletedGain extends StatelessWidget {
-  final int totalCompletedOrders;
-  const TotalCompletedGain({Key? key, required this.totalCompletedOrders})
-      : super(key: key);
+  const TotalCompletedGain({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
-        color: const Color.fromRGBO(22, 60, 98, 1),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "TOTAL COMPLETED",
-              style: TextStyle(
-                color: Color.fromRGBO(215, 215, 255, 1),
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-              ),
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
+            color: const Color.fromRGBO(22, 60, 98, 1),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "TOTAL GAIN",
+                  style: TextStyle(
+                    color: Color.fromRGBO(215, 215, 255, 1),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text("${BlocProvider.of<OrderCompleteCubit>(context).completedGainMoney.toString()} PKR",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 25,
+                      fontWeight: FontWeight.w600,
+                    )),
+              ],
             ),
-            Text("${totalCompletedOrders.toString()} PKR",
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 25,
-                  fontWeight: FontWeight.w600,
-                )),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class EmptyRecords extends StatelessWidget {
-  const EmptyRecords({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          Icon(
-            Icons.list,
-            color: Colors.grey,
-            size: 65,
           ),
-          Text(
-            "RECORD LIST IS EMPTY!",
-            style: TextStyle(color: Colors.grey, fontSize: 18),
-          )
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
 
-// TODO: refactor later DRY PRINCIPLE VIOLATION......
-class CompletedOrderCard extends StatelessWidget {
+class CompletedOrderCard extends StatelessWidget with GradientBoxDecoration {
   const CompletedOrderCard({
     Key? key,
     required this.product,
     required this.cost,
     required this.username,
-    this.createdDate,
-    this.index,
-    this.completedDate,
-    this.completedOrders,
   }) : super(key: key);
-  final String? product, cost, username;
-  final int? index, completedOrders;
-  final DateTime? createdDate, completedDate;
+  final String product, cost, username;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 1),
-      child: CustomCard(
-        horizontalMargin: 15,
-        borderRadius: 7,
-        shadow: false,
-        width: double.maxFinite,
-        height: 110,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ListTile(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(7),
-              ),
-              title: Text(
-                product!,
-                style: const TextStyle(
-                  fontSize: 17,
-                  letterSpacing: 1.3,
-                  color: Color.fromARGB(255, 218, 224, 236),
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              dense: true,
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 5),
-                  Text(
-                    cost!,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      letterSpacing: 1.2,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+    return Card(
+      child: Container(
+        decoration: gradientDecoration(),
+        child: ListTile(
+          title: Text(
+            product.toUpperCase(),
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 5),
+              Text(
+                "RS. $cost",
+                style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                      color: const Color.fromARGB(255, 218, 224, 236),
                     ),
-                  ),
-                  // const SizedBox(height: 3),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        username!,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          letterSpacing: 1.1,
-                          color: Color.fromARGB(255, 218, 224, 236),
-                          fontWeight: FontWeight.bold,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    username,
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                          color: const Color.fromARGB(255, 218, 224, 236),
                         ),
-                      ),
-                      const Icon(
-                        Icons.check_circle_rounded,
-                        color: Colors.lightGreenAccent,
-                      )
-                    ],
                   ),
+                  const Icon(
+                    Icons.check_circle_rounded,
+                    color: Colors.lightGreenAccent,
+                  )
                 ],
               ),
-              enabled: true,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

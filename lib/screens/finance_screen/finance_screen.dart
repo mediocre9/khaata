@@ -37,7 +37,7 @@ class _FinanceScreenState extends State<FinanceScreen> {
       child: Scaffold(
         // resizeToAvoidBottomInset: false,
         appBar: CustomAppBar(
-            title: "MANAGE", titleFontSize: 23, subTitle: "FINANCE"),
+            title: "MANAGE",  subTitle: "FINANCE"),
         endDrawer: const CustomDrawer(),
         body: SafeArea(
           child: Container(

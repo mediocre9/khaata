@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:khata/constants.dart';
-import 'package:khata/routes/route_generator.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({Key? key}) : super(key: key);
@@ -8,6 +7,7 @@ class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      width: 250,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 5),
         decoration: const BoxDecoration(
@@ -19,9 +19,9 @@ class CustomDrawer extends StatelessWidget {
         ),
         child: Column(
           children: const [
-            DrawerHeader(),
-            DrawerItems(),
-            DrawerFooter(),
+            CustomDrawerHeader(),
+            CustomDrawerItems(),
+            CustomDrawerFooter(),
           ],
         ),
       ),
@@ -29,8 +29,8 @@ class CustomDrawer extends StatelessWidget {
   }
 }
 
-class DrawerHeader extends StatelessWidget {
-  const DrawerHeader({Key? key}) : super(key: key);
+class CustomDrawerHeader extends StatelessWidget {
+  const CustomDrawerHeader({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -55,12 +55,10 @@ class DrawerHeader extends StatelessWidget {
             ),
             iconColor: kDrawerItemColor,
             leading: TextButton.icon(
-                icon: const Icon(Icons.home_sharp,
-                    color: kDrawerItemColor, size: 30),
-                label: const Text("HOME",
-                    style: TextStyle(color: kDrawerItemColor)),
-                onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                    context, Routes.kManageUserScreen, (route) => false)),
+              icon: const Icon(Icons.home_sharp, color: kDrawerItemColor, size: 30),
+              label: const Text("HOME", style: TextStyle(color: kDrawerItemColor)),
+              onPressed: () => Navigator.pushNamedAndRemoveUntil(context, '/manageUserScreen', (route) => false),
+            ),
           ),
         ],
       ),
@@ -68,14 +66,13 @@ class DrawerHeader extends StatelessWidget {
   }
 }
 
-class DrawerItems extends StatelessWidget {
-  const DrawerItems({Key? key}) : super(key: key);
+class CustomDrawerItems extends StatelessWidget {
+  const CustomDrawerItems({Key? key}) : super(key: key);
   static List<String> drawerItems = [
-    "ORDERS",
+    "Order",
     "Inventory",
     "Users",
     "Finance",
-    // "Settings",
     "About",
   ];
 
@@ -90,9 +87,13 @@ class DrawerItems extends StatelessWidget {
             collapsedIconColor: kDrawerItemColor,
             collapsedTextColor: kDrawerItemColor,
             initiallyExpanded: true,
-            title: Text(drawerItems[0].toUpperCase(),
-                style: const TextStyle(fontSize: kDrawerItemFontSize)),
-            children: const [DrawerSubItems()],
+            title: Text(
+              drawerItems[0].toUpperCase(),
+              style: const TextStyle(fontSize: kDrawerItemFontSize),
+            ),
+            children: const [
+              DrawerSubItems(),
+            ],
           );
         }
         return Material(
@@ -101,23 +102,22 @@ class DrawerItems extends StatelessWidget {
             splashColor: kDrawerSplashColor,
             child: ListTile(
               textColor: kDrawerItemColor,
-              title: Text(drawerItems[index].toUpperCase(),
-                  style: const TextStyle(fontSize: kDrawerItemFontSize)),
+              title: Text(
+                drawerItems[index].toUpperCase(),
+                style: const TextStyle(fontSize: kDrawerItemFontSize),
+              ),
               onTap: () {
                 switch (drawerItems[index].toUpperCase()) {
                   case 'INVENTORY':
-                    Navigator.pushNamedAndRemoveUntil(context,
-                        Routes.kManageInventoryScreen, (route) => false);
+                    Navigator.pushReplacementNamed(context, '/manageInventoryScreen');
                     break;
 
                   case 'USERS':
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, Routes.kManageUserScreen, (route) => false);
+                    Navigator.pushNamedAndRemoveUntil(context, '/manageUserScreen', (route) => false);
                     break;
 
                   case 'FINANCE':
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, Routes.kManageFinanceScreen, (route) => false);
+                    Navigator.pushNamedAndRemoveUntil(context, '/manageFinanceScreen', (route) => false);
                     break;
 
                   case 'ABOUT':
@@ -142,8 +142,7 @@ class DrawerSubItems extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(left: 40),
-      decoration: const BoxDecoration(
-          border: Border(left: BorderSide(width: 2, color: kDrawerItemColor))),
+      decoration: const BoxDecoration(border: Border(left: BorderSide(width: 2, color: kDrawerItemColor))),
       child: ListView.builder(
         itemCount: subItems.length,
         shrinkWrap: true,
@@ -154,23 +153,22 @@ class DrawerSubItems extends StatelessWidget {
               splashColor: const Color.fromRGBO(215, 216, 255, 1.0),
               child: ListTile(
                 visualDensity: const VisualDensity(vertical: -4),
-                title: Text(subItems[index],
-                    style: const TextStyle(fontSize: kDrawerSubItemFontSize)),
+                title: Text(
+                  subItems[index],
+                  style: const TextStyle(fontSize: kDrawerSubItemFontSize),
+                ),
                 textColor: kDrawerItemColor,
                 onTap: () {
                   switch (subItems[index].toUpperCase()) {
                     case 'MANAGE':
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, Routes.kManageOrderScreen, (route) => false);
+                      Navigator.pushReplacementNamed(context, '/manageOrderScreen');
                       break;
                     case 'PENDING':
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, Routes.kPendingScreen, (route) => false);
+                      Navigator.pushReplacementNamed(context, '/pendingScreen');
                       break;
 
                     case 'COMPLETED':
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, Routes.kCompletedScreen, (route) => false);
+                      Navigator.pushNamedAndRemoveUntil(context, '/completedScreen', (route) => false);
                       break;
                   }
                 },
@@ -183,8 +181,8 @@ class DrawerSubItems extends StatelessWidget {
   }
 }
 
-class DrawerFooter extends StatelessWidget {
-  const DrawerFooter({Key? key}) : super(key: key);
+class CustomDrawerFooter extends StatelessWidget {
+  const CustomDrawerFooter({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

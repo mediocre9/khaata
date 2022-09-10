@@ -1,203 +1,176 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:khata/constants.dart';
-import 'package:khata/screens/inventory_screen/inventory_screen.dart';
+import 'package:khata/screens/item_detail_screen/cubit/add_more_cubit.dart';
 import 'package:khata/widgets/custom_app_bar.dart';
 import 'package:khata/widgets/custom_card.dart';
 import 'package:khata/widgets/custom_drawer.dart';
 import 'package:khata/widgets/custom_outlined_button.dart';
 
-class ItemDetailScreen extends StatefulWidget {
-  const ItemDetailScreen(
-      {Key? key, this.itemName, this.cost, this.stock, this.index})
-      : super(key: key);
-  final String? itemName, cost, stock;
-  final int? index;
+class ItemDetailScreen extends StatelessWidget {
+  final String itemName, cost, stock;
+  final int index;
+  const ItemDetailScreen({
+    Key? key,
+    this.itemName = "nil",
+    this.cost = "nil",
+    this.stock = 'nil',
+    this.index = 0,
+  }) : super(key: key);
 
-  @override
-  State<ItemDetailScreen> createState() => _ItemDetailScreenState();
-}
-
-class _ItemDetailScreenState extends State<ItemDetailScreen> {
-  final TextEditingController _stockController = TextEditingController();
-
-  @override
-  void dispose() {
-    _stockController.clear();
-    super.dispose();
-  }
+  static final TextEditingController _stockController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: CustomAppBar(
-          title: "Order",
-          titleFontSize: 23,
-          subTitle: "Book",
-        ),
+        resizeToAvoidBottomInset: true,
+        appBar: CustomAppBar(title: "Order", subTitle: "Book"),
 
         // Drawer
         endDrawer: const CustomDrawer(),
-        body: SafeArea(
-          child: Center(
-            child: CustomCard(
-              innerMainAlignment: MainAxisAlignment.start,
-              innerCrossAlignment: CrossAxisAlignment.start,
-              width: double.maxFinite,
-              shadow: true,
-              height: 340,
-              verticalMargin: 5,
-              horizontalMargin: 30,
-              elevationLevel: 5,
-              borderRadius: 5,
-              child: Container(
-                padding: const EdgeInsets.only(left: 30, right: 8, top: 2),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+        body: Container(
+          margin: const EdgeInsets.only(top: 20),
+          child: CustomCard(
+            innerMainAlignment: MainAxisAlignment.start,
+            innerCrossAlignment: CrossAxisAlignment.start,
+            width: double.maxFinite,
+            shadow: true,
+            height: 270,
+            verticalMargin: 5,
+            horizontalMargin: 30,
+            elevationLevel: 5,
+            borderRadius: 5,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        IconButton(
-                          color: Colors.white60,
-                          icon: const Icon(Icons.close_outlined),
-                          onPressed: () => Navigator.pop(context),
-                        ),
-                      ],
+                    IconButton(
+                      color: Colors.white60,
+                      icon: const Icon(Icons.close_outlined),
+                      onPressed: () {
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          '/manageInventoryScreen',
+                          (route) => false,
+                        );
+                      },
                     ),
-                    const SizedBox(height: 5),
-                    Text(
-                      widget.itemName!,
-                      style: const TextStyle(
-                        color: kCardTextColor,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 9),
-                    Text(
-                      "RS. ${widget.cost!.replaceAll("PKR", "")}",
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      widget.stock!,
-                      style: const TextStyle(color: Colors.white, fontSize: 13),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(top: 70),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CustomOutlinedButton(
-                            textColor: const Color.fromARGB(255, 218, 224, 236),
-                            text: "ADD MORE TO STOCK",
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: const Text("Add Stock"),
-                                    content: TextField(
-                                      controller: _stockController,
-                                      keyboardType: TextInputType.number,
-                                      autofocus: true,
-                                      decoration:
-                                          const InputDecoration(hintText: "0"),
-                                      maxLength: 5,
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          var object =
-                                              productBox!.getAt(widget.index!);
-                                          object!.initialStock = object
-                                                  .initialStock! +
-                                              int.parse(_stockController.text);
-                                          Navigator.pushAndRemoveUntil(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const ManageInventoryScreen(),
-                                              ),
-                                              (route) => false);
-                                        },
-                                        child: const Text("Add"),
-                                      ),
-                                      TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                          child: const Text("Cancel")),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                          const SizedBox(height: 9),
-                          CustomOutlinedButton(
-                            text: "DELETE",
-                            borderColor: Colors.redAccent,
-                            textColor: Colors.redAccent,
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: const Text("Warning!"),
-                                    content: const Text(
-                                        "Do you really want to delete this record?"),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () {
-                                            productBox!.deleteAt(widget.index!);
-                                            Navigator.pushAndRemoveUntil(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const ManageInventoryScreen(),
-                                                ),
-                                                (route) => false);
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                key: UniqueKey(),
-                                                content: const Text(
-                                                    "Item deleted!",
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w600)),
-                                                backgroundColor:
-                                                    kSnackBarErrorColor,
-                                              ),
-                                            );
-                                          },
-                                          child: const Text("Yes")),
-                                      TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                          child: const Text("Cancel")),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    )
                   ],
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(itemName, style: Theme.of(context).textTheme.headlineMedium),
+                      Text("RS. ${cost.replaceAll("PKR", "")}", style: Theme.of(context).textTheme.headlineSmall),
+                      const SizedBox(height: 5),
+                      Text("STOCK: $stock", style: Theme.of(context).textTheme.titleSmall),
+                      const SizedBox(height: 25),
+                      OutlinedButton(
+                        child: const Text("ADD MORE"),
+                        onPressed: () async {
+                          await addMoreDialogBox(context);
+                        },
+                      ),
+                      const SizedBox(height: 9),
+                      CustomOutlinedButton(
+                        text: "DELETE",
+                        onPressed: () async {
+                          await deleteItemDialogBox(context);
+                        },
+                      ),
+                    ],
+                  ),
+                )
+              ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Future<dynamic> deleteItemDialogBox(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(
+            "Warning!",
+            style: Theme.of(context).textTheme.titleLarge!.copyWith(color: Colors.black),
+          ),
+          content: Text(
+            "Do you really want to delete this record?",
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.black),
+          ),
+          actions: [
+            TextButton(
+              child: const Text("Yes"),
+              onPressed: () {
+                () async => await productBox!.deleteAt(index);
+                Navigator.pushReplacementNamed(context, '/manageInventoryScreen');
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    key: UniqueKey(),
+                    backgroundColor: kSnackBarErrorColor,
+                    content: const Text(
+                      "Item deleted!",
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                );
+              },
+            ),
+            TextButton(
+              child: const Text("Cancel"),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<dynamic> addMoreDialogBox(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: Text(
+            "Add Stock",
+            style: Theme.of(context).textTheme.titleLarge!.copyWith(color: Colors.black),
+          ),
+          content: TextField(
+            style: const TextStyle(color: kTextColor),
+            decoration: const InputDecoration(hintText: "0"),
+            keyboardType: TextInputType.number,
+            controller: _stockController,
+            autofocus: true,
+            maxLength: 5,
+          ),
+          actions: [
+            TextButton(
+              child: const Text("Add"),
+              onPressed: () {
+                BlocProvider.of<AddMoreCubit>(context).addMore(
+                  _stockController.text,
+                  itemName,
+                );
+                Navigator.pushReplacementNamed(context, '/manageInventoryScreen');
+              },
+            ),
+            TextButton(
+              child: const Text("Cancel"),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ],
+        );
+      },
     );
   }
 }

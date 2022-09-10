@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:khata/models/model/order_model.dart';
 import 'package:khata/models/model/product_model.dart';

@@ -1,19 +1,19 @@
 # KHAATA 
 - **Status:** underdevelopment
-- **Version:** 0.0
+- **Version:** 0.0.0
 - **Description:** *Project Description here. . .*
 
 ## **NOTE :**
 **Do not commit files to master (main) branch directly. Contributors are only allowed to commit files to development branch, quick and dirty code is also acceptable...**
 
 ## **Development Progress :**
-![Progress](https://progress-bar.dev/33/?title=progress)
+![Progress](https://progress-bar.dev/75/?title=progress)
 
 ## **Task-List**
-- [ ] **Bloc Pattern Implementation** 
+- [x] **Bloc Pattern Implementation** 
 - [ ] Refactoring
 - [ ] Testing
-- [ ] Profiling and Optimization
+- [x] Profiling and Optimization
 - [ ] Doxygen comment documentation 
 
 ## 1. **Project Dependencies:**
@@ -25,14 +25,21 @@
 - hive_flutter: 1.1.0
 - flutter_inset_box_shadow: 1.0.8
 - fl_chart: 0.55.1
-  
-## 2. **Project Structure and Guidelines:**
+
+
+## 2. **Build Preview:**
+![](preview/order_screen.png?raw=true "manage-order-screen")
+<br/>
+<br/>
+![](preview/inventory_screen.png?raw=true "manage-inventory-screen")
+
+## 3. **Project Structure and Guidelines:**
 - `snake-case` naming convention for files and folder **e.g** `sub-screen`.
 - **camelCase** `kConstantValue` for constant values.
 - `camelCase` for variables naming convention.
 - According to google docs, prefer **classes** over **methods** for widget separation and for better widget tree optimization.
 
-## 3. **Custom widget classes:**
+## 4. **Custom widget classes:**
 #### 1. CustomOutlinedButton :
 ```
 CustomOutlinedButton(

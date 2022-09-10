@@ -1,14 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:khata/constants.dart';
-import 'package:khata/models/model/order_model.dart';
-import 'package:khata/models/model/product_model.dart';
+import 'package:khata/screens/order_detail_screen/cubit/order_detail_cubit.dart';
+import 'package:khata/screens/order_screen/cubit/order_home_cubit.dart';
 import 'package:khata/screens/order_screen/order_screen.dart';
-import 'package:khata/widgets/custom_app_bar.dart';
-import 'package:khata/widgets/custom_card.dart';
-import 'package:khata/widgets/custom_drawer.dart';
+import 'package:khata/screens/user_home_screen/user_home_exports.dart';
 import 'package:khata/widgets/custom_outlined_button.dart';
 
-class OrderDetailScreen extends StatefulWidget {
+class OrderDetailScreen extends StatelessWidget {
   const OrderDetailScreen({
     Key? key,
     this.username,
@@ -25,18 +21,13 @@ class OrderDetailScreen extends StatefulWidget {
   final bool? status;
 
   @override
-  State<OrderDetailScreen> createState() => _OrderDetailScreenState();
-}
-
-class _OrderDetailScreenState extends State<OrderDetailScreen> {
-  @override
   Widget build(BuildContext context) {
+    BlocProvider.of<OrderDetailCubit>(context).checkOrderState(index!);
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: CustomAppBar(
           title: "Order",
-          titleFontSize: 23,
           subTitle: "Book",
         ),
 
@@ -49,8 +40,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               innerCrossAlignment: CrossAxisAlignment.start,
               width: double.maxFinite,
               shadow: true,
-              height: 340,
-              // verticalMargin: 5,
+              height: 330,
               horizontalMargin: 30,
               elevationLevel: 5,
               borderRadius: 5,
@@ -69,14 +59,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         ),
                       ],
                     ),
-                    // const SizedBox(height: 5),
                     Container(
                       padding: const EdgeInsets.only(bottom: 30, left: 20),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.product!,
+                            product!.toUpperCase(),
                             style: const TextStyle(
                               color: Color.fromARGB(255, 218, 224, 236),
                               fontSize: 14,
@@ -85,7 +74,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           ),
                           const SizedBox(height: 3),
                           Text(
-                            "RS. ${widget.cost!.replaceAll("PKR", "")}",
+                            "RS. ${cost!.replaceAll("PKR", "")}",
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 17,
@@ -94,7 +83,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           ),
                           const SizedBox(height: 3),
                           Text(
-                            widget.username!,
+                            username!.toUpperCase(),
                             style: const TextStyle(
                               color: Color.fromARGB(255, 218, 224, 236),
                               fontSize: 12,
@@ -104,224 +93,75 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         ],
                       ),
                     ),
+                    OrderStatusWidget(index: index!),
+                    const SizedBox(height: 5),
                     Text(
-                      "STATUS : ${orderBox!.getAt(widget.index!)!.status! ? "COMPLETED" : "PENDING"}",
-                      style: const TextStyle(
-                          color: Color.fromARGB(255, 218, 224, 236),
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500),
+                      "CREATED DATE : ${createdDate!.replaceRange(10, null, "")}",
+                      style: const TextStyle(color: Color.fromARGB(255, 218, 224, 236), fontSize: 12, fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      "CREATED DATE : ${widget.createdDate!.replaceAll(" 00:00:00.000", "")}",
-                      style: const TextStyle(
-                          color: Color.fromARGB(255, 218, 224, 236),
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      "COMPLETED DATE : ${widget.completedDate!.replaceAll(" 00:00:00.000", "")}",
-                      style: const TextStyle(
-                          color: Color.fromARGB(255, 218, 224, 236),
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500),
+                      "COMPLETED DATE : ${completedDate!.replaceRange(10, null, "")}",
+                      style: const TextStyle(color: Color.fromARGB(255, 218, 224, 236), fontSize: 12, fontWeight: FontWeight.w500),
                     ),
                     Container(
                       padding: const EdgeInsets.only(top: 30),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          orderBox!.getAt(widget.index!)!.status! == false
-                              ? CustomOutlinedButton(
-                                  textColor:
-                                      const Color.fromARGB(255, 218, 224, 236),
-                                  text: "MARK COMPLETED",
-                                  onPressed: () {
-                                    setState(
-                                      () {
-                                        // orderBox!.deleteAt(widget.index!);
-
-                                        for (var i = 0;
-                                            i < productBox!.values.length;
-                                            i++) {
-                                          // product exists...
-                                          if (productBox!
-                                                  .getAt(i)!
-                                                  .name!
-                                                  .toLowerCase() ==
-                                              widget.product!.toLowerCase()) {
-                                            // then decrease stock....
-                                            int currentStock = productBox!
-                                                    .getAt(i)!
-                                                    .initialStock! -
-                                                1;
-
-                                            // get object
-                                            var product = productBox!.getAt(i);
-
-                                            // show alert when item is less than 5....
-                                            if (productBox!
-                                                    .getAt(i)!
-                                                    .initialStock! <=
-                                                5) {
-                                              _showDialog("Alert",
-                                                  "Product ${productBox!.getAt(i)!.name!.toLowerCase()} stock is ${productBox!.getAt(i)!.initialStock!}");
-
-                                              // update description....
-                                              orderBox!.putAt(
-                                                widget.index!,
-                                                OrderModel(
-                                                  widget.username,
-                                                  widget.product,
-                                                  int.parse(widget.cost!
-                                                      .replaceAll(" PKR", "")),
-                                                  DateTime.parse(
-                                                      widget.createdDate!),
-                                                  DateTime.parse(DateTime.now()
-                                                      .toString()),
-                                                  true,
-                                                ),
-                                              );
-
-                                              // update item
-                                              productBox!.putAt(
-                                                i,
-                                                ProductModel(
-                                                  name: product!.name,
-                                                  initialStock: currentStock,
-                                                  cost: int.parse(widget.cost!
-                                                      .replaceAll(" PKR", "")),
-                                                ),
-                                              );
-
-                                              // go back
-                                              Navigator.pushAndRemoveUntil(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const ManageOrderScreen(),
-                                                  ),
-                                                  (route) => false);
-                                            }
-                                            // show alert when item is out of stock....
-                                            // else if (productBox!
-                                            //         .getAt(i)!
-                                            //         .initialStock! ==
-                                            //     0) {
-                                            //   _showDialog(
-                                            //     "Alert",
-                                            //     "Product ${productBox!.getAt(i)!.name!.toLowerCase()} is out of stock. Please refill your inventory.",
-                                            //   );
-                                            // }
-                                            else {
-                                              // update item
-                                              productBox!.putAt(
-                                                i,
-                                                ProductModel(
-                                                  name: product!.name,
-                                                  initialStock: currentStock,
-                                                  cost: int.parse(widget.cost!
-                                                      .replaceAll(" PKR", "")),
-                                                ),
-                                              );
-
-                                              // updated description....
-                                              orderBox!.putAt(
-                                                widget.index!,
-                                                OrderModel(
-                                                  widget.username,
-                                                  widget.product,
-                                                  int.parse(widget.cost!
-                                                      .replaceAll(" PKR", "")),
-                                                  DateTime.parse(
-                                                      widget.createdDate!),
-                                                  DateTime.parse(DateTime.now()
-                                                      .toString()),
-                                                  true,
-                                                ),
-                                              );
-
-                                              Navigator.pushAndRemoveUntil(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const ManageOrderScreen(),
-                                                  ),
-                                                  (route) => false);
-                                            }
-
-                                            // update inventory item....
-                                            // else {
-                                            // productBox!.putAt(
-                                            //   i,
-                                            //   ProductModel(
-                                            //     name: product!.name,
-                                            //     initialStock: currentStock,
-                                            //     cost: int.parse(widget.cost!
-                                            //         .replaceAll(" PKR", "")),
-                                            //   ),
-                                            // );
-                                            // }
-
-                                            // Navigator.pushAndRemoveUntil(
-                                            //     context,
-                                            //     MaterialPageRoute(
-                                            //       builder: (context) =>
-                                            //           const ManageOrderScreen(),
-                                            //     ),
-                                            //     (route) => false);
-                                          }
-                                        }
-                                      },
-                                    );
-                                  },
-                                )
-                              : Container(),
+                          BlocBuilder<OrderDetailCubit, OrderDetailState>(builder: (context, state) {
+                            if (state is UnMarkedOrderState) {
+                              return OutlinedButton(
+                                child: const Text("MARK COMPLETED"),
+                                onPressed: () {
+                                  BlocProvider.of<OrderDetailCubit>(context).markOrderStateToComplete(
+                                    index!,
+                                    username!,
+                                    product!,
+                                    int.parse(cost!),
+                                    DateTime.parse(createdDate!),
+                                    DateTime.parse(
+                                      completedDate!,
+                                    ),
+                                  );
+                                },
+                              );
+                            } else {
+                              return Container();
+                            }
+                          }),
                           const SizedBox(height: 9),
                           CustomOutlinedButton(
                             text: "DELETE",
-                            borderColor: Colors.redAccent,
-                            textColor: Colors.redAccent,
+                            // borderColor: Colors.redAccent,
+                            // textColor: Colors.redAccent,
                             onPressed: () {
                               showDialog(
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(
                                     title: const Text("Warning!"),
-                                    content: const Text(
-                                        "Do you really want to delete this record?"),
+                                    content: const Text("Do you really want to delete this record?"),
                                     actions: [
                                       TextButton(
                                         child: const Text("Yes"),
                                         onPressed: () {
-                                          orderBox!.deleteAt(widget.index!);
-                                          Navigator.pushAndRemoveUntil(
+                                          orderBox!.deleteAt(index!);
+                                          Navigator.pushReplacement(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const ManageOrderScreen(),
-                                              ),
-                                              (route) => false);
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
+                                                builder: (context) => BlocProvider(create: (context) => OrderHomeCubit(), child: const ManageOrderScreen()),
+                                              ));
+                                          ScaffoldMessenger.of(context).showSnackBar(
                                             SnackBar(
                                               key: UniqueKey(),
-                                              content: const Text(
-                                                  "Item deleted!",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w600)),
-                                              backgroundColor:
-                                                  kSnackBarErrorColor,
+                                              content: const Text("Item deleted!", style: TextStyle(fontWeight: FontWeight.w600)),
+                                              backgroundColor: kSnackBarErrorColor,
                                             ),
                                           );
                                         },
                                       ),
-                                      TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                          child: const Text("Cancel")),
+                                      TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
                                     ],
                                   );
                                 },
@@ -340,22 +180,24 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       ),
     );
   }
+}
 
-  Future _showDialog(String? title, String? description) {
-    return showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(title!),
-          content: Text(description!),
-          actions: [
-            TextButton(
-              child: const Text("Ok"),
-              onPressed: () => Navigator.pop(context),
-            ),
-          ],
-        );
-      },
+class OrderStatusWidget extends StatelessWidget {
+  const OrderStatusWidget({
+    Key? key,
+    required this.index,
+  }) : super(key: key);
+
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    var isOrderPending = BlocProvider.of<OrderDetailCubit>(context).getOrderStatus(index);
+    String message = isOrderPending ? "PENDING" : "COMPLETED";
+
+    return Text(
+      "STATUS : $message",
+      style: const TextStyle(color: Color.fromARGB(255, 218, 224, 236), fontSize: 12, fontWeight: FontWeight.w500),
     );
   }
 }

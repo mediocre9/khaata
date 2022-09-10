@@ -1,64 +1,23 @@
-import 'package:flutter/material.dart';
-import 'package:khata/constants.dart';
-import 'package:khata/models/model/order_model.dart';
-import 'package:khata/screens/order_screen/order_screen.dart';
-import 'package:khata/widgets/custom_app_bar.dart';
-import 'package:khata/widgets/custom_card.dart';
-import 'package:khata/widgets/custom_drawer.dart';
-import 'package:khata/widgets/custom_outlined_button.dart';
+import 'package:khata/models/model/product_model.dart';
+import 'package:khata/screens/add_order_screen/cubit/add_order_cubit.dart';
+import 'package:khata/screens/user_home_screen/cubit/user_home_cubit_exports.dart';
+import 'package:khata/screens/user_home_screen/user_home_exports.dart';
 
-class AddOrderScreen extends StatefulWidget {
+class AddOrderScreen extends StatelessWidget {
   const AddOrderScreen({Key? key}) : super(key: key);
 
-  @override
-  State<AddOrderScreen> createState() => _AddOrderScreenState();
-}
-
-class _AddOrderScreenState extends State<AddOrderScreen> {
-  final List<String> customers = [];
-  final List<String> products = [];
-  final List<int> cost = [];
-  int? itemCost = 0;
-  int? cindex = 0, pindex;
-
-  int? emptyStockIndex;
-  bool? isStockEmpty = false;
-
-  void fetchAll() {
-    for (var i = 0; i < userBox!.values.length; i++) {
-      customers.add(userBox!.getAt(i)!.username!.toUpperCase());
-    }
-
-    for (var i = 0; i < productBox!.values.length; i++) {
-      products.add(productBox!.getAt(i)!.name!.toUpperCase());
-      cost.add(productBox!.getAt(i)!.cost!);
-    }
-  }
-
-  @override
-  void initState() {
-    fetchAll();
-    // for (int i = 0; i < productBox!.values.length; i++) {
-    //   if (productBox!.getAt(i)!.initialStock == 0) {
-    //     emptyStockIndex = i;
-    //   }
-    // }
-    super.initState();
-  }
+  static final TextEditingController productController = TextEditingController();
+  static final TextEditingController customerController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        title: "Order",
-        titleFontSize: 23,
-        subTitle: "Book",
-      ),
+      appBar: CustomAppBar(title: "Order", subTitle: "Book"),
       endDrawer: const CustomDrawer(),
       body: CustomCard(
         innerMainAlignment: MainAxisAlignment.center,
         width: double.maxFinite,
-        height: 350,
+        height: 300,
         verticalMargin: 10,
         horizontalMargin: 30,
         elevationLevel: 5,
@@ -67,10 +26,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
           children: [
             const Text(
               "ADD ORDER",
-              style: TextStyle(
-                  color: kCardTextColor,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600),
+              style: TextStyle(color: kCardTextColor, fontSize: 20, fontWeight: FontWeight.w600),
             ),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 30),
@@ -89,36 +45,69 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  if (products.isNotEmpty)
-                    DropdownButtonFormField(
-                      hint: const Text("select product",
-                          style: TextStyle(color: Colors.white)),
-                      items: products
-                          .map((e) => DropdownMenuItem(
-                                value: e,
-                                child: Text(e),
-                              ))
-                          .toList(),
-                      iconEnabledColor: Colors.white,
-                      onChanged: (String? value) {
-                        setState(() {
-                          pindex = products.indexOf(value!);
+                  RawAutocomplete(
+                    focusNode: FocusNode(),
+                    key: GlobalKey(),
+                    textEditingController: productController,
+                    fieldViewBuilder: (
+                      context,
+                      productController,
+                      focusNode,
+                      onFieldSubmitted,
+                    ) {
+                      return CustomTextField(
+                        isDense: true,
+                        contentPadding: 10,
+                        focusNode: focusNode,
+                        color: kCardTextColor,
+                        inputType: TextInputType.name,
+                        controller: productController,
+                        onChanged: (s) {},
+                      );
+                    },
+                    optionsBuilder: (TextEditingValue textEditingValue) {
+                      return BlocProvider.of<AddOrderCubit>(context).searchProduct(textEditingValue.text);
+                    },
+                    onSelected: (ProductModel selection) {},
+                    optionsViewBuilder: (context, onSelected, Iterable<ProductModel> options) {
+                      return Align(
+                        alignment: Alignment.topLeft,
+                        child: Material(
+                          color: const Color.fromARGB(255, 233, 233, 233),
+                          child: SizedBox(
+                            width: 200,
+                            child: ListView.builder(
+                              itemCount: options.length,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    // onSelected(options.elementAt(index));
+                                  },
+                                  child: ListTile(
+                                    title: Text(
+                                      options.elementAt(index).name!.toString(),
+                                      style: const TextStyle(fontWeight: FontWeight.w500),
+                                    ),
+                                    subtitle: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text("RS. ${options.elementAt(index).cost!.toString()}"),
+                                        Text("stock : ${options.elementAt(index).initialStock!.toString()}"),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
 
-                          if (productBox!.getAt(pindex!)!.initialStock! == 0) {
-                            emptyStockIndex = pindex;
-                            isStockEmpty = true;
-                          }
-
-                          itemCost = cost[pindex!];
-                        });
-                      },
-                      isExpanded: true,
-                    )
-                  else
-                    DropdownButtonFormField(items: null, onChanged: null),
                   const SizedBox(height: 25),
 
-                  // username textfield....
+                  // // username textfield....
                   const Text(
                     "USERNAME",
                     style: TextStyle(
@@ -127,93 +116,77 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  if (customers.isNotEmpty)
-                    DropdownButtonFormField(
-                      hint: const Text("select customer",
-                          style: TextStyle(color: Colors.white)),
-                      items: customers
-                          .map((e) => DropdownMenuItem(
-                                value: e,
-                                child: Text(e),
-                              ))
-                          .toList(),
-                      onChanged: (String? value) {
-                        setState(() {
-                          cindex = customers.indexOf(value!);
-                        });
-                      },
-                      isExpanded: true,
-                      iconEnabledColor: Colors.white,
-                    )
-                  else
-                    DropdownButtonFormField(onChanged: null, items: null),
 
-                  const SizedBox(height: 25),
-
-                  Text(
-                    "PRODUCT COST : $itemCost",
-                    style: const TextStyle(
-                      fontSize: 15,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  RawAutocomplete(
+                    focusNode: FocusNode(),
+                    key: GlobalKey(),
+                    textEditingController: customerController,
+                    fieldViewBuilder: (
+                      context,
+                      customerController,
+                      focusNode,
+                      onFieldSubmitted,
+                    ) {
+                      return CustomTextField(
+                        isDense: true,
+                        contentPadding: 10,
+                        focusNode: focusNode,
+                        color: kCardTextColor,
+                        inputType: TextInputType.name,
+                        controller: customerController,
+                        // borderStyle: const UnderlineInputBorder(
+                        //     borderSide:
+                        //         BorderSide(color: Colors.white, width: 3)),
+                        onChanged: (s) {},
+                      );
+                    },
+                    optionsBuilder: (TextEditingValue textEditingValue) {
+                      return BlocProvider.of<AddOrderCubit>(context).searchCustomer(textEditingValue.text);
+                    },
+                    onSelected: (UserModel selection) {},
+                    optionsViewBuilder: (context, onSelected, Iterable<UserModel> options) {
+                      return Align(
+                        alignment: Alignment.topLeft,
+                        child: Material(
+                          color: const Color.fromARGB(255, 233, 233, 233),
+                          child: SizedBox(
+                            width: 200,
+                            child: ListView.builder(
+                              itemCount: options.length,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    // onSelected(options.elementAt(index));
+                                  },
+                                  child: ListTile(
+                                    title: Text(
+                                      options.elementAt(index).username!.toString(),
+                                      style: const TextStyle(fontWeight: FontWeight.w500),
+                                    ),
+                                    subtitle: Text("Address: ${options.elementAt(index).address!.toString()}"),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
 
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 25),
                   Center(
-                    child: (products.isNotEmpty && customers.isNotEmpty)
-                        ? CustomOutlinedButton(
-                            text: "ADD ORDER",
-                            textColor: Colors.white,
-                            onPressed: () {
-                              // get product name
-                              // var productName =
-                              //     productBox!.getAt(emptyStockIndex!)!.name!;
-
-                              // product name
-                              if (isStockEmpty == false) {
-                                DateTime now = DateTime.now();
-
-                                orderBox!.add(
-                                  OrderModel(
-                                    customers[cindex!],
-                                    products[pindex!],
-                                    cost[pindex!],
-                                    DateTime(now.year, now.month, now.day),
-                                    DateTime(now.year, now.month, now.day),
-                                    false,
-                                  ),
-                                );
-
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const ManageOrderScreen(),
-                                    ),
-                                    (route) => false);
-                              } else {
-                                setState(() {});
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    title: const Text("Alert"),
-                                    content: Text(
-                                        "Product ${productBox!.getAt(pindex!)!.name!.toLowerCase()} is out of stock."),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                          child: const Text("Ok"))
-                                    ],
-                                  ),
-                                );
-                              }
-                            },
-                          )
-                        : CustomOutlinedButton(
-                            onPressed: () {}, text: "ADD ORDER"),
-                  )
+                    child: OutlinedButton(
+                      child: const Text("ADD ORDER"),
+                      // textColor: Colors.white,
+                      onPressed: () {
+                        BlocProvider.of<AddOrderCubit>(context).addOrder(
+                          productController.text,
+                          customerController.text,
+                        );
+                      },
+                    ),
+                  ),
                 ],
               ),
             )

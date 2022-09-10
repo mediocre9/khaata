@@ -1,150 +1,90 @@
-import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
-import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
-import 'package:khata/constants.dart';
-import 'package:khata/models/model/order_model.dart';
+import 'package:flutter/gestures.dart';
+import 'package:khata/screens/order_pending_screen/cubit/pending_order_cubit.dart';
+import 'package:khata/screens/user_home_screen/user_home_exports.dart';
 
-import 'package:khata/widgets/custom_app_bar.dart';
-import 'package:khata/widgets/custom_card.dart';
-import 'package:khata/widgets/custom_drawer.dart';
-
-class OrderPendingScreen extends StatefulWidget {
+class OrderPendingScreen extends StatelessWidget {
   const OrderPendingScreen({Key? key}) : super(key: key);
 
   @override
-  State<OrderPendingScreen> createState() => _OrderPendingScreenState();
-}
-
-class _OrderPendingScreenState extends State<OrderPendingScreen> {
-  static List<OrderModel?> pendingOrderList = [];
-
-  int pendingOrders = 0;
-  int totalPendingGain = 0;
-
-  _OrderPendingScreenState();
-
-  fetchAllData() {
-    pendingOrderList.clear();
-    for (var i = 0; i < orderBox!.values.length; i++) {
-      if (orderBox!.getAt(i)!.status! == false) {
-        pendingOrderList.add(orderBox!.getAt(i));
-        pendingOrders = pendingOrders + 1;
-        totalPendingGain = totalPendingGain + orderBox!.getAt(i)!.cost!;
-      }
-    }
-  }
-
-  @override
-  void initState() {
-    fetchAllData();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        // resizeToAvoidBottomInset: false,
-        appBar: CustomAppBar(
-            title: "PENDING", titleFontSize: 23, subTitle: "ORDERS"),
-        endDrawer: const CustomDrawer(),
-        body: SafeArea(
-          child: Container(
-            color: kScaffoldColor,
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          TotalPendingOrder(totalPendingOrder: pendingOrders),
-                          const Text(
-                            "PENDING",
-                            style: TextStyle(
-                              color: Color.fromRGBO(58, 52, 98, 1),
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 1,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          TotalPendingGain(
-                            totalPendingGain: totalPendingGain,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.zero,
-                    margin: const EdgeInsets.only(top: 5),
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                      color: Color.fromARGB(255, 253, 253, 253),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.white,
-                          spreadRadius: 0.4,
-                          blurRadius: 1,
-                        ),
-                        BoxShadow(
-                          color: Color.fromARGB(255, 65, 65, 65),
-                          spreadRadius: 1.5,
-                          blurRadius: 4,
-                          offset: Offset(1, 4),
-                          inset: true,
-                        )
-                      ],
-                    ),
-                    child: pendingOrderList.isEmpty
-                        ? const EmptyRecords()
-                        : ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: pendingOrderList.length,
-                            itemBuilder: (_, index) {
-                              return PendingOrderCard(
-                                product: pendingOrderList[index]!
-                                    .productname!
-                                    .toUpperCase(),
-                                cost:
-                                    '${pendingOrderList[index]!.cost.toString()} PKR',
-                                username: pendingOrderList[index]!.username,
-                                index: index,
-                                createdDate:
-                                    pendingOrderList[index]!.createdDate,
-                                completedDate:
-                                    pendingOrderList[index]!.completedDate,
-                              );
-                            },
-                          ),
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      appBar: CustomAppBar(title: "PENDING", subTitle: "ORDERS"),
+      endDrawer: const CustomDrawer(),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: const [
+                TotalPendingOrder(),
+                Text(
+                  "PENDING",
+                  style: TextStyle(
+                    color: Color.fromRGBO(58, 52, 98, 1),
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1,
                   ),
                 ),
               ],
             ),
-          ),
+            const TotalPendingGain(),
+            const SizedBox(height: 10),
+            const NeumorphicContainer(cubitStateManager: PendingInterfaceStateManger()),
+          ],
         ),
       ),
     );
   }
 }
 
+class PendingInterfaceStateManger extends StatelessWidget {
+  const PendingInterfaceStateManger({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<PendingOrderCubit, PendingOrderState>(
+      builder: (context, state) {
+        if (state is PendingOrderInitial) {
+          return EmptyRecordsWidget(
+            message: state.message,
+            icon: state.iconData,
+          );
+        } else if (state is PendingOrderStateCard) {
+          return ScrollConfiguration(
+            behavior: ScrollConfiguration.of(context).copyWith(
+              dragDevices: {
+                PointerDeviceKind.touch,
+                PointerDeviceKind.mouse,
+              },
+            ),
+            child: ListView.builder(
+              physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+              itemCount: state.orders.length,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                return PendingOrderCard(
+                  product: state.orders[index].productname!,
+                  cost: state.orders[index].cost.toString(),
+                  username: state.orders[index].username!,
+                );
+              },
+            ),
+          );
+        }
+        return Container();
+      },
+    );
+  }
+}
+
 class TotalPendingOrder extends StatelessWidget {
-  final int totalPendingOrder;
-  const TotalPendingOrder({Key? key, required this.totalPendingOrder})
-      : super(key: key);
+  const TotalPendingOrder({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -154,9 +94,11 @@ class TotalPendingOrder extends StatelessWidget {
         borderRadius: 0,
         height: 100,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              totalPendingOrder.toString(),
+              BlocProvider.of<PendingOrderCubit>(context).totalPendingOrders.toString(),
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 30,
@@ -179,161 +121,90 @@ class TotalPendingOrder extends StatelessWidget {
 }
 
 class TotalPendingGain extends StatelessWidget {
-  final int totalPendingGain;
-  const TotalPendingGain({Key? key, required this.totalPendingGain})
-      : super(key: key);
+  const TotalPendingGain({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
-        color: const Color.fromRGBO(22, 60, 98, 1),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "TOTAL PENDING",
-              style: TextStyle(
-                color: Color.fromRGBO(215, 215, 255, 1),
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-              ),
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
+            color: const Color.fromRGBO(22, 60, 98, 1),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "TOTAL PENDING",
+                  style: TextStyle(
+                    color: Color.fromRGBO(215, 215, 255, 1),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text(
+                  "${BlocProvider.of<PendingOrderCubit>(context).pendingMoney.toString()} PKR",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 25,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
-            Text("${totalPendingGain.toString()} PKR",
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 25,
-                  fontWeight: FontWeight.w600,
-                )),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class EmptyRecords extends StatelessWidget {
-  const EmptyRecords({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          Icon(
-            Icons.list,
-            color: Colors.grey,
-            size: 55,
           ),
-          Text(
-            "PENDING ORDER LIST IS EMPTY!",
-            style: TextStyle(color: Colors.grey, fontSize: 15),
-          )
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
 
-// TODO: refactor later DRY PRINCIPLE VIOLATION......
-class PendingOrderCard extends StatelessWidget {
+class PendingOrderCard extends StatelessWidget with GradientBoxDecoration {
   const PendingOrderCard({
     Key? key,
     required this.product,
     required this.cost,
     required this.username,
-    this.createdDate,
-    this.index,
-    this.completedDate,
-    this.pendingOrders,
   }) : super(key: key);
-  final String? product, cost, username;
-  final int? index, pendingOrders;
-  final DateTime? createdDate, completedDate;
+  final String product, cost, username;
+
   @override
   Widget build(BuildContext context) {
-    print(orderBox!.getAt(index!)!.status!);
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 1),
-      child: CustomCard(
-        horizontalMargin: 15,
-        borderRadius: 7,
-        shadow: false,
-        width: double.maxFinite,
-        height: 110,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ListTile(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(7),
-              ),
-              title: Text(
-                product!,
-                style: const TextStyle(
-                  fontSize: 17,
-                  letterSpacing: 1.3,
-                  color: Color.fromARGB(255, 218, 224, 236),
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              dense: true,
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 5),
-                  Text(
-                    cost!,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      letterSpacing: 1.2,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+    return Card(
+      child: Container(
+        decoration: gradientDecoration(),
+        child: ListTile(
+          title: Text(
+            product.toUpperCase(),
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 5),
+              Text(
+                "RS. $cost",
+                style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                      color: const Color.fromARGB(255, 218, 224, 236),
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        username!,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          letterSpacing: 1.1,
-                          color: Color.fromARGB(255, 218, 224, 236),
-                          fontWeight: FontWeight.bold,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    username,
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                          color: const Color.fromARGB(255, 218, 224, 236),
                         ),
-                      ),
-                      Icon(
-                        CupertinoIcons.exclamationmark_circle,
-                        color: Colors.yellow[300],
-                      )
-                    ],
                   ),
+                  Icon(
+                    CupertinoIcons.exclamationmark_circle,
+                    color: Colors.yellow[300],
+                  )
                 ],
               ),
-              enabled: true,
-              // onTap: () {
-              //   Navigator.of(context).push(
-              //     MaterialPageRoute(
-              //       builder: (context) => OrderDetailScreen(
-              //         username: username,
-              //         product: product,
-              //         cost: cost,
-              //         createdDate: createdDate!.toString(),
-              //         completedDate: createdDate!.toString(),
-              //         index: index,
-              //         pendingOrders: pendingOrders,
-              //       ),
-              //     ),
-              //   );
-              // },
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

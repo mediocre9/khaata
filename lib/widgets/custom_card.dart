@@ -21,7 +21,7 @@ class CustomCard extends StatelessWidget {
     this.elevationLevel,
     this.innerCrossAlignment,
     this.innerMainAlignment,
-    this.child,
+    required this.child,
     this.borderRadius,
     this.horizontalMargin,
     this.verticalMargin,
@@ -39,13 +39,6 @@ class CustomCard extends StatelessWidget {
                 offset: Offset(2, 2),
               )
             : const BoxShadow(),
-        // const BoxShadow(
-        //     color: Colors.black,
-        //     blurRadius: 7,
-        //     // blurStyle: BlurStyle.normal,
-        //     spreadRadius: 1,
-        //     offset: Offset(2, 2),
-        //   ),
       ],
       borderRadius: BorderRadius.circular(borderRadius ?? 10),
       shape: BoxShape.rectangle,
@@ -70,19 +63,10 @@ class CustomCard extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(borderRadius ?? 10),
         ),
-        margin: EdgeInsets.symmetric(
-            horizontal: horizontalMargin ?? 10, vertical: verticalMargin ?? 10),
+        margin: EdgeInsets.symmetric(horizontal: horizontalMargin ?? 10, vertical: verticalMargin ?? 10),
         child: Container(
           decoration: _cardDecoration(),
-          child: Column(
-            mainAxisAlignment: innerMainAlignment ?? MainAxisAlignment.center,
-            crossAxisAlignment:
-                innerCrossAlignment ?? CrossAxisAlignment.center,
-            children: [
-              child ??
-                  const Text("SAASH", style: TextStyle(color: Colors.white))
-            ],
-          ),
+          child: child,
         ),
       ),
     );
