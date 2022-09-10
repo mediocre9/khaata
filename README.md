@@ -1,6 +1,6 @@
 # KHAATA 
-- **Status:** underdevelopment
-- **Version:** 0.0.0
+- **Status:** under-development
+- **Version:** 1.0.3
 - **Description:** *Project Description here. . .*
 
 ## **NOTE :**
