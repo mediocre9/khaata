@@ -12,7 +12,6 @@ class AddOrderCubit extends Cubit<AddOrderState> {
   List<UserModel> customers = [];
   ProductModel? _productObject;
   int _productIndexInDatabase = 0;
-  // int _productInitialStock = 0;
 
   AddOrderCubit() : super(AddOrderInitial()) {
     _loadData();
@@ -74,17 +73,12 @@ class AddOrderCubit extends Cubit<AddOrderState> {
     return null;
   }
 
-  // void _decreaseStockInInventory() {
-  //   _productInitialStock = _productObject!.initialStock! - 1;
-  // }
-
   void addOrder(String product, String customer) {
     if (product.isNotEmpty && customer.isNotEmpty) {
       _productObject = _getProductObject(product);
 
       if (_productObject != null) {
-        // _decreaseStockInInventory();
-
+        
         // update....
         productBox!.putAt(
           _productIndexInDatabase,
