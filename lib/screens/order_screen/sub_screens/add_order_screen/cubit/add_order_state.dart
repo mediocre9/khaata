@@ -6,16 +6,16 @@ abstract class AddOrderState {
 
 class AddOrderInitial extends AddOrderState {}
 
-class ProductSearchState extends AddOrderState {
-  final List<Product> products;
+class ProductSearchResultsState extends AddOrderState {
+  final List<Product> listOfProducts;
 
-  ProductSearchState(this.products);
+  ProductSearchResultsState({required this.listOfProducts});
 }
 
-class CustomerSearchState extends AddOrderState {
-  final List<Customer> customers;
+class CustomerSearchResultsState extends AddOrderState {
+  final List<Customer> listOfCustomers;
 
-  CustomerSearchState(this.customers);
+  CustomerSearchResultsState({required this.listOfCustomers});
 }
 
 class OrderSelectedState extends AddOrderState {}

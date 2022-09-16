@@ -7,32 +7,32 @@ abstract class OrderState extends Equatable {
   List<Object> get props => [];
 }
 
-class OrderHomeInitial extends OrderState {
+class OrderInitialState extends OrderState {
   final String message;
-  final IconData iconData;
-  const OrderHomeInitial({required this.message, required this.iconData});
+  final IconData icon;
+  const OrderInitialState({required this.message, required this.icon});
 }
 
 class OrderLoadState extends OrderState {
-  final List<Order> orderModel;
-  const OrderLoadState({required this.orderModel});
+  final List<Order> listOfOrders;
+  const OrderLoadState({required this.listOfOrders});
 
   @override
-  List<Object> get props => [orderModel];
+  List<Object> get props => [listOfOrders];
 }
 
 class OrderSearchState extends OrderState {
-  final List<Order> orderModel;
-  const OrderSearchState({required this.orderModel});
+  final List<Order> listOfOrders;
+  const OrderSearchState({required this.listOfOrders});
 
   @override
-  List<Object> get props => [orderModel];
+  List<Object> get props => [listOfOrders];
 }
 
 class OrderFoundState extends OrderState {
   final String message;
-  final IconData iconData;
-  const OrderFoundState({required this.message, required this.iconData});
+  final IconData icon;
+  const OrderFoundState({required this.message, required this.icon});
 }
 
 class OrderCompletedState extends OrderState {

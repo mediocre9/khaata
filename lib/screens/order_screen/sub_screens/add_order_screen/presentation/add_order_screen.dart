@@ -18,7 +18,10 @@ class AddOrderScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: Text("Order"), subtitle: Text("Book")),
+      appBar: const CustomAppBar(
+        title: Text("Order"),
+        subtitle: Text("Book"),
+      ),
       endDrawer: const CustomDrawer(),
       endDrawerEnableOpenDragGesture: true,
       body: CustomCard(
@@ -57,7 +60,74 @@ class AddOrderScreen extends StatelessWidget {
                 children: [
                   const SizedBox(height: 25),
 
-                  // ID textfield.....
+// // username textfield....
+                  const Text(
+                    "CUSTOMER",
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  RawAutocomplete(
+                    focusNode: FocusNode(),
+                    key: GlobalKey(),
+                    textEditingController: customerController,
+                    fieldViewBuilder: (
+                      context,
+                      customerController,
+                      focusNode,
+                      onFieldSubmitted,
+                    ) {
+                      return CustomTextField(
+                        isDense: true,
+                        contentPadding: 10,
+                        focusNode: focusNode,
+                        color: kCardTextColor,
+                        inputType: TextInputType.name,
+                        controller: customerController,
+                        onChanged: (s) {},
+                      );
+                    },
+                    optionsBuilder: (TextEditingValue textEditingValue) {
+                      return BlocProvider.of<AddOrderCubit>(context)
+                          .searchCustomer(textEditingValue.text);
+                    },
+                    onSelected: (Customer selection) {},
+                    optionsViewBuilder:
+                        (context, onSelected, Iterable<Customer> options) {
+                      return Align(
+                        alignment: Alignment.topLeft,
+                        child: Material(
+                          color: const Color.fromARGB(255, 233, 233, 233),
+                          child: SizedBox(
+                            width: 200,
+                            child: ListView.builder(
+                              itemCount: options.length,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () {},
+                                  child: ListTile(
+                                    title: Text(
+                                      options.elementAt(index).username!.toString(),
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    subtitle: Text(
+                                        "Address: ${options.elementAt(index).address!.toString()}"),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+
+                  const SizedBox(height: 25),
+// ID textfield.....
                   const Text(
                     "PRODUCT",
                     style: TextStyle(
@@ -132,85 +202,12 @@ class AddOrderScreen extends StatelessWidget {
                   ),
 
                   const SizedBox(height: 25),
-
-                  // // username textfield....
-                  const Text(
-                    "USERNAME",
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-
-                  RawAutocomplete(
-                    focusNode: FocusNode(),
-                    key: GlobalKey(),
-                    textEditingController: customerController,
-                    fieldViewBuilder: (
-                      context,
-                      customerController,
-                      focusNode,
-                      onFieldSubmitted,
-                    ) {
-                      return CustomTextField(
-                        isDense: true,
-                        contentPadding: 10,
-                        focusNode: focusNode,
-                        color: kCardTextColor,
-                        inputType: TextInputType.name,
-                        controller: customerController,
-                        // borderStyle: const UnderlineInputBorder(
-                        //     borderSide:
-                        //         BorderSide(color: Colors.white, width: 3)),
-                        onChanged: (s) {},
-                      );
-                    },
-                    optionsBuilder: (TextEditingValue textEditingValue) {
-                      return BlocProvider.of<AddOrderCubit>(context)
-                          .searchCustomer(textEditingValue.text);
-                    },
-                    onSelected: (Customer selection) {},
-                    optionsViewBuilder:
-                        (context, onSelected, Iterable<Customer> options) {
-                      return Align(
-                        alignment: Alignment.topLeft,
-                        child: Material(
-                          color: const Color.fromARGB(255, 233, 233, 233),
-                          child: SizedBox(
-                            width: 200,
-                            child: ListView.builder(
-                              itemCount: options.length,
-                              itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    // onSelected(options.elementAt(index));
-                                  },
-                                  child: ListTile(
-                                    title: Text(
-                                      options.elementAt(index).username!.toString(),
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    subtitle: Text(
-                                        "Address: ${options.elementAt(index).address!.toString()}"),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-
-                  const SizedBox(height: 25),
                   Center(
                     child: OutlinedButton(
                       child: const Text("ADD ORDER"),
                       // textColor: Colors.white,
-                      onPressed: () {
-                        BlocProvider.of<AddOrderCubit>(context).addOrder(
+                      onPressed: () async {
+                        await BlocProvider.of<AddOrderCubit>(context).addOrder(
                           productController.text,
                           customerController.text,
                         );

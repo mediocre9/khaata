@@ -9,60 +9,67 @@ part 'order_state.dart';
 class OrderCubit extends Cubit<OrderState> {
   final List<Order> orders = [];
   OrderCubit()
-      : super(const OrderHomeInitial(
-            message: "ORDER LIST IS EMPTY!", iconData: Icons.list)) {
-    _loadOrders();
+      : super(
+          const OrderInitialState(
+            message: "ORDER LIST IS EMPTY!",
+            icon: Icons.list,
+          ),
+        ) {
+    _loadOrdersfromDatabase();
   }
 
-  get totalOrders => orders.length;
-
-  get orderListObject => orders;
-
-  get totalPendingOrders {
-    int counter = 0;
-    bool isPending = true;
-    for (int i = 0; i < orderBox!.values.length; i++) {
-      if (orderBox!.getAt(i)!.status == isPending) {
-        counter++;
-      }
-    }
-    return counter;
-  }
-
-  get totalGain {
-    int totalMoney = 0;
-    bool isCompleted = false;
-    for (int i = 0; i < orderBox!.values.length; i++) {
-      if (orderBox!.getAt(i)!.status == isCompleted) {
-        totalMoney = totalMoney + orderBox!.getAt(i)!.cost!;
-      }
-    }
-    return totalMoney;
-  }
-
-  void _loadOrders() {
+  void _loadOrdersfromDatabase() {
     for (int i = 0; i < orderBox!.values.length; i++) {
       orders.add(orderBox!.getAt(i)!);
     }
 
     if (orders.isNotEmpty) {
-      emit(OrderLoadState(orderModel: orders));
+      emit(OrderLoadState(listOfOrders: orders));
     }
   }
 
-  void calculateCompletedOrders() {}
+  get totalPendingOrders {
+    int count = 0;
+    bool isOrderPending = true;
+    for (int i = 0; i < orderBox!.values.length; i++) {
+      if (orderBox!.getAt(i)!.pendingStatus == isOrderPending) {
+        count++;
+      }
+    }
+    return count;
+  }
 
-  void searchOrder(String search) {
-    List<Order> searchOrders = orders
-        .where((order) =>
-            order.productname!.toLowerCase().startsWith(search.toLowerCase()))
+  get totalGainedMoney {
+    int money = 0;
+    bool isOrderPending = false;
+
+    for (int i = 0; i < orderBox!.values.length; i++) {
+      if (orderBox!.getAt(i)!.pendingStatus == isOrderPending) {
+        money = money + orderBox!.getAt(i)!.cost!;
+      }
+    }
+    return money;
+  }
+
+  void searchOrder(String searchOrder) {
+    List<Order> searchResults = orders
+        .where((order) => order.productName!
+            .trim()
+            .toLowerCase()
+            .startsWith(searchOrder.trim().toLowerCase()))
         .toList();
 
-    if (searchOrders.isNotEmpty) {
-      emit(OrderSearchState(orderModel: searchOrders));
+    if (searchResults.isNotEmpty) {
+      emit(OrderSearchState(listOfOrders: searchResults));
     } else {
-      emit(const OrderFoundState(
-          message: "ORDER NOT FOUND!", iconData: Icons.search_off_rounded));
+      emit(
+        const OrderFoundState(
+          message: "ORDER NOT FOUND!",
+          icon: Icons.search_off_rounded,
+        ),
+      );
     }
   }
+
+  get totalOrders => orders.length;
 }

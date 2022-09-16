@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:khata/constants.dart';
+import 'package:khata/models/model/order.dart';
 import 'package:khata/screens/order_screen/cubit/order_cubit.dart';
 import 'package:khata/screens/order_screen/sub_screens/order_detail_screen/cubit/order_detail_cubit.dart';
 import 'package:khata/screens/order_screen/sub_screens/order_detail_screen/presentation/order_detail_screen.dart';
@@ -112,10 +113,10 @@ class OrderInterfaceStateManager extends StatelessWidget
   Widget build(BuildContext context) {
     return BlocBuilder<OrderCubit, OrderState>(
       builder: (context, state) {
-        if (state is OrderHomeInitial) {
+        if (state is OrderInitialState) {
           return EmptyRecordsWidget(
             message: state.message,
-            icon: state.iconData,
+            icon: state.icon,
           );
         } else if (state is OrderLoadState) {
           return ScrollConfiguration(
@@ -127,18 +128,13 @@ class OrderInterfaceStateManager extends StatelessWidget
             ),
             child: ListView.builder(
               shrinkWrap: true,
-              itemCount: state.orderModel.length,
+              itemCount: state.listOfOrders.length,
               physics: const AlwaysScrollableScrollPhysics(
-                  parent: BouncingScrollPhysics()),
+                parent: BouncingScrollPhysics(),
+              ),
               itemBuilder: (context, index) {
-                var order = state.orderModel;
                 return OrderCard(
-                  product: order[index].productname!,
-                  cost: order[index].cost.toString(),
-                  username: order[index].username!,
-                  completedDate: order[index].completedDate.toString(),
-                  createdDate: order[index].createdDate.toString(),
-                  status: order[index].status!,
+                  order: state.listOfOrders[index],
                   index: index,
                 );
               },
@@ -146,16 +142,11 @@ class OrderInterfaceStateManager extends StatelessWidget
           );
         } else if (state is OrderSearchState) {
           return ListView.builder(
-            itemCount: state.orderModel.length,
+            itemCount: state.listOfOrders.length,
             shrinkWrap: true,
             itemBuilder: (context, index) {
               return OrderCard(
-                product: state.orderModel[index].productname!,
-                cost: state.orderModel[index].cost.toString(),
-                username: state.orderModel[index].username!,
-                completedDate: state.orderModel[index].completedDate.toString(),
-                createdDate: state.orderModel[index].createdDate.toString(),
-                status: state.orderModel[index].status!,
+                order: state.listOfOrders[index],
                 index: index,
               );
             },
@@ -276,7 +267,7 @@ class TotalGain extends StatelessWidget {
                       .copyWith(color: const Color.fromRGBO(215, 215, 255, 1)),
                 ),
                 Text(
-                  "${BlocProvider.of<OrderCubit>(context).totalGain.toString()} PKR",
+                  "${BlocProvider.of<OrderCubit>(context).totalGainedMoney.toString()} PKR",
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
               ],
@@ -289,20 +280,12 @@ class TotalGain extends StatelessWidget {
 }
 
 class OrderCard extends StatelessWidget with GradientDecoration {
-  final String product, cost, username;
   final int index;
-  final bool status;
-  final String createdDate, completedDate;
-
+  final Order order;
   const OrderCard({
     Key? key,
-    required this.product,
-    required this.cost,
-    required this.username,
-    required this.createdDate,
     required this.index,
-    required this.completedDate,
-    required this.status,
+    required this.order,
   }) : super(key: key);
 
   @override
@@ -312,28 +295,28 @@ class OrderCard extends StatelessWidget with GradientDecoration {
         decoration: gradientDecoration(),
         child: ListTile(
           title: Text(
-            product.toUpperCase(),
+            order.productName!.toUpperCase(),
             style: Theme.of(context).textTheme.titleLarge,
           ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "RS. $cost",
+                "RS. ${order.cost}",
                 style: Theme.of(context)
                     .textTheme
                     .titleLarge!
                     .copyWith(color: const Color.fromARGB(255, 218, 224, 236)),
               ),
-              if (status) ...[
+              if (order.pendingStatus!) ...[
                 OrderStatusIcon(
-                  data: username,
+                  data: order.customerName!,
                   icon: CupertinoIcons.exclamationmark_circle,
                   color: Colors.yellow,
                 ),
               ] else ...[
                 OrderStatusIcon(
-                  data: username,
+                  data: order.customerName!,
                   icon: Icons.check_circle_rounded,
                   color: Colors.lightGreenAccent,
                 ),
@@ -347,11 +330,14 @@ class OrderCard extends StatelessWidget with GradientDecoration {
                 builder: (context) => BlocProvider(
                   create: (context) => OrderDetailCubit(),
                   child: OrderDetailScreen(
-                    username: username,
-                    product: product,
-                    cost: cost,
-                    createdDate: createdDate.toString(),
-                    completedDate: createdDate.toString(),
+                    order: Order(
+                      order.customerName,
+                      order.productName,
+                      order.cost,
+                      order.createdDate,
+                      order.completedDate,
+                      order.pendingStatus,
+                    ),
                     index: index,
                   ),
                 ),
@@ -382,10 +368,10 @@ class OrderStatusIcon extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          data,
+          data.trim().toUpperCase(),
           style: Theme.of(context)
               .textTheme
-              .titleMedium!
+              .titleSmall!
               .copyWith(color: const Color.fromARGB(255, 218, 224, 236)),
         ),
         Icon(icon, color: color),

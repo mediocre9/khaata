@@ -1,69 +1,67 @@
-import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
-import 'package:khata/constants.dart';
 import 'package:khata/models/model/order.dart';
 import 'package:khata/models/model/product.dart';
+import 'package:khata/screens/customer_screen/cubit/customer_cubit_exports.dart';
 
 part 'order_detail_state.dart';
 
 class OrderDetailCubit extends Cubit<OrderDetailState> {
-  OrderDetailCubit() : super(OrderDetailInitial());
+  Order? _order;
   Product? _productObject;
   int _productInitialStock = 0;
   int _productIndexInDatabase = 0;
-  getOrderStatus(index) => orderBox!.getAt(index)!.status == true;
+  int _orderIndexInDatabase = 0;
 
-  markOrderStateToComplete(int index, String username, String product, int cost,
-      DateTime createdDate, DateTime completedDate) {
-    orderBox!.putAt(
-      index,
+  OrderDetailCubit() : super(OrderDetailInitialState());
+
+  void init(Order order, int index) {
+    _order = order;
+    _orderIndexInDatabase = index;
+    if (_order!.pendingStatus!) {
+      emit(UnMarkedOrderState());
+    } else {
+      emit(MarkOrderState());
+    }
+  }
+
+  void completeOrder() async {
+    await orderBox!.putAt(
+      _orderIndexInDatabase,
       Order(
-        username,
-        product,
-        cost,
-        createdDate,
+        _order!.customerName,
+        _order!.productName,
+        _order!.cost,
+        _order!.createdDate,
         DateTime.now(),
         false,
       ),
     );
 
-    _productObject = _getProductObject(product);
-
+    _productObject = _getProductObjectFromDatabase(_order!.productName!);
     if (_productObject != null) {
       _productInitialStock = _productObject!.stock! - 1;
     }
 
     var updatedItem = Product(
-        name: product.toUpperCase(), cost: cost, stock: _productInitialStock);
+      name: _order!.productName,
+      cost: _order!.cost,
+      stock: _productInitialStock,
+    );
 
-    List<Product> updateItemList = [];
-    for (int i = 0; i < productBox!.values.length; i++) {
-      updateItemList.add(productBox!.getAt(i)!);
-
-      if (productBox!.getAt(i)!.name!.toLowerCase() == product.toLowerCase()) {
-        productBox!.putAt(_productIndexInDatabase, updatedItem);
-        break;
-      }
-    }
-
-    emit(MarkOrderState());
+    productBox!.putAt(_productIndexInDatabase, updatedItem);
   }
 
-  Product? _getProductObject(String name) {
+  Future<void> deleteOrder(int index) async {
+    await orderBox!.deleteAt(index);
+  }
+
+  Product? _getProductObjectFromDatabase(String productName) {
     for (int i = 0; i < productBox!.values.length; i++) {
-      if (productBox!.getAt(i)!.name!.toLowerCase() == name.toLowerCase()) {
+      if (productName.trim().toLowerCase() ==
+          productBox!.getAt(i)!.name!.trim().toLowerCase()) {
         _productIndexInDatabase = i;
         return productBox!.getAt(i)!;
       }
     }
     return null;
-  }
-
-  checkOrderState(int index) {
-    if (getOrderStatus(index)) {
-      emit(UnMarkedOrderState());
-    } else {
-      emit(MarkOrderState());
-    }
   }
 }

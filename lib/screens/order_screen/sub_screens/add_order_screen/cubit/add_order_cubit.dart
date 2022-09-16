@@ -7,99 +7,63 @@ import 'package:khata/models/model/customer.dart';
 part 'add_order_state.dart';
 
 class AddOrderCubit extends Cubit<AddOrderState> {
-  List<Product> products = [];
-  List<Customer> customers = [];
-  Product? _productObject;
-  int _productIndexInDatabase = 0;
-  // int _productInitialStock = 0;
+  final List<Product> _listOfSuggestedProducts = [];
+  final List<Customer> _listOfSuggestedCustomers = [];
 
   AddOrderCubit() : super(AddOrderInitial()) {
-    _loadData();
+    _loadAndInitDataFromDatabase();
   }
 
-  // initializing data.....
-  void _loadData() {
+  void _loadAndInitDataFromDatabase() {
+    int initialStock = 0;
+
     for (int i = 0; i < productBox!.values.length; i++) {
-      if (productBox!.getAt(i)!.stock != 0) {
-        products.add(productBox!.getAt(i)!);
+      /**
+     * fetching those product items from database
+     * that their initial stock should not be 
+     * empty or (0). Because we only want to suggest
+     * those items to our textfield that are in a stock.
+     */
+      if (productBox!.getAt(i)!.stock != initialStock) {
+        _listOfSuggestedProducts.add(productBox!.getAt(i)!);
       }
     }
 
+    /**
+     * fetching customers records from database
+     * for suggestions.
+     */
     for (int i = 0; i < userBox!.values.length; i++) {
-      customers.add(userBox!.getAt(i)!);
+      _listOfSuggestedCustomers.add(userBox!.getAt(i)!);
     }
   }
 
-  // search product.....
-  List<Product> searchProduct(String search) {
-    if (search.isNotEmpty) {
-      List<Product> productList = products
-          .where((product) =>
-              product.name!.toLowerCase().startsWith(search.toLowerCase()))
-          .toList();
-
-      if (productList.isNotEmpty) {
-        emit(ProductSearchState(productList));
-        return productList;
-      }
-    }
-    return List.empty();
-  }
-
-  // search customer....
-  List<Customer> searchCustomer(String search) {
-    if (search.isNotEmpty) {
-      List<Customer> customerList = customers
-          .where((customer) =>
-              customer.username!.toLowerCase().startsWith(search.toLowerCase()))
-          .toList();
-
-      if (customerList.isNotEmpty) {
-        emit(CustomerSearchState(customerList));
-        return customerList;
-      }
-    }
-    return List.empty();
-  }
-
-  // get product object.....
-  Product? _getProductObject(String name) {
-    for (int i = 0; i < productBox!.values.length; i++) {
-      if (productBox!.getAt(i)!.name!.toLowerCase() == name.toLowerCase()) {
-        _productIndexInDatabase = i;
-        return productBox!.getAt(i)!;
-      }
-    }
-    return null;
-  }
-
-  // void _decreaseStockInInventory() {
-  //   _productInitialStock = _productObject!.initialStock! - 1;
-  // }
-
-  void addOrder(String product, String customer) {
+  /// To add an order we are bound to get the product object
+  /// by using [_getProductObjectFromDatabase] method.
+  ///
+  /// Because we are only getting a string from our [AddOrderScreen] textfield
+  /// So we are using this [_getProductObjectFromDatabase] method just to
+  /// get an actual product object so we can use those product object values
+  /// on our [Order] object.
+  ///
+  /// Just read the code for better understanding...
+  /// 
+  /// #### code speaks louder than comments . . .
+  Future<void> addOrder(String product, String customer) async {
     if (product.isNotEmpty && customer.isNotEmpty) {
-      _productObject = _getProductObject(product);
+      Product? productObject = _getProductObjectFromDatabase(product);
 
-      if (_productObject != null) {
-        // _decreaseStockInInventory();
-
-        // update....
-        productBox!.putAt(
-          _productIndexInDatabase,
-          Product(
-            name: _productObject!.name,
-            stock: _productObject!.stock,
-            cost: _productObject!.cost,
-          ),
-        );
-
-        // add new order...
-        orderBox!.add(
+      if (productObject != null) {
+        /**
+       * setting up boolean flag to TRUE
+       * because our newly created order's
+       * status is pending.
+       */
+        await orderBox!.add(
           Order(
-            customer,
-            product,
-            _productObject!.cost,
+            customer.trim(),
+            product.trim(),
+            productObject.cost,
             DateTime.now(),
             DateTime.now(),
             true,
@@ -107,5 +71,65 @@ class AddOrderCubit extends Cubit<AddOrderState> {
         );
       }
     }
+  }
+
+  /// Returns a [Product] type object from database.
+  /// If value exists in a database a product object will be
+  /// returned otherwise null value would be thrown.
+  ///
+  /// This method relies on [Hive] database for the
+  /// retrieval of an object.
+  ///
+  /// `Argument:` To get an object, pass product name as an
+  /// argument.
+  ///
+  /// `Example:`
+  /// ```dart
+  ///   Product? object = _getProductObjectFromDatabase("value");
+  /// ```
+  Product? _getProductObjectFromDatabase(String productName) {
+    for (int i = 0; i < productBox!.values.length; i++) {
+      if (productName.trim().toLowerCase() ==
+          productBox!.getAt(i)!.name!.trim().toLowerCase()) {
+        return productBox!.getAt(i)!;
+      }
+    }
+    return null;
+  }
+
+  /// Search suggestion to find the products.
+  List<Product> searchProduct(String searchProduct) {
+    if (searchProduct.isNotEmpty) {
+      List<Product> searchResults = _listOfSuggestedProducts
+          .where((product) => product.name!
+              .trim()
+              .toLowerCase()
+              .startsWith(searchProduct.trim().toLowerCase()))
+          .toList();
+
+      if (searchResults.isNotEmpty) {
+        emit(ProductSearchResultsState(listOfProducts: searchResults));
+        return searchResults;
+      }
+    }
+    return List.empty();
+  }
+
+  /// Search suggestion to find the customers.
+  List<Customer> searchCustomer(String searchCustomer) {
+    if (searchCustomer.isNotEmpty) {
+      List<Customer> searchResults = _listOfSuggestedCustomers
+          .where((customer) => customer.username!
+              .trim()
+              .toLowerCase()
+              .startsWith(searchCustomer.trim().toLowerCase()))
+          .toList();
+
+      if (searchResults.isNotEmpty) {
+        emit(CustomerSearchResultsState(listOfCustomers: searchResults));
+        return searchResults;
+      }
+    }
+    return List.empty();
   }
 }
