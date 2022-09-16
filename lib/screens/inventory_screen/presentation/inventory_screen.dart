@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:khata/constants.dart';
+import 'package:khata/models/model/product.dart';
 import 'package:khata/screens/inventory_screen/cubit/inventory_cubit.dart';
 import 'package:khata/screens/inventory_screen/sub_screens/item_detail_screen/cubit/add_more_cubit.dart';
 import 'package:khata/screens/inventory_screen/sub_screens/item_detail_screen/presentation/item_detail_screen.dart';
@@ -80,18 +81,78 @@ class SearchFieldAreaWidget extends StatelessWidget {
   }
 }
 
+class ProductInterfaceStateManager extends StatelessWidget
+    implements InterfaceStateManager {
+  const ProductInterfaceStateManager({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<InventoryCubit, InventoryState>(
+      builder: (context, state) {
+        if (state is InventoryInititalState) {
+          return EmptyRecordsWidget(
+            icon: Icons.list,
+            message: state.message,
+          );
+        } else if (state is LoadInventoryDataState) {
+          var length = state.products.length;
+          return ScrollConfiguration(
+            behavior: ScrollConfiguration.of(context).copyWith(
+              dragDevices: {
+                PointerDeviceKind.touch,
+                PointerDeviceKind.mouse,
+              },
+            ),
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: length,
+              physics: const AlwaysScrollableScrollPhysics(
+                parent: BouncingScrollPhysics(),
+              ),
+              itemBuilder: (_, index) {
+                return ProductCardWidget(
+                  product: state.products[index],
+                  index: index,
+                  isItemInStock:
+                      BlocProvider.of<InventoryCubit>(context).getStockStatus(index),
+                );
+              },
+            ),
+          );
+        } else if (state is ProductFoundState) {
+          return ListView.builder(
+            shrinkWrap: true,
+            itemCount: state.products.length,
+            itemBuilder: (_, index) {
+              return ProductCardWidget(
+                product: state.products[index],
+                isItemInStock:
+                    BlocProvider.of<InventoryCubit>(context).getStockStatus(index),
+                index: index,
+              );
+            },
+          );
+        } else if (state is ProductNotFoundState) {
+          return RecordNotFoundWidget(message: state.message);
+        }
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
+  }
+}
+
 class ProductCardWidget extends StatelessWidget with GradientDecoration {
-  const ProductCardWidget({
-    Key? key,
-    required this.itemName,
-    required this.cost,
-    required this.stock,
-    required this.index,
-    this.isItemInStock,
-  }) : super(key: key);
-  final String itemName, cost, stock;
+  final Product product;
   final bool? isItemInStock;
   final int index;
+
+  const ProductCardWidget({
+    Key? key,
+    required this.index,
+    required this.product,
+    this.isItemInStock,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -99,14 +160,14 @@ class ProductCardWidget extends StatelessWidget with GradientDecoration {
         decoration: gradientDecoration(),
         child: ListTile(
           title: Text(
-            itemName,
+            product.name!,
             style: Theme.of(context).textTheme.titleLarge,
           ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "RS. $cost",
+                "RS. ${product.cost}",
                 style: Theme.of(context)
                     .textTheme
                     .titleLarge!
@@ -114,7 +175,7 @@ class ProductCardWidget extends StatelessWidget with GradientDecoration {
               ),
               if (isItemInStock!) ...[
                 Text(
-                  "STOCK : $stock",
+                  "STOCK : ${product.stock}",
                   style: Theme.of(context)
                       .textTheme
                       .titleSmall!
@@ -147,9 +208,11 @@ class ProductCardWidget extends StatelessWidget with GradientDecoration {
                 builder: (context) => BlocProvider(
                   create: (context) => AddMoreCubit(),
                   child: ItemDetailScreen(
-                    itemName: itemName,
-                    cost: cost,
-                    stock: stock,
+                    product: Product(
+                      name: product.name,
+                      stock: product.stock,
+                      cost: product.cost,
+                    ),
                     index: index,
                   ),
                 ),
@@ -159,71 +222,6 @@ class ProductCardWidget extends StatelessWidget with GradientDecoration {
           },
         ),
       ),
-    );
-  }
-}
-
-class ProductInterfaceStateManager extends StatelessWidget
-    implements InterfaceStateManager {
-  const ProductInterfaceStateManager({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<InventoryCubit, InventoryState>(
-      builder: (context, state) {
-        if (state is InventoryInititalState) {
-          return EmptyRecordsWidget(
-            icon: Icons.list,
-            message: state.message,
-          );
-        } else if (state is LoadInventoryDataState) {
-          var product = state.products;
-          var length = state.products.length;
-          return ScrollConfiguration(
-            behavior: ScrollConfiguration.of(context).copyWith(
-              dragDevices: {
-                PointerDeviceKind.touch,
-                PointerDeviceKind.mouse,
-              },
-            ),
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: length,
-              physics: const AlwaysScrollableScrollPhysics(
-                parent: BouncingScrollPhysics(),
-              ),
-              itemBuilder: (_, index) {
-                return ProductCardWidget(
-                  itemName: product[index].name!.toUpperCase(),
-                  cost: product[index].cost.toString(),
-                  stock: product[index].stock.toString().toUpperCase(),
-                  index: index,
-                  isItemInStock:
-                      BlocProvider.of<InventoryCubit>(context).getStockStatus(index),
-                );
-              },
-            ),
-          );
-        } else if (state is ProductFoundState) {
-          return ListView.builder(
-            shrinkWrap: true,
-            itemCount: state.products.length,
-            itemBuilder: (_, index) {
-              return ProductCardWidget(
-                itemName: state.products[index].name!.toUpperCase(),
-                cost: state.products[index].cost.toString(),
-                stock: state.products[index].stock.toString().toUpperCase(),
-                index: index,
-                isItemInStock:
-                    BlocProvider.of<InventoryCubit>(context).getStockStatus(index),
-              );
-            },
-          );
-        } else if (state is ProductNotFoundState) {
-          return RecordNotFoundWidget(message: state.message);
-        }
-        return const Center(child: CircularProgressIndicator());
-      },
     );
   }
 }

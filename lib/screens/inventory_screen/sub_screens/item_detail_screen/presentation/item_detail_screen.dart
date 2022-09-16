@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:khata/constants.dart';
+import 'package:khata/models/model/product.dart';
 import 'package:khata/screens/inventory_screen/sub_screens/item_detail_screen/cubit/add_more_cubit.dart';
 import 'package:khata/widgets/custom_app_bar.dart';
 import 'package:khata/widgets/custom_card.dart';
@@ -8,14 +9,13 @@ import 'package:khata/widgets/custom_drawer.dart';
 import 'package:khata/widgets/custom_outlined_button.dart';
 
 class ItemDetailScreen extends StatelessWidget {
-  final String itemName, cost, stock;
   final int index;
+  final Product product;
+
   const ItemDetailScreen({
     Key? key,
-    this.itemName = "nil",
-    this.cost = "nil",
-    this.stock = 'nil',
     this.index = 0,
+    required this.product,
   }) : super(key: key);
 
   static final TextEditingController _stockController = TextEditingController();
@@ -61,10 +61,13 @@ class ItemDetailScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(itemName, style: Theme.of(context).textTheme.headlineMedium),
-                    Text("RS. ${cost.replaceAll("PKR", "")}", style: Theme.of(context).textTheme.headlineSmall),
+                    Text(product.name!,
+                        style: Theme.of(context).textTheme.headlineMedium),
+                    Text("RS. ${product.cost}",
+                        style: Theme.of(context).textTheme.headlineSmall),
                     const SizedBox(height: 5),
-                    Text("STOCK: $stock", style: Theme.of(context).textTheme.titleSmall),
+                    Text("STOCK: ${product.stock}",
+                        style: Theme.of(context).textTheme.titleSmall),
                     const SizedBox(height: 25),
                     OutlinedButton(
                       child: const Text("ADD MORE"),
@@ -96,18 +99,24 @@ class ItemDetailScreen extends StatelessWidget {
         return AlertDialog(
           title: Text(
             "Warning!",
-            style: Theme.of(context).textTheme.titleLarge!.copyWith(color: Colors.black),
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge!
+                .copyWith(color: Colors.black),
           ),
           content: Text(
             "Do you really want to delete this record?",
-            style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.black),
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium!
+                .copyWith(color: Colors.black),
           ),
           actions: [
             TextButton(
               child: const Text("Yes"),
               onPressed: () {
-                () async => await productBox!.deleteAt(index);
-                Navigator.pushReplacementNamed(context, '/manageInventoryScreen');
+                productBox!.deleteAt(index);
+                Navigator.pushReplacementNamed(context, '/InventoryScreen');
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     key: UniqueKey(),
@@ -137,7 +146,10 @@ class ItemDetailScreen extends StatelessWidget {
         return AlertDialog(
           title: Text(
             "Add Stock",
-            style: Theme.of(context).textTheme.titleLarge!.copyWith(color: Colors.black),
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge!
+                .copyWith(color: Colors.black),
           ),
           content: TextField(
             style: const TextStyle(color: kTextColor),
@@ -153,9 +165,9 @@ class ItemDetailScreen extends StatelessWidget {
               onPressed: () {
                 BlocProvider.of<AddMoreCubit>(context).addMore(
                   _stockController.text,
-                  itemName,
+                  product.name!,
                 );
-                Navigator.pushReplacementNamed(context, '/manageInventoryScreen');
+                Navigator.pushReplacementNamed(context, '/InventoryScreen');
               },
             ),
             TextButton(

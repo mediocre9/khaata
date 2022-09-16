@@ -18,7 +18,7 @@ class CompletedCubit extends Cubit<CompletedState> {
   get completedGainMoney {
     int gainMoney = 0;
     for (int i = 0; i < orderBox!.values.length; i++) {
-      if (orderBox!.getAt(i)!.status == _isOrderPending) {
+      if (orderBox!.getAt(i)!.pendingStatus == _isOrderPending) {
         gainMoney = gainMoney + orderBox!.getAt(i)!.cost!;
       }
     }
@@ -27,7 +27,7 @@ class CompletedCubit extends Cubit<CompletedState> {
 
   _loadCompletedOrders() {
     for (int i = 0; i < orderBox!.values.length; i++) {
-      if (orderBox!.getAt(i)!.status == _isOrderPending) {
+      if (orderBox!.getAt(i)!.pendingStatus == _isOrderPending) {
         orders.add(orderBox!.getAt(i)!);
       }
     }

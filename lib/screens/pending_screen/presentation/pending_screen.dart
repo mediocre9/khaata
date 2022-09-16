@@ -87,9 +87,9 @@ class PendingInterfaceStateManger extends StatelessWidget
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 return PendingOrderCard(
-                  product: state.orders[index].productname!,
+                  product: state.orders[index].productName!,
                   cost: state.orders[index].cost.toString(),
-                  username: state.orders[index].username!,
+                  username: state.orders[index].customerName!,
                 );
               },
             ),
@@ -194,7 +194,7 @@ class PendingOrderCard extends StatelessWidget with GradientDecoration {
         decoration: gradientDecoration(),
         child: ListTile(
           title: Text(
-            product.toUpperCase(),
+            product.trim().toUpperCase(),
             style: Theme.of(context).textTheme.titleLarge,
           ),
           subtitle: Column(
@@ -212,7 +212,7 @@ class PendingOrderCard extends StatelessWidget with GradientDecoration {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    username,
+                    username.trim().toUpperCase(),
                     style: Theme.of(context)
                         .textTheme
                         .titleMedium!

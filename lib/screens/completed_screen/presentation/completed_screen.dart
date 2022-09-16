@@ -94,8 +94,8 @@ class CompletedOrderInterfaceStateManager extends StatelessWidget
               itemCount: state.orders.length,
               itemBuilder: (_, index) {
                 return CompletedOrderCard(
-                  username: state.orders[index].username!,
-                  product: state.orders[index].productname!,
+                  username: state.orders[index].customerName!,
+                  product: state.orders[index].productName!,
                   cost: state.orders[index].cost.toString(),
                 );
               },
@@ -205,13 +205,12 @@ class CompletedOrderCard extends StatelessWidget with GradientDecoration {
         decoration: gradientDecoration(),
         child: ListTile(
           title: Text(
-            product.toUpperCase(),
+            product.trim().toUpperCase(),
             style: Theme.of(context).textTheme.titleLarge,
           ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 5),
               Text(
                 "RS. $cost",
                 style: Theme.of(context)
@@ -223,10 +222,10 @@ class CompletedOrderCard extends StatelessWidget with GradientDecoration {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    username,
+                    username.trim().toUpperCase(),
                     style: Theme.of(context)
                         .textTheme
-                        .titleMedium!
+                        .titleSmall!
                         .copyWith(color: const Color.fromARGB(255, 218, 224, 236)),
                   ),
                   const Icon(

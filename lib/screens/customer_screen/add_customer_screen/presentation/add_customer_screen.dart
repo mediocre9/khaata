@@ -22,40 +22,38 @@ class AddCustomerScreen extends StatelessWidget {
 
       // Drawer
       endDrawer: const CustomDrawer(),
-      body: SafeArea(
-        child: CustomCard(
-          innerMainAlignment: MainAxisAlignment.center,
-          width: double.maxFinite,
-          height: 310,
-          verticalMargin: 3,
-          horizontalMargin: 30,
-          elevationLevel: 5,
-          borderRadius: 5,
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  IconButton(
-                    color: Colors.white60,
-                    icon: const Icon(Icons.close_outlined),
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/UserScreen');
-                    },
-                  ),
-                ],
-              ),
-              const Text(
-                "ADD USER",
-                style: TextStyle(
-                  fontSize: 24,
-                  color: kCardTextColor,
-                  fontWeight: FontWeight.w600,
+      body: CustomCard(
+        innerMainAlignment: MainAxisAlignment.center,
+        width: double.maxFinite,
+        height: 310,
+        verticalMargin: 3,
+        horizontalMargin: 30,
+        elevationLevel: 5,
+        borderRadius: 5,
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  color: Colors.white60,
+                  icon: const Icon(Icons.close_outlined),
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(context, '/UserScreen');
+                  },
                 ),
+              ],
+            ),
+            const Text(
+              "ADD USER",
+              style: TextStyle(
+                fontSize: 24,
+                color: kCardTextColor,
+                fontWeight: FontWeight.w600,
               ),
-              const SaveUserData(),
-            ],
-          ),
+            ),
+            const SaveUserData(),
+          ],
         ),
       ),
     );

@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:khata/constants.dart';
-import 'package:khata/screens/user_screen/cubit/customer_cubit.dart';
+import 'package:khata/screens/customer_screen/cubit/customer_cubit.dart';
 import 'package:khata/themes/decorations.dart';
 import 'package:khata/widgets/custom_app_bar.dart';
 import 'package:khata/widgets/custom_drawer.dart';

@@ -108,7 +108,14 @@ class SaveItemData extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("NAME", style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.bold)),
+                  const Text(
+                    "NAME",
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   CustomTextField(
                     isDense: true,
                     contentPadding: 10,
@@ -140,7 +147,6 @@ class SaveItemData extends StatelessWidget {
                     color: kCardTextColor,
                     controller: _stockControlller,
                     inputType: TextInputType.number,
-
                     onChanged: (s) {},
                   ),
                 ],
@@ -203,7 +209,10 @@ class SaveItemData extends StatelessWidget {
     return SnackBar(
       duration: const Duration(milliseconds: 600),
       key: UniqueKey(),
-      content: Text(message ?? "Value not defined", style: const TextStyle(fontWeight: FontWeight.w600),),
+      content: Text(
+        message ?? "Value not defined",
+        style: const TextStyle(fontWeight: FontWeight.w600),
+      ),
       backgroundColor: color ?? Colors.blueAccent,
     );
   }

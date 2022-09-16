@@ -21,7 +21,7 @@ class PendingCubit extends Cubit<PendingState> {
   get pendingMoney {
     int remainingMoney = 0;
     for (int i = 0; i < orderBox!.values.length; i++) {
-      if (orderBox!.getAt(i)!.status == isOrderPending) {
+      if (orderBox!.getAt(i)!.pendingStatus == isOrderPending) {
         remainingMoney = remainingMoney + orderBox!.getAt(i)!.cost!;
       }
     }
@@ -30,7 +30,7 @@ class PendingCubit extends Cubit<PendingState> {
 
   _loadPendingOrders() {
     for (int i = 0; i < orderBox!.values.length; i++) {
-      if (orderBox!.getAt(i)!.status == isOrderPending) {
+      if (orderBox!.getAt(i)!.pendingStatus == isOrderPending) {
         pendingOrders.add(orderBox!.getAt(i)!);
       }
     }
