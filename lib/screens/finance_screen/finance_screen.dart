@@ -1,4 +1,6 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:khata/models/model/order.dart';
 import 'package:khata/widgets/custom_app_bar.dart';
 import 'package:khata/widgets/custom_drawer.dart';
 import '../../constants.dart';
@@ -11,15 +13,14 @@ class FinanceScreen extends StatefulWidget {
 }
 
 class _FinanceScreenState extends State<FinanceScreen> {
-  // static List<OrderModel?> completedOrderList = [];
+  List<Order> orders = [];
   int currentGain = 0;
 
   fetchAllData() {
-    // completedOrderList.clear();
     for (var i = 0; i < orderBox!.values.length; i++) {
-      if (orderBox!.getAt(i)!.status! == false) {
-        // completedOrderList.add(orderBox!.getAt(i));
+      if (orderBox!.getAt(i)!.pendingStatus! == false) {
         currentGain = currentGain + orderBox!.getAt(i)!.cost!;
+        orders.add(orderBox!.getAt(i)!);
       }
     }
   }
@@ -30,11 +31,15 @@ class _FinanceScreenState extends State<FinanceScreen> {
     super.initState();
   }
 
+  int i = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar: const CustomAppBar(title: Text("MANAGE"), subtitle: Text("FINANCE")),
+      appBar: const CustomAppBar(
+        title: Text("MANAGE"),
+        subtitle: Text("FINANCE"),
+      ),
       endDrawer: const CustomDrawer(),
       body: SafeArea(
         child: Container(
@@ -57,7 +62,46 @@ class _FinanceScreenState extends State<FinanceScreen> {
                     ),
                     const SizedBox(height: 10),
                     const Text("Finance Graph Area"),
-                    // const LineChartSample5(),
+                    const SizedBox(height: 40),
+                    AspectRatio(
+                      aspectRatio: 2,
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        width: double.infinity,
+                        height: 300,
+                        child: LineChart(
+                          swapAnimationCurve: Curves.bounceIn,
+                          swapAnimationDuration: const Duration(milliseconds: 250),
+                          LineChartData(
+                            backgroundColor:
+                                const Color.fromARGB(255, 236, 236, 236),
+                            borderData: FlBorderData(show: true),
+                            gridData: FlGridData(
+                              show: false,
+                              horizontalInterval: 1.6,
+                              drawVerticalLine: false,
+                            ),
+                            titlesData: FlTitlesData(
+                              show: false,
+                            ),
+                            lineBarsData: [
+                              LineChartBarData(
+                                color: Colors.purple,
+                                isCurved: true,
+                                spots: orders
+                                    .map(
+                                      (e) => FlSpot(
+                                        (15 * i++).toDouble(),
+                                        e.cost!.toDouble(),
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -67,6 +111,35 @@ class _FinanceScreenState extends State<FinanceScreen> {
       ),
     );
   }
+
+  SideTitles get _bottomTitles => SideTitles(
+        showTitles: true,
+        getTitlesWidget: (value, meta) {
+          String text = '';
+          switch (value.toInt()) {
+            case 1:
+              text = 'Jan';
+              break;
+            case 3:
+              text = 'Mar';
+              break;
+            case 5:
+              text = 'May';
+              break;
+            case 7:
+              text = 'Jul';
+              break;
+            case 9:
+              text = 'Sep';
+              break;
+            case 11:
+              text = 'Nov';
+              break;
+          }
+
+          return Text(text);
+        },
+      );
 }
 
 class CurrentGain extends StatelessWidget {
@@ -101,7 +174,11 @@ class CurrentGain extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                const Icon(Icons.arrow_upward, color: Colors.lightGreenAccent, size: 30)
+                const Icon(
+                  Icons.arrow_upward,
+                  color: Colors.lightGreenAccent,
+                  size: 30,
+                )
               ],
             ),
           ],
@@ -125,45 +202,45 @@ class CurrentGain extends StatelessWidget {
 
 //   const LineChartSample5({Key? key}) : super(key: key);
 
-  // Widget bottomTitleWidgets(double value, TitleMeta meta) {
-  //   const style = TextStyle(
-  //     fontWeight: FontWeight.bold,
-  //     color: Colors.blueGrey,
-  //     fontFamily: 'Digital',
-  //     fontSize: 18,
-  //   );
-  //   String text;
-  //   switch (value.toInt()) {
-  //     case 0:
-  //       text = '00:00';
-  //       break;
-  //     case 1:
-  //       text = '04:00';
-  //       break;
-  //     case 2:
-  //       text = '08:00';
-  //       break;
-  //     case 3:
-  //       text = '12:00';
-  //       break;
-  //     case 4:
-  //       text = '16:00';
-  //       break;
-  //     case 5:
-  //       text = '20:00';
-  //       break;
-  //     case 6:
-  //       text = '23:59';
-  //       break;
-  //     default:
-  //       return Container();
-  //   }
+// Widget bottomTitleWidgets(double value, TitleMeta meta) {
+//   const style = TextStyle(
+//     fontWeight: FontWeight.bold,
+//     color: Colors.blueGrey,
+//     fontFamily: 'Digital',
+//     fontSize: 18,
+//   );
+//   String text;
+//   switch (value.toInt()) {
+//     case 0:
+//       text = '00:00';
+//       break;
+//     case 1:
+//       text = '04:00';
+//       break;
+//     case 2:
+//       text = '08:00';
+//       break;
+//     case 3:
+//       text = '12:00';
+//       break;
+//     case 4:
+//       text = '16:00';
+//       break;
+//     case 5:
+//       text = '20:00';
+//       break;
+//     case 6:
+//       text = '23:59';
+//       break;
+//     default:
+//       return Container();
+//   }
 
-  //   return SideTitleWidget(
-  //     axisSide: meta.axisSide,
-  //     child: Text(text, style: style),
-  //   );
-  // }
+//   return SideTitleWidget(
+//     axisSide: meta.axisSide,
+//     child: Text(text, style: style),
+//   );
+// }
 
 //   @override
 //   Widget build(BuildContext context) {
