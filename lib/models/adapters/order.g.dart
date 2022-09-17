@@ -31,9 +31,9 @@ class OrderAdapter extends TypeAdapter<Order> {
     writer
       ..writeByte(6)
       ..writeByte(0)
-      ..write(obj.username)
+      ..write(obj.customerName)
       ..writeByte(1)
-      ..write(obj.productname)
+      ..write(obj.productName)
       ..writeByte(2)
       ..write(obj.cost)
       ..writeByte(3)
@@ -41,7 +41,7 @@ class OrderAdapter extends TypeAdapter<Order> {
       ..writeByte(4)
       ..write(obj.completedDate)
       ..writeByte(5)
-      ..write(obj.status);
+      ..write(obj.pendingStatus);
   }
 
   @override

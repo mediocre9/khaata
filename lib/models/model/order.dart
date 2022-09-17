@@ -4,10 +4,10 @@ part '../adapters/order.g.dart';
 @HiveType(typeId: 2)
 class Order {
   @HiveField(0)
-  final String? username;
+  final String? customerName;
 
   @HiveField(1)
-  final String? productname;
+  final String? productName;
 
   @HiveField(2)
   final int? cost;
@@ -19,8 +19,8 @@ class Order {
   final DateTime? completedDate;
 
   @HiveField(5)
-  final bool? status;
+  final bool? pendingStatus;
 
-  Order(this.username, this.productname, this.cost, this.createdDate,
-      this.completedDate, this.status);
+  Order(this.customerName, this.productName, this.cost, this.createdDate,
+      this.completedDate, this.pendingStatus);
 }

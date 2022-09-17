@@ -41,10 +41,10 @@ class AddOrderCubit extends Cubit<AddOrderState> {
   /// To add an order we are bound to get the product object
   /// by using [_getProductObjectFromDatabase] method.
   ///
-  /// Because we are only getting a string from our [AddOrderScreen] textfield
+  /// Because we are only getting a string from our [AddOrderScreen]'s textfields
   /// So we are using this [_getProductObjectFromDatabase] method just to
-  /// get an actual product object so we can use those product object values
-  /// on our [Order] object.
+  /// get an actual product object by finding it through product name.
+  /// so we can use that product object on our [Order] object.
   ///
   /// Just read the code for better understanding...
   /// 

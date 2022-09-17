@@ -17,6 +17,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      automaticallyImplyLeading: false,
       elevation: elevationLevel ?? Theme.of(context).appBarTheme.elevation,
       toolbarHeight: height ?? Theme.of(context).appBarTheme.toolbarHeight,
       title: Container(
@@ -34,8 +35,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               style: TextStyle(
                 fontSize: 17.0,
                 fontWeight: FontWeight.normal,
-                fontFamily:
-                    Theme.of(context).appBarTheme.toolbarTextStyle?.fontFamily,
+                fontFamily: Theme.of(context).appBarTheme.toolbarTextStyle?.fontFamily,
               ),
             ),
           ],

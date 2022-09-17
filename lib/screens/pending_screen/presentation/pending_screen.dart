@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:khata/models/model/order.dart';
+import 'package:khata/screens/order_screen/sub_screens/order_detail_screen/cubit/order_detail_cubit.dart';
+import 'package:khata/screens/order_screen/sub_screens/order_detail_screen/presentation/order_detail_screen.dart';
 import 'package:khata/screens/pending_screen/cubit/pending_cubit.dart';
 import 'package:khata/themes/decorations.dart';
 import 'package:khata/widgets/custom_app_bar.dart';
@@ -58,8 +61,7 @@ class PendingScreen extends StatelessWidget {
   }
 }
 
-class PendingInterfaceStateManger extends StatelessWidget
-    implements InterfaceStateManager {
+class PendingInterfaceStateManger extends StatelessWidget implements InterfaceStateManager {
   const PendingInterfaceStateManger({super.key});
 
   @override
@@ -87,9 +89,8 @@ class PendingInterfaceStateManger extends StatelessWidget
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 return PendingOrderCard(
-                  product: state.orders[index].productName!,
-                  cost: state.orders[index].cost.toString(),
-                  username: state.orders[index].customerName!,
+                  order: state.orders[index],
+                  index: index,
                 );
               },
             ),
@@ -178,13 +179,13 @@ class TotalPendingGain extends StatelessWidget {
 }
 
 class PendingOrderCard extends StatelessWidget with GradientDecoration {
-  final String product, cost, username;
+  final Order order;
+  final int index;
 
   const PendingOrderCard({
     Key? key,
-    required this.product,
-    required this.cost,
-    required this.username,
+    required this.order,
+    required this.index,
   }) : super(key: key);
 
   @override
@@ -193,30 +194,46 @@ class PendingOrderCard extends StatelessWidget with GradientDecoration {
       child: Container(
         decoration: gradientDecoration(),
         child: ListTile(
+          onTap: () {
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+                  return BlocProvider(
+                    create: (context) => OrderDetailCubit(),
+                    child: OrderDetailScreen(
+                      order: Order(
+                        order.customerName,
+                        order.productName,
+                        order.cost,
+                        order.createdDate,
+                        order.completedDate,
+                        order.pendingStatus,
+                      ),
+                      index: index,
+                    ),
+                  );
+                },
+              ),
+            );
+          },
           title: Text(
-            product.trim().toUpperCase(),
+            order.productName!.trim().toUpperCase(),
             style: Theme.of(context).textTheme.titleLarge,
           ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 5),
               Text(
-                "RS. $cost",
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge!
-                    .copyWith(color: const Color.fromARGB(255, 218, 224, 236)),
+                "RS. ${order.cost}",
+                style: Theme.of(context).textTheme.titleLarge!.copyWith(color: const Color.fromARGB(255, 218, 224, 236)),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    username.trim().toUpperCase(),
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium!
-                        .copyWith(color: const Color.fromARGB(255, 218, 224, 236)),
+                    order.customerName!.trim().toUpperCase(),
+                    style: Theme.of(context).textTheme.titleSmall!.copyWith(color: const Color.fromARGB(255, 218, 224, 236)),
                   ),
                   Icon(
                     CupertinoIcons.exclamationmark_circle,

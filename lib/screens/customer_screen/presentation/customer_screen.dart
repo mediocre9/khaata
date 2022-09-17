@@ -94,7 +94,7 @@ class SearchFieldAreaWidget extends StatelessWidget {
           style: const TextStyle(color: kTextColor),
           decoration: const InputDecoration(hintText: "Search"),
           onChanged: (user) {
-            BlocProvider.of<UserCubit>(context).searchUser(user);
+            BlocProvider.of<CustomerCubit>(context).searchUser(user);
           },
         ),
       ],
@@ -105,11 +105,13 @@ class SearchFieldAreaWidget extends StatelessWidget {
 class UserCardWidget extends StatelessWidget with GradientDecoration {
   final String username;
   final String address;
+  final int placedOrders;
 
   const UserCardWidget({
     Key? key,
     required this.username,
     required this.address,
+    required this.placedOrders,
   }) : super(key: key);
 
   @override
@@ -128,11 +130,9 @@ class UserCardWidget extends StatelessWidget with GradientDecoration {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "PLACED ORDERS : ",
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleSmall!
-                        .copyWith(color: const Color.fromARGB(255, 218, 224, 236)),
+                    "PLACED ORDERS : ${placedOrders}",
+                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                        color: const Color.fromARGB(255, 218, 224, 236)),
                   ),
                 ],
               ),
@@ -156,10 +156,8 @@ class UserCardWidget extends StatelessWidget with GradientDecoration {
               children: [
                 Text(
                   address.toUpperCase(),
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleSmall!
-                      .copyWith(color: const Color.fromARGB(255, 218, 224, 236)),
+                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                      color: const Color.fromARGB(255, 218, 224, 236)),
                 ),
               ],
             ),
@@ -198,7 +196,7 @@ class UserInterfaceStateManager extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<UserCubit, CustomerState>(
+    return BlocBuilder<CustomerCubit, CustomerState>(
       builder: (_, state) {
         if (state is CustomerInitialState) {
           return EmptyRecordsWidget(
@@ -224,11 +222,13 @@ class UserInterfaceStateManager extends StatelessWidget
                   direction: DismissDirection.endToStart,
                   key: UniqueKey(),
                   onDismissed: (dismiss) async {
-                    await BlocProvider.of<UserCubit>(_).deleteUser(index);
+                    await BlocProvider.of<CustomerCubit>(_).deleteUser(index);
                   },
                   child: UserCardWidget(
                     username: state.users[index].username!,
                     address: state.users[index].address!,
+                    placedOrders: BlocProvider.of<CustomerCubit>(context)
+                        .placedOrders(state.users[index].username!),
                   ),
                 );
               },
@@ -242,6 +242,8 @@ class UserInterfaceStateManager extends StatelessWidget
               return UserCardWidget(
                 username: state.searchUser[index].username!,
                 address: state.searchUser[index].address!,
+                placedOrders: BlocProvider.of<CustomerCubit>(context)
+                    .placedOrders(state.searchUser[index].username!),
               );
             },
           );

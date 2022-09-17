@@ -1,9 +1,9 @@
 import 'customer_cubit_exports.dart';
 part 'customer_state.dart';
 
-class UserCubit extends Cubit<CustomerState> {
+class CustomerCubit extends Cubit<CustomerState> {
   final List<Customer> _userList = [];
-  UserCubit() : super(const CustomerInitialState("EMPTY LIST")) {
+  CustomerCubit() : super(const CustomerInitialState("EMPTY LIST")) {
     _loadUsersList();
   }
 
@@ -17,6 +17,18 @@ class UserCubit extends Cubit<CustomerState> {
     } else {
       emit(const CustomerInitialState("RECORD LIST IS EMPTY!"));
     }
+  }
+
+  int placedOrders(String customer) {
+    int count = 0;
+    for (int i = 0; i < orderBox!.values.length; i++) {
+      if (orderBox!.getAt(i)!.pendingStatus! == false &&
+          orderBox!.getAt(i)!.customerName!.trim().toLowerCase() ==
+              customer.trim().toLowerCase()) {
+        count++;
+      }
+    }
+    return count;
   }
 
   void searchUser(String user) {

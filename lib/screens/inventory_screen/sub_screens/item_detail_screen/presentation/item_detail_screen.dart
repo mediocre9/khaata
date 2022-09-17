@@ -51,7 +51,7 @@ class ItemDetailScreen extends StatelessWidget {
                     color: Colors.white60,
                     icon: const Icon(Icons.close_outlined),
                     onPressed: () {
-                      Navigator.pushNamed(context, '/InventoryScreen');
+                      Navigator.pop(context);
                     },
                   ),
                 ],
@@ -61,13 +61,10 @@ class ItemDetailScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(product.name!,
-                        style: Theme.of(context).textTheme.headlineMedium),
-                    Text("RS. ${product.cost}",
-                        style: Theme.of(context).textTheme.headlineSmall),
+                    Text(product.name!, style: Theme.of(context).textTheme.headlineMedium),
+                    Text("RS. ${product.cost}", style: Theme.of(context).textTheme.headlineSmall),
                     const SizedBox(height: 5),
-                    Text("STOCK: ${product.stock}",
-                        style: Theme.of(context).textTheme.titleSmall),
+                    Text("STOCK: ${product.stock}", style: Theme.of(context).textTheme.titleSmall),
                     const SizedBox(height: 25),
                     OutlinedButton(
                       child: const Text("ADD MORE"),
@@ -99,17 +96,11 @@ class ItemDetailScreen extends StatelessWidget {
         return AlertDialog(
           title: Text(
             "Warning!",
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge!
-                .copyWith(color: Colors.black),
+            style: Theme.of(context).textTheme.titleLarge!.copyWith(color: Colors.black),
           ),
           content: Text(
             "Do you really want to delete this record?",
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium!
-                .copyWith(color: Colors.black),
+            style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.black),
           ),
           actions: [
             TextButton(
@@ -146,10 +137,7 @@ class ItemDetailScreen extends StatelessWidget {
         return AlertDialog(
           title: Text(
             "Add Stock",
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge!
-                .copyWith(color: Colors.black),
+            style: Theme.of(context).textTheme.titleLarge!.copyWith(color: Colors.black),
           ),
           content: TextField(
             style: const TextStyle(color: kTextColor),

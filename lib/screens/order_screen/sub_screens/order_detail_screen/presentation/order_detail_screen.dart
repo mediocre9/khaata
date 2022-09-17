@@ -93,18 +93,12 @@ class OrderDetailScreen extends StatelessWidget {
                 const SizedBox(height: 5),
                 Text(
                   "CREATED DATE : ${DateUtils.dateOnly(order.createdDate!).toString().replaceRange(10, null, "")}",
-                  style: const TextStyle(
-                      color: Color.fromARGB(255, 218, 224, 236),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500),
+                  style: const TextStyle(color: Color.fromARGB(255, 218, 224, 236), fontSize: 12, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 5),
                 Text(
                   "COMPLETED DATE : ${DateUtils.dateOnly(order.completedDate!).toString().replaceRange(10, null, "")}",
-                  style: const TextStyle(
-                      color: Color.fromARGB(255, 218, 224, 236),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500),
+                  style: const TextStyle(color: Color.fromARGB(255, 218, 224, 236), fontSize: 12, fontWeight: FontWeight.w500),
                 ),
                 Container(
                   padding: const EdgeInsets.only(top: 30),
@@ -117,11 +111,9 @@ class OrderDetailScreen extends StatelessWidget {
                             return OutlinedButton(
                               child: const Text("MARK COMPLETED"),
                               onPressed: () {
-                                BlocProvider.of<OrderDetailCubit>(context)
-                                    .completeOrder();
+                                BlocProvider.of<OrderDetailCubit>(context).completeOrder();
 
-                                Navigator.pushReplacementNamed(
-                                    context, '/OrderScreen');
+                                Navigator.pushReplacementNamed(context, '/OrderScreen');
                               },
                             );
                           } else {
@@ -139,25 +131,18 @@ class OrderDetailScreen extends StatelessWidget {
                               return AlertDialog(
                                 title: Text(
                                   "Warning!",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleLarge!
-                                      .copyWith(color: Colors.black),
+                                  style: Theme.of(context).textTheme.titleLarge!.copyWith(color: Colors.black),
                                 ),
                                 content: Text(
                                   "Do you really want to delete this record?",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleMedium!
-                                      .copyWith(color: Colors.black),
+                                  style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.black),
                                 ),
                                 actions: [
                                   TextButton(
                                     child: const Text("Yes"),
                                     onPressed: () {
                                       orderBox!.deleteAt(index);
-                                      Navigator.pushReplacementNamed(
-                                          context, '/OrderScreen');
+                                      Navigator.pushReplacementNamed(context, '/OrderScreen');
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(
                                           key: UniqueKey(),

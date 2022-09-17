@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:khata/screens/completed_screen/cubit/completed_cubit.dart';
 import 'package:khata/screens/completed_screen/presentation/completed_screen.dart';
+import 'package:khata/screens/customer_screen/add_customer_screen/cubit/add_customer_cubit.dart';
+import 'package:khata/screens/customer_screen/add_customer_screen/presentation/add_customer_screen.dart';
+import 'package:khata/screens/customer_screen/cubit/customer_cubit.dart';
+import 'package:khata/screens/customer_screen/presentation/customer_screen.dart';
 import 'package:khata/screens/finance_screen/finance_screen.dart';
 import 'package:khata/screens/inventory_screen/cubit/inventory_cubit.dart';
 import 'package:khata/screens/inventory_screen/presentation/inventory_screen.dart';
@@ -13,10 +17,6 @@ import 'package:khata/screens/order_screen/sub_screens/add_order_screen/cubit/ad
 import 'package:khata/screens/order_screen/sub_screens/add_order_screen/presentation/add_order_screen.dart';
 import 'package:khata/screens/pending_screen/cubit/pending_cubit.dart';
 import 'package:khata/screens/pending_screen/presentation/pending_screen.dart';
-import 'package:khata/screens/user_screen/add_customer_screen/cubit/add_customer_cubit.dart';
-import 'package:khata/screens/user_screen/add_customer_screen/presentation/add_customer_screen.dart';
-import 'package:khata/screens/user_screen/cubit/customer_cubit.dart';
-import 'package:khata/screens/user_screen/presentation/customer_screen.dart';
 
 class AppRouteGenerator {
   static Route<dynamic> generate(RouteSettings routeSettings) {
@@ -24,7 +24,7 @@ class AppRouteGenerator {
       case '/UserScreen':
         return _pageRoute(
           BlocProvider(
-            create: (context) => UserCubit(),
+            create: (context) => CustomerCubit(),
             child: const CustomerScreen(),
           ),
         );

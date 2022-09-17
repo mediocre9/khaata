@@ -81,8 +81,7 @@ class SearchFieldAreaWidget extends StatelessWidget {
   }
 }
 
-class ProductInterfaceStateManager extends StatelessWidget
-    implements InterfaceStateManager {
+class ProductInterfaceStateManager extends StatelessWidget implements InterfaceStateManager {
   const ProductInterfaceStateManager({super.key});
 
   @override
@@ -113,8 +112,7 @@ class ProductInterfaceStateManager extends StatelessWidget
                 return ProductCardWidget(
                   product: state.products[index],
                   index: index,
-                  isItemInStock:
-                      BlocProvider.of<InventoryCubit>(context).getStockStatus(index),
+                  isItemInStock: BlocProvider.of<InventoryCubit>(context).getStockStatus(index),
                 );
               },
             ),
@@ -126,8 +124,7 @@ class ProductInterfaceStateManager extends StatelessWidget
             itemBuilder: (_, index) {
               return ProductCardWidget(
                 product: state.products[index],
-                isItemInStock:
-                    BlocProvider.of<InventoryCubit>(context).getStockStatus(index),
+                isItemInStock: BlocProvider.of<InventoryCubit>(context).getStockStatus(index),
                 index: index,
               );
             },
@@ -160,26 +157,20 @@ class ProductCardWidget extends StatelessWidget with GradientDecoration {
         decoration: gradientDecoration(),
         child: ListTile(
           title: Text(
-            product.name!,
+            product.name!.trim().toUpperCase(),
             style: Theme.of(context).textTheme.titleLarge,
           ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "RS. ${product.cost}",
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge!
-                    .copyWith(color: const Color.fromARGB(255, 218, 224, 236)),
+                "RS. ${product.cost.toString().trim()}",
+                style: Theme.of(context).textTheme.titleLarge!.copyWith(color: const Color.fromARGB(255, 218, 224, 236)),
               ),
               if (isItemInStock!) ...[
                 Text(
                   "STOCK : ${product.stock}",
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleSmall!
-                      .copyWith(color: const Color.fromARGB(255, 218, 224, 236)),
+                  style: Theme.of(context).textTheme.titleSmall!.copyWith(color: const Color.fromARGB(255, 218, 224, 236)),
                 )
               ] else ...[
                 Row(
@@ -187,10 +178,7 @@ class ProductCardWidget extends StatelessWidget with GradientDecoration {
                   children: [
                     Text(
                       "OUT OF STOCK",
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleSmall!
-                          .copyWith(color: const Color.fromARGB(255, 218, 224, 236)),
+                      style: Theme.of(context).textTheme.titleSmall!.copyWith(color: const Color.fromARGB(255, 218, 224, 236)),
                     ),
                     const Icon(
                       Icons.warning_amber_outlined,
@@ -202,22 +190,22 @@ class ProductCardWidget extends StatelessWidget with GradientDecoration {
             ],
           ),
           onTap: () {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (context) => BlocProvider(
-                  create: (context) => AddMoreCubit(),
-                  child: ItemDetailScreen(
-                    product: Product(
-                      name: product.name,
-                      stock: product.stock,
-                      cost: product.cost,
+            Navigator.of(context).push(
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) {
+                  return BlocProvider(
+                    create: (context) => AddMoreCubit(),
+                    child: ItemDetailScreen(
+                      product: Product(
+                        name: product.name,
+                        stock: product.stock,
+                        cost: product.cost,
+                      ),
+                      index: index,
                     ),
-                    index: index,
-                  ),
-                ),
+                  );
+                },
               ),
-              (route) => false,
             );
           },
         ),
