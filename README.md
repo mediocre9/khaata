@@ -28,7 +28,7 @@
 
 
 ## 2. **Build Preview:**
-![](preview/1.jpg?raw=true "" =250x250)
+![](preview/1.jpg?raw=true "" | width=250)
 <br/>
 <br/>
 ![](preview/2.jpg?raw=true "")
