@@ -3,8 +3,8 @@
 - **Version:** 1.0.3
 - **Description:** *Project Description here. . .*
 
-## **NOTE :**
-**Do not commit files to master (main) branch directly. Contributors are only allowed to commit files to development branch, quick and dirty code is also acceptable...**
+## **Development Branches**
+- update-1.2.3 (in-progress)
 
 ## **Development Progress :**
 ![Progress](https://progress-bar.dev/75/?title=progress)
@@ -28,10 +28,28 @@
 
 
 ## 2. **Build Preview:**
-![](preview/order_screen.png?raw=true "manage-order-screen")
+![](preview/1.jpg?raw=true "")
 <br/>
 <br/>
-![](preview/inventory_screen.png?raw=true "manage-inventory-screen")
+![](preview/2.jpg?raw=true "")
+<br/>
+<br/>
+![](preview/3.jpg?raw=true "")
+<br/>
+<br/>
+![](preview/4.jpg?raw=true "")
+<br/>
+<br/>
+![](preview/5.jpg?raw=true "")
+<br/>
+<br/>
+![](preview/6.jpg?raw=true "")
+<br/>
+<br/>
+![](preview/7.jpg?raw=true "")
+<br/>
+<br/>
+![](preview/8.jpg?raw=true "")
 
 ## 3. **Project Structure and Guidelines:**
 - `snake_case` naming convention for files and folder **e.g** `sub_screen`.
