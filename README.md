@@ -69,10 +69,8 @@ CustomOutlinedButton(
 #### 2. CustomAppBar
 ```
     CustomAppBar(
-      title: "Title",
-      subTitle: "subTitle",
-      titleFontSize: 16,
-      backgroundColor: Colors.amberAccent,
+      title: Text("Title"),
+      subtitle: Text("subTitle"),
     );
 ```
 #### 3. CustomCard
