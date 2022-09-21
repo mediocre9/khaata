@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:khata/constants.dart';
 import 'package:khata/models/model/order.dart';
@@ -15,8 +16,6 @@ class AddOrderCubit extends Cubit<AddOrderState> {
   }
 
   void _loadAndInitDataFromDatabase() {
-    int initialStock = 0;
-
     for (int i = 0; i < productBox!.values.length; i++) {
       /**
      * fetching those product items from database
@@ -24,7 +23,7 @@ class AddOrderCubit extends Cubit<AddOrderState> {
      * empty or (0). Because we only want to suggest
      * those items to our textfield that are in a stock.
      */
-      if (productBox!.getAt(i)!.stock != initialStock) {
+      if (productBox!.getAt(i)!.stock != 0) {
         _listOfSuggestedProducts.add(productBox!.getAt(i)!);
       }
     }
@@ -33,8 +32,8 @@ class AddOrderCubit extends Cubit<AddOrderState> {
      * fetching customers records from database
      * for suggestions.
      */
-    for (int i = 0; i < userBox!.values.length; i++) {
-      _listOfSuggestedCustomers.add(userBox!.getAt(i)!);
+    for (int i = 0; i < customerBox!.values.length; i++) {
+      _listOfSuggestedCustomers.add(customerBox!.getAt(i)!);
     }
   }
 
@@ -47,7 +46,7 @@ class AddOrderCubit extends Cubit<AddOrderState> {
   /// so we can use that product object on our [Order] object.
   ///
   /// Just read the code for better understanding...
-  /// 
+  ///
   /// #### code speaks louder than comments . . .
   Future<void> addOrder(String product, String customer) async {
     if (product.isNotEmpty && customer.isNotEmpty) {
@@ -57,7 +56,8 @@ class AddOrderCubit extends Cubit<AddOrderState> {
         /**
        * setting up boolean flag to TRUE
        * because our newly created order's
-       * status is pending.
+       * status should be in a pending
+       * state.
        */
         await orderBox!.add(
           Order(
@@ -75,7 +75,7 @@ class AddOrderCubit extends Cubit<AddOrderState> {
 
   /// Returns a [Product] type object from database.
   /// If value exists in a database a product object will be
-  /// returned otherwise null value would be thrown.
+  /// returned otherwise null value would be thrown out.
   ///
   /// This method relies on [Hive] database for the
   /// retrieval of an object.
@@ -97,38 +97,47 @@ class AddOrderCubit extends Cubit<AddOrderState> {
     return null;
   }
 
-  /// Search suggestion to find the products.
-  List<Product> searchProduct(String searchProduct) {
-    if (searchProduct.isNotEmpty) {
-      List<Product> searchResults = _listOfSuggestedProducts
-          .where((product) => product.name!
-              .trim()
-              .toLowerCase()
-              .startsWith(searchProduct.trim().toLowerCase()))
-          .toList();
+  /// generic search method to find customer or product object....
+  List<T> search<T>(String search) {
+    if (search.isNotEmpty) {
+      List<T> searchResults = [];
+      AddOrderState state;
 
+      if (T == Customer) {
+        searchResults = _listOfSuggestedCustomers
+            .where((customer) => customer.username!
+                .trim()
+                .toLowerCase()
+                .startsWith(search.trim().toLowerCase()))
+            .cast<T>()
+            .toList();
+
+        state = CustomerSearchResultsState(listOfCustomers: searchResults.cast());
+      } else {
+        searchResults = _listOfSuggestedProducts
+            .where((product) => product.name!
+                .trim()
+                .toLowerCase()
+                .startsWith(search.trim().toLowerCase()))
+            .cast<T>()
+            .toList();
+
+        state = ProductSearchResultsState(listOfProducts: searchResults.cast());
+      }
+
+      /***
+       * If the list of suggested [searchResults] is not empty
+       * then emit a new state, Otherwise an empty list would be 
+       * returned.
+       */
       if (searchResults.isNotEmpty) {
-        emit(ProductSearchResultsState(listOfProducts: searchResults));
+        emit(state);
         return searchResults;
       }
     }
-    return List.empty();
-  }
 
-  /// Search suggestion to find the customers.
-  List<Customer> searchCustomer(String searchCustomer) {
-    if (searchCustomer.isNotEmpty) {
-      List<Customer> searchResults = _listOfSuggestedCustomers
-          .where((customer) => customer.username!
-              .trim()
-              .toLowerCase()
-              .startsWith(searchCustomer.trim().toLowerCase()))
-          .toList();
-
-      if (searchResults.isNotEmpty) {
-        emit(CustomerSearchResultsState(listOfCustomers: searchResults));
-        return searchResults;
-      }
+    if (kDebugMode) {
+      print("Search results not found!");
     }
     return List.empty();
   }

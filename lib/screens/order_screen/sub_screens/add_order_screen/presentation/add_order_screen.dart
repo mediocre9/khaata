@@ -92,7 +92,7 @@ class AddOrderScreen extends StatelessWidget {
                     },
                     optionsBuilder: (TextEditingValue textEditingValue) {
                       return BlocProvider.of<AddOrderCubit>(context)
-                          .searchCustomer(textEditingValue.text);
+                          .search<Customer>(textEditingValue.text);
                     },
                     onSelected: (Customer selection) {},
                     optionsViewBuilder:
@@ -158,7 +158,7 @@ class AddOrderScreen extends StatelessWidget {
                     },
                     optionsBuilder: (TextEditingValue textEditingValue) {
                       return BlocProvider.of<AddOrderCubit>(context)
-                          .searchProduct(textEditingValue.text);
+                          .search<Product>(textEditingValue.text);
                     },
                     onSelected: (Product selection) {},
                     optionsViewBuilder:
