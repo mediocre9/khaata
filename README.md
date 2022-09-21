@@ -31,25 +31,25 @@
 ![](preview/1.jpg?raw=true "")
 <br/>
 <br/>
-![](preview/2.png?raw=true "")
+![](preview/2.jpg?raw=true "")
 <br/>
 <br/>
-![](preview/3.png?raw=true "")
+![](preview/3.jpg?raw=true "")
 <br/>
 <br/>
-![](preview/4.png?raw=true "")
+![](preview/4.jpg?raw=true "")
 <br/>
 <br/>
-![](preview/5.png?raw=true "")
+![](preview/5.jpg?raw=true "")
 <br/>
 <br/>
-![](preview/6.png?raw=true "")
+![](preview/6.jpg?raw=true "")
 <br/>
 <br/>
-![](preview/7.png?raw=true "")
+![](preview/7.jpg?raw=true "")
 <br/>
 <br/>
-![](preview/8.png?raw=true "")
+![](preview/8.jpg?raw=true "")
 
 ## 3. **Project Structure and Guidelines:**
 - `snake_case` naming convention for files and folder **e.g** `sub_screen`.
