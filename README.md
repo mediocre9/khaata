@@ -62,7 +62,6 @@
 ```dart
 CustomOutlinedButton(
               text: "Click",
-              textColor: Colors.black,
               onPressed: () {},
             );
 ```
@@ -90,8 +89,6 @@ CustomTextField(
             color: Colors.black,
             inputType: TextInputType.number,
             isDense: true,
-            borderStyle: const UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.white, width: 3)),
             onChanged: (value) {},
           );
 ```
