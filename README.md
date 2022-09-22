@@ -59,7 +59,7 @@
 
 ## 4. **Custom widget classes:**
 #### 1. CustomOutlinedButton :
-```
+```dart
 CustomOutlinedButton(
               text: "Click",
               textColor: Colors.black,
@@ -67,14 +67,14 @@ CustomOutlinedButton(
             );
 ```
 #### 2. CustomAppBar
-```
+```dart
     CustomAppBar(
       title: Text("Title"),
       subtitle: Text("subTitle"),
     );
 ```
 #### 3. CustomCard
-```
+```dart
     CustomCard(
       height: 50,
       width: 100,
@@ -83,7 +83,7 @@ CustomOutlinedButton(
     );
 ```
 #### 4. CustomTextField
-```
+```dart
 CustomTextField(
             controller: controller,
             contentPadding: 10,
