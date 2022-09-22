@@ -55,7 +55,7 @@
 - `snake_case` naming convention for files and folder **e.g** `sub_screen`.
 - **camelCase** `kConstantValue` for constant values.
 - `camelCase` for variables naming convention.
-- According to google docs, prefer **classes** over **methods** for widget separation and for better widget tree optimization.
+- According to flutter docs, prefer **classes** over **methods** for widget separation and for better widget tree optimization.
 
 ## 4. **Custom widget classes:**
 #### 1. CustomOutlinedButton :
@@ -69,10 +69,8 @@ CustomOutlinedButton(
 #### 2. CustomAppBar
 ```
     CustomAppBar(
-      title: "Title",
-      subTitle: "subTitle",
-      titleFontSize: 16,
-      backgroundColor: Colors.amberAccent,
+      title: Text("Title"),
+      subtitle: Text("subTitle"),
     );
 ```
 #### 3. CustomCard
