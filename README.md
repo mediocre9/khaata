@@ -25,7 +25,10 @@
 - hive_flutter: 1.1.0
 - flutter_inset_box_shadow: 1.0.8
 - fl_chart: 0.55.1
-
+- equatable: 2.0.3
+- badges: 2.0.3
+- bloc: 8.1
+- flutter_bloc: 8.0.1.0
 
 ## 2. **Build Preview:**
 ![](preview/1.jpg?raw=true "")
