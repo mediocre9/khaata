@@ -14,7 +14,7 @@
 - [ ] Refactoring
 - [ ] Testing
 - [x] Profiling and Optimization
-- [ ] Doxygen comment documentation 
+- [ ] Doxygen documentation 
 
 ## 1. **Project Dependencies:**
 
