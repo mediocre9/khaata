@@ -7,7 +7,7 @@
 - update-1.2.3 (in-progress)
 
 ## **Development Progress :**
-![Progress](https://progress-bar.dev/75/?title=progress)
+![Progress](https://progress-bar.dev/90/?title=progress)
 
 ## **Task-List**
 - [x] **Bloc Pattern Implementation** 
