@@ -1,8 +1,18 @@
+import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:khata/models/model/order.dart';
+import 'package:khata/themes/decorations.dart';
 import 'package:khata/widgets/custom_app_bar.dart';
 import 'package:khata/widgets/custom_drawer.dart';
-import 'package:fl_chart/fl_chart.dart';
 import '../../constants.dart';
+
+class GraphData {
+  final int moneyPerDay;
+  final int day;
+
+  GraphData(this.moneyPerDay, this.day);
+}
 
 class FinanceScreen extends StatefulWidget {
   const FinanceScreen({Key? key}) : super(key: key);
@@ -11,17 +21,50 @@ class FinanceScreen extends StatefulWidget {
   State<FinanceScreen> createState() => _FinanceScreenState();
 }
 
-class _FinanceScreenState extends State<FinanceScreen> {
-  // static List<OrderModel?> completedOrderList = [];
+class _FinanceScreenState extends State<FinanceScreen> with GradientDecoration {
+  List<Order> listOfCompletedOrders = [];
+  // List<String> days
+  List<int> days = [];
+  List<GraphData> points = [];
   int currentGain = 0;
 
   fetchAllData() {
-    // completedOrderList.clear();
+    // get all completed orders.
     for (var i = 0; i < orderBox!.values.length; i++) {
-      if (orderBox!.getAt(i)!.status! == true) {
-        // completedOrderList.add(orderBox!.getAt(i));
+      if (orderBox!.getAt(i)!.pendingStatus! == false) {
         currentGain = currentGain + orderBox!.getAt(i)!.cost!;
+
+        // add only days
+        days.add(orderBox!.getAt(i)!.completedDate!.day);
+
+        // add whole object
+        listOfCompletedOrders.add(orderBox!.getAt(i)!);
       }
+    }
+
+    if (kDebugMode) {
+      print(days);
+    }
+    // deleting duplicate values (days)
+    days = days.toSet().toList();
+
+    if (kDebugMode) {
+      print("\n\n${days.length}");
+    }
+    int moneyPerDay = 0;
+    int index = 0;
+    for (int day in days) {
+      // money count
+      for (Order order in listOfCompletedOrders) {
+        if (day == order.completedDate!.day) {
+          moneyPerDay = moneyPerDay + order.cost!;
+        }
+      }
+
+      // index++;
+
+      points.add(GraphData(moneyPerDay, day));
+      moneyPerDay *= 0;
     }
   }
 
@@ -33,40 +76,135 @@ class _FinanceScreenState extends State<FinanceScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        // resizeToAvoidBottomInset: false,
-        appBar: CustomAppBar(
-            title: "MANAGE",  subTitle: "FINANCE"),
-        endDrawer: const CustomDrawer(),
-        body: SafeArea(
-          child: Container(
-            color: kScaffoldColor,
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      appBar: const CustomAppBar(
+        title: Text("MANAGE"),
+        subtitle: Text("FINANCE"),
+      ),
+      endDrawer: const CustomDrawer(),
+      body: Container(
+        color: kScaffoldColor,
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
                     children: [
-                      Row(
-                        children: [
-                          CurrentGain(
-                            currentGain: currentGain,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      const Text("Finance Graph Area"),
-                      // const LineChartSample5(),
+                      CurrentGain(currentGain: currentGain),
                     ],
                   ),
-                ),
-              ],
+                  const SizedBox(height: 10),
+                ],
+              ),
             ),
-          ),
+            Container(
+              margin: const EdgeInsets.all(30),
+              width: double.infinity,
+              height: 200,
+              child: LineChart(
+                swapAnimationCurve: Curves.bounceIn,
+                swapAnimationDuration: const Duration(milliseconds: 250),
+                LineChartData(
+                  borderData: FlBorderData(
+                    show: true,
+                    border: Border(
+                      bottom: BorderSide(
+                        width: 3,
+                        color: Colors.deepPurple[200]!,
+                      ),
+                      left: BorderSide(
+                        width: 3,
+                        color: Colors.deepPurple[200]!,
+                      ),
+                    ),
+                  ),
+                  titlesData: FlTitlesData(
+                    topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    rightTitles:
+                        AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    leftTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                      axisNameWidget: const Text(
+                        "Money Per Day",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                      axisNameWidget: const Text(
+                        "Days",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                  clipData: FlClipData.all(),
+                  backgroundColor: const Color.fromARGB(255, 241, 241, 241),
+                  // backgroundColor: const Color.fromARGB(171, 203, 188, 214),
+                  lineTouchData: LineTouchData(
+                    enabled: true,
+                    touchTooltipData: LineTouchTooltipData(
+                      tooltipBgColor: const Color.fromARGB(255, 245, 245, 245),
+                      getTooltipItems: (touchedSpots) {
+                        return touchedSpots
+                            .map(
+                              (e) => LineTooltipItem(
+                                "",
+                                const TextStyle(
+                                  color: Colors.green,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: "${e.y.toString()}/Rs",
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                            .toList();
+                      },
+                    ),
+                  ),
+                  lineBarsData: [
+                    LineChartBarData(
+                      isCurved: true,
+                      belowBarData: BarAreaData(
+                        show: true,
+                        gradient: const LinearGradient(
+                          colors: [
+                            Color.fromARGB(139, 8, 102, 36),
+                            Color.fromARGB(106, 96, 231, 137),
+                          ],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomLeft,
+                        ),
+                      ),
+                      color: Colors.green[700],
+                      spots: points
+                          .map((e) => FlSpot(
+                                e.day.toDouble(),
+                                e.moneyPerDay.toDouble(),
+                              ))
+                          .toList(),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -105,8 +243,11 @@ class CurrentGain extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                const Icon(Icons.arrow_upward,
-                    color: Colors.lightGreenAccent, size: 30)
+                const Icon(
+                  Icons.arrow_upward,
+                  color: Colors.lightGreenAccent,
+                  size: 30,
+                )
               ],
             ),
           ],
@@ -116,223 +257,95 @@ class CurrentGain extends StatelessWidget {
   }
 }
 
-class LineChartSample5 extends StatelessWidget {
-  final List<int> showIndexes = const [1, 3, 5];
-  final List<FlSpot> allSpots = const [
-    FlSpot(0, 1),
-    FlSpot(1, 2),
-    FlSpot(2, 1.5),
-    FlSpot(3, 3),
-    FlSpot(4, 3.5),
-    FlSpot(5, 5),
-    FlSpot(6, 8),
-  ];
+// class LineCharts extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     const cutOffYValue = 0.0;
+//     const yearTextStyle =
+//     TextStyle(fontSize: 12, color: Colors.black);
 
-  const LineChartSample5({Key? key}) : super(key: key);
-
-  // Widget bottomTitleWidgets(double value, TitleMeta meta) {
-  //   const style = TextStyle(
-  //     fontWeight: FontWeight.bold,
-  //     color: Colors.blueGrey,
-  //     fontFamily: 'Digital',
-  //     fontSize: 18,
-  //   );
-  //   String text;
-  //   switch (value.toInt()) {
-  //     case 0:
-  //       text = '00:00';
-  //       break;
-  //     case 1:
-  //       text = '04:00';
-  //       break;
-  //     case 2:
-  //       text = '08:00';
-  //       break;
-  //     case 3:
-  //       text = '12:00';
-  //       break;
-  //     case 4:
-  //       text = '16:00';
-  //       break;
-  //     case 5:
-  //       text = '20:00';
-  //       break;
-  //     case 6:
-  //       text = '23:59';
-  //       break;
-  //     default:
-  //       return Container();
-  //   }
-
-  //   return SideTitleWidget(
-  //     axisSide: meta.axisSide,
-  //     child: Text(text, style: style),
-  //   );
-  // }
-
-  @override
-  Widget build(BuildContext context) {
-    final lineBarsData = [
-      LineChartBarData(
-        showingIndicators: showIndexes,
-        spots: allSpots,
-        isCurved: true,
-        barWidth: 4,
-        shadow: const Shadow(
-          blurRadius: 8,
-          color: Colors.black,
-        ),
-        belowBarData: BarAreaData(
-          show: true,
-          gradient: LinearGradient(
-            colors: [
-              const Color(0xff12c2e9).withOpacity(0.4),
-              const Color(0xffc471ed).withOpacity(0.4),
-              const Color(0xfff64f59).withOpacity(0.4),
-            ],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          ),
-        ),
-        dotData: FlDotData(show: false),
-        gradient: const LinearGradient(
-          colors: [
-            Color(0xff12c2e9),
-            Color(0xffc471ed),
-            Color(0xfff64f59),
-          ],
-          stops: [0.1, 0.4, 0.9],
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-        ),
-      ),
-    ];
-
-    final tooltipsOnBar = lineBarsData[0];
-
-    return SizedBox(
-      width: 300,
-      height: 140,
-      child: LineChart(
-        LineChartData(
-          showingTooltipIndicators: showIndexes.map((index) {
-            return ShowingTooltipIndicators([
-              LineBarSpot(tooltipsOnBar, lineBarsData.indexOf(tooltipsOnBar),
-                  tooltipsOnBar.spots[index]),
-            ]);
-          }).toList(),
-          lineTouchData: LineTouchData(
-            enabled: false,
-            getTouchedSpotIndicator:
-                (LineChartBarData barData, List<int> spotIndexes) {
-              return spotIndexes.map((index) {
-                return TouchedSpotIndicatorData(
-                  FlLine(
-                    color: Colors.pink,
-                  ),
-                  FlDotData(
-                    show: true,
-                    getDotPainter: (spot, percent, barData, index) =>
-                        FlDotCirclePainter(
-                      radius: 8,
-                      color: lerpGradient(
-                        barData.gradient!.colors,
-                        barData.gradient!.stops!,
-                        percent / 100,
-                      ),
-                      strokeWidth: 2,
-                      strokeColor: Colors.black,
-                    ),
-                  ),
-                );
-              }).toList();
-            },
-            touchTooltipData: LineTouchTooltipData(
-              tooltipBgColor: Colors.pink,
-              tooltipRoundedRadius: 8,
-              getTooltipItems: (List<LineBarSpot> lineBarsSpot) {
-                return lineBarsSpot.map((lineBarSpot) {
-                  return LineTooltipItem(
-                    lineBarSpot.y.toString(),
-                    const TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
-                  );
-                }).toList();
-              },
-            ),
-          ),
-          lineBarsData: lineBarsData,
-          minY: 0,
-          titlesData: FlTitlesData(
-            leftTitles: AxisTitles(
-              axisNameWidget: const Text('count'),
-              sideTitles: SideTitles(
-                showTitles: false,
-                reservedSize: 0,
-              ),
-            ),
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                interval: 1,
-                // getTitlesWidget: bottomTitleWidgets,
-              ),
-            ),
-            rightTitles: AxisTitles(
-              axisNameWidget: const Text('count'),
-              sideTitles: SideTitles(
-                showTitles: false,
-                reservedSize: 0,
-              ),
-            ),
-            topTitles: AxisTitles(
-              axisNameWidget: const Text(
-                'Wall clock',
-                textAlign: TextAlign.left,
-              ),
-              sideTitles: SideTitles(
-                showTitles: true,
-                reservedSize: 0,
-              ),
-            ),
-          ),
-          gridData: FlGridData(show: false),
-          borderData: FlBorderData(
-            show: true,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Lerps between a [LinearGradient] colors, based on [t]
-Color lerpGradient(List<Color> colors, List<double> stops, double t) {
-  if (colors.isEmpty) {
-    throw ArgumentError('"colors" is empty.');
-  } else if (colors.length == 1) {
-    return colors[0];
-  }
-
-  if (stops.length != colors.length) {
-    stops = [];
-
-    /// provided gradientColorStops is invalid and we calculate it here
-    colors.asMap().forEach((index, color) {
-      final percent = 1.0 / (colors.length - 1);
-      stops.add(percent * index);
-    });
-  }
-
-  for (var s = 0; s < stops.length - 1; s++) {
-    final leftStop = stops[s], rightStop = stops[s + 1];
-    final leftColor = colors[s], rightColor = colors[s + 1];
-    if (t <= leftStop) {
-      return leftColor;
-    } else if (t < rightStop) {
-      final sectionT = (t - leftStop) / (rightStop - leftStop);
-      return Color.lerp(leftColor, rightColor, sectionT)!;
-    }
-  }
-  return colors.last;
-}
+//     return SizedBox(
+//       width: 360,
+//       height: 250,
+//       child: LineChart(
+//         LineChartData(
+//           lineTouchData: LineTouchData(enabled: false),
+//           lineBarsData: [
+//             LineChartBarData(
+//               spots: [
+//                 FlSpot(0, 1),
+//                 FlSpot(1, 1),
+//                 FlSpot(2, 3),
+//                 FlSpot(3, 4),
+//                 FlSpot(3, 5),
+//                 FlSpot(4, 4)
+//               ],
+//               isCurved: true,
+//               barWidth: 2,
+//               colors: [
+//                 Colors.black,
+//               ],
+//               belowBarData: BarAreaData(
+//                 show: true,
+//                 colors: [Colors.lightBlue.withOpacity(0.5)],
+//                 cutOffY: cutOffYValue,
+//                 applyCutOffY: true,
+//               ),
+//               aboveBarData: BarAreaData(
+//                 show: true,
+//                 colors: [Colors.lightGreen.withOpacity(0.5)],
+//                 cutOffY: cutOffYValue,
+//                 applyCutOffY: true,
+//               ),
+//               dotData: FlDotData(
+//                 show: false,
+//               ),
+//             ),
+//           ],
+//           minY: 0,
+//           titlesData: FlTitlesData(
+//             bottomTitles: SideTitles(
+//                 showTitles: true,
+//                 reservedSize: 5,
+//                 getTitles: (value) {
+//                   switch (value.toInt()) {
+//                     case 0:
+//                       return '2017';
+//                     case 1:
+//                       return '2018';
+//                     case 2:
+//                       return '2019';
+//                     case 3:
+//                       return '2020';
+//                     case 4:
+//                       return '2021';
+//                     default:
+//                       return '';
+//                   }
+//                 }),
+//             leftTitles: SideTitles(
+//               showTitles: true,
+//               getTitles: (value) {
+//                 return '\$ ${value + 150}';
+//               },
+//             ),
+//           ),
+//           axisTitleData: FlAxisTitleData(
+//               leftTitle: AxisTitle(showTitle: true, titleText: 'Value', margin: 10),
+//               bottomTitle: AxisTitle(
+//                   showTitle: true,
+//                   margin: 10,
+//                   titleText: 'Year',
+//                   textStyle: yearTextStyle,
+//                   textAlign: TextAlign.right)),
+//           gridData: FlGridData(
+//             show: true,
+//             checkToShowHorizontalLine: (double value) {
+//               return value == 1 || value == 2 || value == 3 || value == 4;
+//             },
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

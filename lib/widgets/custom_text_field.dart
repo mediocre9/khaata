@@ -13,8 +13,7 @@ class CustomTextField extends StatelessWidget {
     this.hintText,
     this.maxLength,
     this.focusNode,
-  })  : assert(contentPadding != null),
-        super(key: key);
+  }) : super(key: key);
 
   final String? hintText;
   final Color? fillColor;

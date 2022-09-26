@@ -1,39 +1,43 @@
 import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  late String title;
-  late String? subTitle;
-  final double? elevationLevel;
+  final Text title;
+  final Text subtitle;
   final double? height;
+  final double? elevationLevel;
 
-  CustomAppBar({
+  const CustomAppBar({
     Key? key,
     required this.title,
+    required this.subtitle,
     this.height = 65,
-    this.subTitle,
     this.elevationLevel,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      elevation: elevationLevel,
+      automaticallyImplyLeading: false,
+      elevation: elevationLevel ?? Theme.of(context).appBarTheme.elevation,
       toolbarHeight: height ?? Theme.of(context).appBarTheme.toolbarHeight,
       title: Container(
         margin: EdgeInsets.zero,
-        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 10.0,
+          vertical: 8.0,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title.toUpperCase()),
+            Text(title.data!.toUpperCase()),
             Text(
-              subTitle?.toUpperCase() ?? "subtitle here",
+              subtitle.data!.toUpperCase(),
               style: TextStyle(
+                fontSize: 17.0,
                 fontWeight: FontWeight.normal,
-                fontSize: 16.0,
-                fontFamily: Theme.of(context).appBarTheme.toolbarTextStyle!.fontFamily,
+                fontFamily: Theme.of(context).appBarTheme.toolbarTextStyle?.fontFamily,
               ),
-            )
+            ),
           ],
         ),
       ),

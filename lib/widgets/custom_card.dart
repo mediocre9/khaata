@@ -2,29 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:khata/constants.dart';
 
 class CustomCard extends StatelessWidget {
+  final bool? shadow;
+  final Widget? child;
+  final double? width;
+  final double? height;
   final double? borderRadius;
   final double? elevationLevel;
-  final double? height;
-  final double? width;
-  final double? horizontalMargin;
   final double? verticalMargin;
-  final Widget? child;
-  final bool? shadow;
-  final CrossAxisAlignment? innerCrossAlignment;
+  final double? horizontalMargin;
   final MainAxisAlignment? innerMainAlignment;
+  final CrossAxisAlignment? innerCrossAlignment;
 
   const CustomCard({
     Key? key,
-    this.height,
-    this.width,
-    this.shadow = true,
-    this.elevationLevel,
-    this.innerCrossAlignment,
-    this.innerMainAlignment,
     required this.child,
+    this.width,
+    this.height,
+    this.shadow = true,
     this.borderRadius,
-    this.horizontalMargin,
+    this.elevationLevel,
     this.verticalMargin,
+    this.horizontalMargin,
+    this.innerMainAlignment,
+    this.innerCrossAlignment,
   }) : super(key: key);
 
   BoxDecoration _cardDecoration() {
@@ -32,15 +32,17 @@ class CustomCard extends StatelessWidget {
       boxShadow: [
         shadow!
             ? const BoxShadow(
-                color: Colors.black,
-                blurRadius: 12,
-                blurStyle: BlurStyle.normal,
                 spreadRadius: 2,
+                blurRadius: 12,
                 offset: Offset(2, 2),
+                color: Colors.black,
+                blurStyle: BlurStyle.normal,
               )
             : const BoxShadow(),
       ],
-      borderRadius: BorderRadius.circular(borderRadius ?? 10),
+      borderRadius: BorderRadius.circular(
+        borderRadius ?? 10,
+      ),
       shape: BoxShape.rectangle,
       gradient: const LinearGradient(
         begin: Alignment.centerLeft,
@@ -61,9 +63,14 @@ class CustomCard extends StatelessWidget {
       child: Card(
         elevation: elevationLevel ?? 1,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(borderRadius ?? 10),
+          borderRadius: BorderRadius.circular(
+            borderRadius ?? 10,
+          ),
         ),
-        margin: EdgeInsets.symmetric(horizontal: horizontalMargin ?? 10, vertical: verticalMargin ?? 10),
+        margin: EdgeInsets.symmetric(
+          horizontal: horizontalMargin ?? 10,
+          vertical: verticalMargin ?? 10,
+        ),
         child: Container(
           decoration: _cardDecoration(),
           child: child,

@@ -1,7 +1,9 @@
-import 'package:khata/screens/user_home_screen/user_home_exports.dart';
+import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
+import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
+import 'package:khata/constants.dart';
 
-mixin NeumorphicBoxDecoration {
-  BoxDecoration neumorphicDecoration() {
+mixin NeumorphicDecoration {
+  BoxDecoration neumorphic() {
     return const BoxDecoration(
       borderRadius: BorderRadius.all(Radius.circular(8)),
       color: Color.fromARGB(255, 253, 253, 253),
@@ -23,7 +25,7 @@ mixin NeumorphicBoxDecoration {
   }
 }
 
-mixin GradientBoxDecoration {
+mixin GradientDecoration {
   BoxDecoration gradientDecoration() {
     return BoxDecoration(
       borderRadius: BorderRadius.circular(7),

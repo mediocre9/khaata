@@ -1,100 +1,104 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:khata/screens/add_item_screen/cubit/add_item_cubit.dart';
-import 'package:khata/screens/add_order_screen/add_order_screen.dart';
-import 'package:khata/screens/add_order_screen/cubit/add_order_cubit.dart';
+import 'package:khata/screens/completed_screen/cubit/completed_cubit.dart';
+import 'package:khata/screens/completed_screen/presentation/completed_screen.dart';
+import 'package:khata/screens/customer_screen/add_customer_screen/cubit/add_customer_cubit.dart';
+import 'package:khata/screens/customer_screen/add_customer_screen/presentation/add_customer_screen.dart';
+import 'package:khata/screens/customer_screen/cubit/customer_cubit.dart';
+import 'package:khata/screens/customer_screen/presentation/customer_screen.dart';
 import 'package:khata/screens/finance_screen/finance_screen.dart';
-import 'package:khata/screens/inventory_home_screen/cubit/inventory_home_cubit.dart';
-import 'package:khata/screens/inventory_home_screen/inventory_home_screen.dart';
-import 'package:khata/screens/add_item_screen/add_item_screen.dart';
-import 'package:khata/screens/order_completed_screen/cubit/order_complete_cubit.dart';
-import 'package:khata/screens/order_completed_screen/order_completed_screen.dart';
-import 'package:khata/screens/order_pending_screen/cubit/pending_order_cubit.dart';
-import 'package:khata/screens/order_pending_screen/order_pending_screen.dart';
-import 'package:khata/screens/order_screen/cubit/order_home_cubit.dart';
-import 'package:khata/screens/order_screen/order_screen.dart';
-import 'package:khata/screens/user_add_screen/cubit/user_add_cubit.dart';
-import 'package:khata/screens/user_add_screen/user_add_sub_screen.dart';
-import 'package:khata/screens/user_home_screen/cubit/user_home_cubit.dart';
-import 'package:khata/screens/user_home_screen/user_home_screen.dart';
+import 'package:khata/screens/inventory_screen/cubit/inventory_cubit.dart';
+import 'package:khata/screens/inventory_screen/presentation/inventory_screen.dart';
+import 'package:khata/screens/inventory_screen/sub_screens/add_item_screen/cubit/add_item_cubit.dart';
+import 'package:khata/screens/inventory_screen/sub_screens/add_item_screen/presentation/add_item_screen.dart';
+import 'package:khata/screens/order_screen/cubit/order_cubit.dart';
+import 'package:khata/screens/order_screen/presentation/order_screen.dart';
+import 'package:khata/screens/order_screen/sub_screens/add_order_screen/cubit/add_order_cubit.dart';
+import 'package:khata/screens/order_screen/sub_screens/add_order_screen/presentation/add_order_screen.dart';
+import 'package:khata/screens/pending_screen/cubit/pending_cubit.dart';
+import 'package:khata/screens/pending_screen/presentation/pending_screen.dart';
 
-// Implemented routing system for future use and scalability.
-// if we want to build a web application from this codebase...
 class AppRouteGenerator {
-  static Route<dynamic> generateScreen(RouteSettings routeSettings) {
+  static Route<dynamic> generate(RouteSettings routeSettings) {
     switch (routeSettings.name) {
-      case '/manageUserScreen':
-        return pageRoute(
+      case '/UserScreen':
+        return _pageRoute(
           BlocProvider(
-            create: (context) => UserHomeCubit(),
-            child: const UserHomeScreen(),
+            create: (context) => CustomerCubit(),
+            child: const CustomerScreen(),
           ),
         );
 
-      case '/manageInventoryScreen':
-        return pageRoute(
+      case '/AddUserScreen':
+        return _pageRoute(
           BlocProvider(
-            create: (context) => InventoryHomeCubit(),
-            child: const InventoryHomeScreen(),
+            create: (context) => AddUserCubit(),
+            child: const AddCustomerScreen(),
           ),
         );
 
-      case '/pendingScreen':
-        return pageRoute(
+      case '/InventoryScreen':
+        return _pageRoute(
           BlocProvider(
-            create: (context) => PendingOrderCubit(),
-            child: const OrderPendingScreen(),
+            create: (context) => InventoryCubit(),
+            child: const InventoryScreen(),
           ),
         );
 
-      case '/completedScreen':
-        return pageRoute(
-          BlocProvider(
-            create: (context) => OrderCompleteCubit(),
-            child: const OrderCompletedScreen(),
-          ),
-        );
-
-      case '/addItemScreen':
-        return pageRoute(
+      case '/AddItemScreen':
+        return _pageRoute(
           BlocProvider(
             create: (context) => AddItemCubit(),
             child: const AddItemScreen(),
           ),
         );
 
-      case '/addUserScreen':
-        return pageRoute(
+      case '/PendingScreen':
+        return _pageRoute(
           BlocProvider(
-            create: (context) => UserAddCubit(),
-            child: const UserAddSubScreen(),
+            create: (context) => PendingCubit(),
+            child: const PendingScreen(),
           ),
         );
 
-      case '/manageOrderScreen':
-        return pageRoute(
+      case '/CompletedScreen':
+        return _pageRoute(
           BlocProvider(
-            create: (context) => OrderHomeCubit(),
-            child: const ManageOrderScreen(),
+            create: (context) => CompletedCubit(),
+            child: const CompletedScreen(),
           ),
         );
 
-      case '/addOrderScreen':
-        return pageRoute(BlocProvider(
-          create: (context) => AddOrderCubit(),
-          child: const AddOrderScreen(),
-        ));
+      case '/OrderScreen':
+        return _pageRoute(
+          BlocProvider(
+            create: (context) => OrderCubit(),
+            child: const OrderScreen(),
+          ),
+        );
 
-      case '/manageFinanceScreen':
-        return pageRoute(const FinanceScreen());
+      case '/AddOrderScreen':
+        return _pageRoute(
+          BlocProvider(
+            create: (context) => AddOrderCubit(),
+            child: const AddOrderScreen(),
+          ),
+        );
+
+      case '/FinanceScreen':
+        return _pageRoute(const FinanceScreen());
 
       default:
-        return pageRoute(_undefinedRouteScreen);
+        return _pageRoute(_undefinedRouteScreen);
     }
   }
 
-  static pageRoute(dynamic screen) {
-    return MaterialPageRoute(builder: (context) => screen);
+  static _pageRoute(Widget screen) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => screen,
+      transitionDuration: Duration.zero,
+      reverseTransitionDuration: Duration.zero,
+    );
   }
 
   static get _undefinedRouteScreen {

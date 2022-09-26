@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:khata/constants.dart';
-import 'package:khata/models/model/order_model.dart';
-import 'package:khata/models/model/product_model.dart';
-import 'package:khata/models/model/user_model.dart';
+import 'package:khata/models/model/order.dart';
+import 'package:khata/models/model/product.dart';
+import 'package:khata/models/model/customer.dart';
 import 'package:khata/routes/route_generator.dart';
 import 'package:khata/themes/themes.dart';
 import 'package:path_provider/path_provider.dart';
@@ -14,13 +14,13 @@ import 'package:path_provider/path_provider.dart';
 Future<void> initDatabase() async {
   Hive.init((await getApplicationDocumentsDirectory()).path);
 
-  Hive.registerAdapter(UserModelAdapter());
-  Hive.registerAdapter(ProductModelAdapter());
-  Hive.registerAdapter(OrderModelAdapter());
+  Hive.registerAdapter(CustomerAdapter());
+  Hive.registerAdapter(ProductAdapter());
+  Hive.registerAdapter(OrderAdapter());
 
-  userBox = await Hive.openBox<UserModel>('user_box');
-  productBox = await Hive.openBox<ProductModel>('product_box');
-  orderBox = await Hive.openBox<OrderModel>('order_box');
+  userBox = await Hive.openBox<Customer>('user_box');
+  productBox = await Hive.openBox<Product>('product_box');
+  orderBox = await Hive.openBox<Order>('order_box');
 }
 
 void main() async {
@@ -30,11 +30,11 @@ void main() async {
   runApp(
     MaterialApp(
       title: "Khaata",
-      color: Colors.white60,
-      debugShowCheckedModeBanner: false,
-      onGenerateRoute: AppRouteGenerator.generateScreen,
-      initialRoute: '/manageOrderScreen',
+      color: Colors.white30,
       theme: AppTheme.lightTheme(),
+      debugShowCheckedModeBanner: false,
+      onGenerateRoute: AppRouteGenerator.generate,
+      initialRoute: '/OrderScreen',
     ),
   );
 }
