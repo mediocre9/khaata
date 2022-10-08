@@ -8,8 +8,8 @@ class CustomerCubit extends Cubit<CustomerState> {
   }
 
   void _loadUsersList() {
-    for (int i = 0; i < userBox!.values.length; i++) {
-      _userList.add(userBox!.getAt(i)!);
+    for (int i = 0; i < customerBox!.values.length; i++) {
+      _userList.add(customerBox!.getAt(i)!);
     }
 
     if (_userList.isNotEmpty) {
@@ -46,6 +46,6 @@ class CustomerCubit extends Cubit<CustomerState> {
   }
 
   Future<void> deleteUser(int index) async {
-    await userBox!.deleteAt(index);
+    await customerBox!.deleteAt(index);
   }
 }

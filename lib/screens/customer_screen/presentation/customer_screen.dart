@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:khata/constants.dart';
+import 'package:khata/models/model/customer.dart';
 import 'package:khata/screens/customer_screen/cubit/customer_cubit.dart';
 import 'package:khata/themes/decorations.dart';
 import 'package:khata/widgets/custom_app_bar.dart';
@@ -102,72 +103,6 @@ class SearchFieldAreaWidget extends StatelessWidget {
   }
 }
 
-class UserCardWidget extends StatelessWidget with GradientDecoration {
-  final String username;
-  final String address;
-  final int placedOrders;
-
-  const UserCardWidget({
-    Key? key,
-    required this.username,
-    required this.address,
-    required this.placedOrders,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Container(
-        decoration: gradientDecoration(),
-        child: Column(
-          children: [
-            ListTile(
-              title: Text(
-                username.toUpperCase(),
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "PLACED ORDERS : ${placedOrders}",
-                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                        color: const Color.fromARGB(255, 218, 224, 236)),
-                  ),
-                ],
-              ),
-            ),
-            ExpansionTile(
-              trailing: const Icon(Icons.expand_circle_down_outlined),
-              leading: const Icon(Icons.person),
-              expandedAlignment: Alignment.centerLeft,
-              collapsedIconColor: const Color.fromARGB(255, 218, 224, 236),
-              childrenPadding: const EdgeInsets.symmetric(
-                horizontal: 17,
-                vertical: 10,
-              ),
-              title: Text(
-                "DETAILS",
-                style: Theme.of(context)
-                    .textTheme
-                    .labelLarge!
-                    .copyWith(color: const Color.fromARGB(255, 218, 224, 236)),
-              ),
-              children: [
-                Text(
-                  address.toUpperCase(),
-                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                      color: const Color.fromARGB(255, 218, 224, 236)),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 /// Screen UI state manager that updates the UI when an event occurs.
 ///
 /// Scenario: About [CustomerScreen]
@@ -225,8 +160,7 @@ class UserInterfaceStateManager extends StatelessWidget
                     await BlocProvider.of<CustomerCubit>(_).deleteUser(index);
                   },
                   child: UserCardWidget(
-                    username: state.users[index].username!,
-                    address: state.users[index].address!,
+                    customer: state.users[index],
                     placedOrders: BlocProvider.of<CustomerCubit>(context)
                         .placedOrders(state.users[index].username!),
                   ),
@@ -240,8 +174,7 @@ class UserInterfaceStateManager extends StatelessWidget
             shrinkWrap: true,
             itemBuilder: (_, index) {
               return UserCardWidget(
-                username: state.searchUser[index].username!,
-                address: state.searchUser[index].address!,
+                customer: state.searchUser[index],
                 placedOrders: BlocProvider.of<CustomerCubit>(context)
                     .placedOrders(state.searchUser[index].username!),
               );
@@ -252,6 +185,74 @@ class UserInterfaceStateManager extends StatelessWidget
         }
         return const Center(child: CircularProgressIndicator());
       },
+    );
+  }
+}
+
+class UserCardWidget extends StatelessWidget with GradientDecoration {
+  final Customer customer;
+  final int placedOrders;
+
+  const UserCardWidget({
+    Key? key,
+    required this.placedOrders,
+    required this.customer,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Container(
+        decoration: gradientDecoration(),
+        child: Column(
+          children: [
+            ListTile(
+              title: Text(
+                customer.username!.toUpperCase(),
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "PLACED ORDERS : $placedOrders",
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleSmall!
+                        .copyWith(color: const Color.fromARGB(255, 218, 224, 236)),
+                  ),
+                ],
+              ),
+            ),
+            ExpansionTile(
+              trailing: const Icon(Icons.expand_circle_down_outlined),
+              leading: const Icon(Icons.person),
+              expandedAlignment: Alignment.centerLeft,
+              collapsedIconColor: const Color.fromARGB(255, 218, 224, 236),
+              childrenPadding: const EdgeInsets.symmetric(
+                horizontal: 17,
+                vertical: 10,
+              ),
+              title: Text(
+                "DETAILS",
+                style: Theme.of(context)
+                    .textTheme
+                    .labelLarge!
+                    .copyWith(color: const Color.fromARGB(255, 218, 224, 236)),
+              ),
+              children: [
+                Text(
+                  customer.address!.toUpperCase(),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleSmall!
+                      .copyWith(color: const Color.fromARGB(255, 218, 224, 236)),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

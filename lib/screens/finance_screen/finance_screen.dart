@@ -83,30 +83,18 @@ class _FinanceScreenState extends State<FinanceScreen> with GradientDecoration {
         subtitle: Text("FINANCE"),
       ),
       endDrawer: const CustomDrawer(),
-      body: Container(
-        color: kScaffoldColor,
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      CurrentGain(currentGain: currentGain),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                ],
-              ),
-            ),
-            Container(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            child: CurrentGain(currentGain: currentGain),
+          ),
+          SingleChildScrollView(
+            child: Container(
               margin: const EdgeInsets.all(30),
               width: double.infinity,
-              height: 200,
+              height: MediaQuery.of(context).size.height / 2.5,
               child: LineChart(
                 swapAnimationCurve: Curves.bounceIn,
                 swapAnimationDuration: const Duration(milliseconds: 250),
@@ -151,7 +139,6 @@ class _FinanceScreenState extends State<FinanceScreen> with GradientDecoration {
                   ),
                   clipData: FlClipData.all(),
                   backgroundColor: const Color.fromARGB(255, 241, 241, 241),
-                  // backgroundColor: const Color.fromARGB(171, 203, 188, 214),
                   lineTouchData: LineTouchData(
                     enabled: true,
                     touchTooltipData: LineTouchTooltipData(
@@ -204,8 +191,8 @@ class _FinanceScreenState extends State<FinanceScreen> with GradientDecoration {
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -217,135 +204,46 @@ class CurrentGain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-        color: const Color.fromRGBO(22, 60, 98, 1),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "CURRENT",
-              style: TextStyle(
-                color: Color.fromRGBO(215, 215, 255, 1),
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            color: const Color.fromRGBO(22, 60, 98, 1),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "${currentGain.toString()} PKR",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 25,
-                    fontWeight: FontWeight.w600,
+                const Text(
+                  "CURRENT",
+                  style: TextStyle(
+                    color: Color.fromRGBO(215, 215, 255, 1),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-                const Icon(
-                  Icons.arrow_upward,
-                  color: Colors.lightGreenAccent,
-                  size: 30,
-                )
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "${currentGain.toString()} PKR",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 25,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const Icon(
+                      Icons.arrow_upward,
+                      color: Colors.lightGreenAccent,
+                      size: 30,
+                    )
+                  ],
+                ),
               ],
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }
-
-// class LineCharts extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     const cutOffYValue = 0.0;
-//     const yearTextStyle =
-//     TextStyle(fontSize: 12, color: Colors.black);
-
-//     return SizedBox(
-//       width: 360,
-//       height: 250,
-//       child: LineChart(
-//         LineChartData(
-//           lineTouchData: LineTouchData(enabled: false),
-//           lineBarsData: [
-//             LineChartBarData(
-//               spots: [
-//                 FlSpot(0, 1),
-//                 FlSpot(1, 1),
-//                 FlSpot(2, 3),
-//                 FlSpot(3, 4),
-//                 FlSpot(3, 5),
-//                 FlSpot(4, 4)
-//               ],
-//               isCurved: true,
-//               barWidth: 2,
-//               colors: [
-//                 Colors.black,
-//               ],
-//               belowBarData: BarAreaData(
-//                 show: true,
-//                 colors: [Colors.lightBlue.withOpacity(0.5)],
-//                 cutOffY: cutOffYValue,
-//                 applyCutOffY: true,
-//               ),
-//               aboveBarData: BarAreaData(
-//                 show: true,
-//                 colors: [Colors.lightGreen.withOpacity(0.5)],
-//                 cutOffY: cutOffYValue,
-//                 applyCutOffY: true,
-//               ),
-//               dotData: FlDotData(
-//                 show: false,
-//               ),
-//             ),
-//           ],
-//           minY: 0,
-//           titlesData: FlTitlesData(
-//             bottomTitles: SideTitles(
-//                 showTitles: true,
-//                 reservedSize: 5,
-//                 getTitles: (value) {
-//                   switch (value.toInt()) {
-//                     case 0:
-//                       return '2017';
-//                     case 1:
-//                       return '2018';
-//                     case 2:
-//                       return '2019';
-//                     case 3:
-//                       return '2020';
-//                     case 4:
-//                       return '2021';
-//                     default:
-//                       return '';
-//                   }
-//                 }),
-//             leftTitles: SideTitles(
-//               showTitles: true,
-//               getTitles: (value) {
-//                 return '\$ ${value + 150}';
-//               },
-//             ),
-//           ),
-//           axisTitleData: FlAxisTitleData(
-//               leftTitle: AxisTitle(showTitle: true, titleText: 'Value', margin: 10),
-//               bottomTitle: AxisTitle(
-//                   showTitle: true,
-//                   margin: 10,
-//                   titleText: 'Year',
-//                   textStyle: yearTextStyle,
-//                   textAlign: TextAlign.right)),
-//           gridData: FlGridData(
-//             show: true,
-//             checkToShowHorizontalLine: (double value) {
-//               return value == 1 || value == 2 || value == 3 || value == 4;
-//             },
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

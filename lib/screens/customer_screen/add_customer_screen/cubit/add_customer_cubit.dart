@@ -8,7 +8,7 @@ class AddUserCubit extends Cubit<CustomerSaveState> {
 
   void addUser(String username, String address) async {
     if (username.isNotEmpty && address.isNotEmpty) {
-      await userBox!.add(
+      await customerBox!.add(
         Customer(
           username: username.trim(),
           address: address.trim(),

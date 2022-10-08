@@ -12,7 +12,7 @@
 *   Aimal         (Programmer)
 *   Jaanas        (Programmer)
 *   Fahad Zia     (Programmer)
-*/
+*/ 
 
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -34,7 +34,7 @@ Future<void> initDatabase() async {
   Hive.registerAdapter(ProductAdapter());
   Hive.registerAdapter(OrderAdapter());
 
-  userBox = await Hive.openBox<Customer>('user_box');
+  customerBox = await Hive.openBox<Customer>('user_box');
   productBox = await Hive.openBox<Product>('product_box');
   orderBox = await Hive.openBox<Order>('order_box');
 }

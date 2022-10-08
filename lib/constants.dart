@@ -18,7 +18,7 @@ const double kDrawerSubItemFontSize = 12.0;
 const Color kSnackBarSuccessColor = Color.fromARGB(255, 69, 189, 85);
 const Color kSnackBarErrorColor = Color.fromARGB(255, 223, 71, 71);
 
-Box<Customer>? userBox;
+Box<Customer>? customerBox;
 Box<Product>? productBox;
 Box<Order>? orderBox;
 
