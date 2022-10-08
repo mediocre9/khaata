@@ -15,7 +15,7 @@ class AppTheme {
       brightness: Brightness.light,
       scaffoldBackgroundColor: kScaffoldColor,
 
-      /// [TextTheme] for search area as caaption
+      /// [TextTheme] for search area as caption
       textTheme: const TextTheme(
         labelMedium: TextStyle(
           fontSize: 11,
