@@ -52,7 +52,6 @@ class _FinanceScreenState extends State<FinanceScreen> with GradientDecoration {
       print("\n\n${days.length}");
     }
     int moneyPerDay = 0;
-    int index = 0;
     for (int day in days) {
       // money count
       for (Order order in listOfCompletedOrders) {

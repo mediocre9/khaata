@@ -12,8 +12,9 @@
 *   Aimal         (Programmer)
 *   Jaanas        (Programmer)
 *   Fahad Zia     (Programmer)
-*/ 
+*/
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:khata/constants.dart';
@@ -28,7 +29,11 @@ import 'package:path_provider/path_provider.dart';
 /// For futher details, please refer to the documentation.
 /// Documentation: https://docs.hivedb.dev/#/
 Future<void> initDatabase() async {
-  Hive.init((await getApplicationDocumentsDirectory()).path);
+  if (kIsWeb) {
+    Hive.initFlutter();
+  } else {
+    Hive.init((await getApplicationDocumentsDirectory()).path);
+  }
 
   Hive.registerAdapter(CustomerAdapter());
   Hive.registerAdapter(ProductAdapter());
