@@ -9,5 +9,8 @@ class Customer {
   @HiveField(1)
   final String? address;
 
-  Customer({this.username, this.address});
+  Customer({
+    this.username,
+    this.address,
+  });
 }

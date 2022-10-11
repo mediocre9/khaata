@@ -210,7 +210,10 @@ class DrawerSubItems extends StatelessWidget {
                     ? Badge(
                         alignment: Alignment.centerLeft,
                         badgeContent: Text(_pendingOrders.toString()),
-                        child: Text(subItems[index]),
+                        child: Text(
+                          subItems[index],
+                          style: const TextStyle(color: Colors.white),
+                        ),
                       )
                     : Text(subItems[index])),
                 textColor: kDrawerItemColor,

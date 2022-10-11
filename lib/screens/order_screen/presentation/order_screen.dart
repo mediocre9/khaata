@@ -84,7 +84,10 @@ class SearchFieldAreaWidget extends StatelessWidget {
           children: [
             Text(
               "SEARCH ORDER",
-              style: Theme.of(context).textTheme.labelMedium,
+              style: Theme.of(context)
+                  .textTheme
+                  .labelMedium!
+                  .copyWith(color: kTextColor),
             ),
             const Icon(
               Icons.search_rounded,
@@ -105,7 +108,8 @@ class SearchFieldAreaWidget extends StatelessWidget {
   }
 }
 
-class OrderInterfaceStateManager extends StatelessWidget implements InterfaceStateManager {
+class OrderInterfaceStateManager extends StatelessWidget
+    implements InterfaceStateManager {
   const OrderInterfaceStateManager({super.key});
 
   @override
@@ -176,15 +180,24 @@ class TotalOrders extends StatelessWidget {
           children: [
             Text(
               "TOTAL",
-              style: Theme.of(context).textTheme.titleLarge,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge!
+                  .copyWith(color: Colors.white),
             ),
             Text(
               BlocProvider.of<OrderCubit>(context).totalOrders.toString(),
-              style: Theme.of(context).textTheme.headline5,
+              style: Theme.of(context)
+                  .textTheme
+                  .headline5!
+                  .copyWith(color: Colors.white),
             ),
             Text(
               "ORDERS",
-              style: Theme.of(context).textTheme.titleSmall,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleSmall!
+                  .copyWith(color: Colors.white),
             ),
           ],
         ),
@@ -214,15 +227,24 @@ class PendingOrders extends StatelessWidget {
             children: [
               Text(
                 "PENDING",
-                style: Theme.of(context).textTheme.titleLarge!.copyWith(color: const Color.fromRGBO(58, 52, 98, 1)),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge!
+                    .copyWith(color: const Color.fromRGBO(58, 52, 98, 1)),
               ),
               Text(
                 BlocProvider.of<OrderCubit>(context).totalPendingOrders.toString(),
-                style: Theme.of(context).textTheme.headline5!.copyWith(color: const Color.fromRGBO(58, 52, 98, 1)),
+                style: Theme.of(context)
+                    .textTheme
+                    .headline5!
+                    .copyWith(color: const Color.fromRGBO(58, 52, 98, 1)),
               ),
               Text(
                 "ORDERS",
-                style: Theme.of(context).textTheme.titleSmall!.copyWith(color: const Color.fromRGBO(58, 52, 98, 1)),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleSmall!
+                    .copyWith(color: const Color.fromRGBO(58, 52, 98, 1)),
               ),
             ],
           ),
@@ -251,11 +273,17 @@ class TotalGain extends StatelessWidget {
               children: [
                 Text(
                   "TOTAL GAIN",
-                  style: Theme.of(context).textTheme.labelLarge!.copyWith(color: const Color.fromRGBO(215, 215, 255, 1)),
+                  style: Theme.of(context)
+                      .textTheme
+                      .labelLarge!
+                      .copyWith(color: const Color.fromRGBO(215, 215, 255, 1)),
                 ),
                 Text(
                   "${BlocProvider.of<OrderCubit>(context).totalGainedMoney.toString()} PKR",
-                  style: Theme.of(context).textTheme.headlineSmall,
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineSmall!
+                      .copyWith(color: Colors.white),
                 ),
               ],
             ),
@@ -290,7 +318,10 @@ class OrderCard extends StatelessWidget with GradientDecoration {
             children: [
               Text(
                 "RS. ${order.cost}",
-                style: Theme.of(context).textTheme.titleLarge!.copyWith(color: const Color.fromARGB(255, 218, 224, 236)),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge!
+                    .copyWith(color: const Color.fromARGB(255, 218, 224, 236)),
               ),
               if (order.pendingStatus!) ...[
                 OrderStatusIcon(
@@ -355,7 +386,10 @@ class OrderStatusIcon extends StatelessWidget {
       children: [
         Text(
           data.trim().toUpperCase(),
-          style: Theme.of(context).textTheme.titleSmall!.copyWith(color: const Color.fromARGB(255, 218, 224, 236)),
+          style: Theme.of(context)
+              .textTheme
+              .titleSmall!
+              .copyWith(color: const Color.fromARGB(255, 218, 224, 236)),
         ),
         Icon(icon, color: color),
       ],
