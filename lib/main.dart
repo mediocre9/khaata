@@ -53,9 +53,9 @@ void main() async {
       title: "Khaata",
       color: Colors.white30,
       theme: AppTheme.lightTheme(),
-      debugShowCheckedModeBanner: false,
-      onGenerateRoute: AppRouteGenerator.generate,
       initialRoute: '/OrderScreen',
+      onGenerateRoute: AppRouteGenerator.generate,
+      debugShowCheckedModeBanner: false,
     ),
   );
 }
