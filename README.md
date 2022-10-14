@@ -32,7 +32,7 @@
 
 ## 2. **Project Structure and Guidelines:**
 
-- <a href="https://dart.dev/guides/language/effective-dart/style">coding guidelines</a>
+- <a href="https://dart.dev/guides/language/effective-dart/style" target="_blank">coding guidelines</a>
 - **According to flutter docs, prefer **classes** over **methods** for widget separation and for better widget tree optimization.**
 
 ## 4. **Custom widget classes:**
