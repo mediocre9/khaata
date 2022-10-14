@@ -12,7 +12,7 @@
 ## **Task-List**
 - [x] **Bloc Pattern Implementation** 
 - [ ] Refactoring
-- [ ] Testing
+- [ ] Unit Testing
 - [x] Profiling and Optimization
 - [ ] Documentation 
 
