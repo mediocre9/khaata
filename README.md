@@ -7,7 +7,7 @@
 - update-1.2.4 (in-progress)
 
 ## **Development Progress :**
-![Progress](https://progress-bar.dev/90/?title=progress)
+![Progress](https://progress-bar.dev/70/?title=progress)
 
 ## **Task-List**
 - [x] Bloc Pattern
@@ -32,7 +32,7 @@
 
 ## 2. **Project Structure and Guidelines:**
 
-- <a href="https://dart.dev/guides/language/effective-dart/style" target="_blank">coding guidelines</a>
+- <a href="https://dart.dev/guides/language/effective-dart/style" target="_blank">Coding Guidelines</a>
 - **According to flutter docs, prefer **classes** over **methods** for widget separation and for better widget tree optimization.**
 
 ## 4. **Custom widget classes:**
