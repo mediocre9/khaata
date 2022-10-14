@@ -4,13 +4,13 @@
 - **Description:** *Project Description here. . .*
 
 ## **Development Branches**
-- update-1.2.3 (in-progress)
+- update-1.2.4 (in-progress)
 
 ## **Development Progress :**
 ![Progress](https://progress-bar.dev/90/?title=progress)
 
 ## **Task-List**
-- [x] **Bloc Pattern Implementation** 
+- [x] Bloc Pattern
 - [ ] Refactoring
 - [ ] Unit Testing
 - [x] Profiling and Optimization
@@ -30,35 +30,10 @@
 - bloc: 8.1
 - flutter_bloc: 8.0.1.0
 
-## 2. **Build Preview:**
-![](preview/1.jpg?raw=true "")
-<br/>
-<br/>
-![](preview/2.jpg?raw=true "")
-<br/>
-<br/>
-![](preview/3.jpg?raw=true "")
-<br/>
-<br/>
-![](preview/4.jpg?raw=true "")
-<br/>
-<br/>
-![](preview/5.jpg?raw=true "")
-<br/>
-<br/>
-![](preview/6.jpg?raw=true "")
-<br/>
-<br/>
-![](preview/7.jpg?raw=true "")
-<br/>
-<br/>
-![](preview/8.jpg?raw=true "")
+## 2. **Project Structure and Guidelines:**
 
-## 3. **Project Structure and Guidelines:**
-- `snake_case` naming convention for files and folder **e.g** `sub_screen`.
-- **camelCase** `kConstantValue` for constant values.
-- `camelCase` for variables naming convention.
-- According to flutter docs, prefer **classes** over **methods** for widget separation and for better widget tree optimization.
+- <a href="https://dart.dev/guides/language/effective-dart/style">coding guidelines</a>
+- **According to flutter docs, prefer **classes** over **methods** for widget separation and for better widget tree optimization.**
 
 ## 4. **Custom widget classes:**
 #### 1. CustomOutlinedButton :
@@ -95,3 +70,30 @@ CustomTextField(
             onChanged: (value) {},
           );
 ```
+
+
+## 3. **Build Preview:**
+<img src="preview/1.jpg" width="430">
+<br/>
+<br/>
+<img src="preview/2.jpg" width="430">
+<br/>
+<br/>
+<img src="preview/3.jpg" width="430">
+<br/>
+<br/>
+<img src="preview/4.jpg" width="430">
+<br/>
+<br/>
+<img src="preview/5.jpg" width="430">
+<br/>
+<br/>
+<img src="preview/6.jpg" width="430">
+<br/>
+<br/>
+<img src="preview/7.jpg" width="430">
+<br/>
+<br/>
+<img src="preview/8.jpg" width="430">
+
+
