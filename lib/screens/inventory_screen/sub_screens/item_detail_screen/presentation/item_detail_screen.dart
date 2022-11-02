@@ -24,10 +24,10 @@ class ItemDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      endDrawerEnableOpenDragGesture: true,
-      appBar: const CustomAppBar(title: Text("Order"), subtitle: Text("Book")),
-
-      // Drawer
+      appBar: const CustomAppBar(
+        title: Text("Order"),
+        subtitle: Text("Book"),
+      ),
       endDrawer: const CustomDrawer(),
       body: Container(
         margin: const EdgeInsets.only(top: 20),
@@ -57,14 +57,26 @@ class ItemDetailScreen extends StatelessWidget {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 30,
+                  vertical: 5,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(product.name!, style: Theme.of(context).textTheme.headlineMedium),
-                    Text("RS. ${product.cost}", style: Theme.of(context).textTheme.headlineSmall),
+                    Text(
+                      product.name!.toUpperCase(),
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                    Text(
+                      "RS. ${product.cost}",
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
                     const SizedBox(height: 5),
-                    Text("STOCK: ${product.stock}", style: Theme.of(context).textTheme.titleSmall),
+                    Text(
+                      "STOCK: ${product.stock}",
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
                     const SizedBox(height: 25),
                     OutlinedButton(
                       child: const Text("ADD MORE"),
@@ -96,11 +108,17 @@ class ItemDetailScreen extends StatelessWidget {
         return AlertDialog(
           title: Text(
             "Warning!",
-            style: Theme.of(context).textTheme.titleLarge!.copyWith(color: Colors.black),
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge!
+                .copyWith(color: Colors.black),
           ),
           content: Text(
             "Do you really want to delete this record?",
-            style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.black),
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium!
+                .copyWith(color: Colors.black),
           ),
           actions: [
             TextButton(
@@ -137,7 +155,10 @@ class ItemDetailScreen extends StatelessWidget {
         return AlertDialog(
           title: Text(
             "Add Stock",
-            style: Theme.of(context).textTheme.titleLarge!.copyWith(color: Colors.black),
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge!
+                .copyWith(color: Colors.black),
           ),
           content: TextField(
             style: const TextStyle(color: kTextColor),

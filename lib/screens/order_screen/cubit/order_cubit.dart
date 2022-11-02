@@ -8,12 +8,10 @@ part 'order_state.dart';
 
 class OrderCubit extends Cubit<OrderState> {
   final List<Order> orders = [];
+
   OrderCubit()
       : super(
-          const OrderInitialState(
-            message: "ORDER LIST IS EMPTY!",
-            icon: Icons.list,
-          ),
+          const OrderInitialState(message: "ORDER LIST IS EMPTY!", icon: Icons.list),
         ) {
     _loadOrdersfromDatabase();
   }

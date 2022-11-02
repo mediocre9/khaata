@@ -82,7 +82,10 @@ class SearchFieldAreaWidget extends StatelessWidget {
           children: [
             Text(
               "SEARCH CUSTOMER",
-              style: Theme.of(context).textTheme.labelMedium,
+              style: Theme.of(context)
+                  .textTheme
+                  .labelMedium!
+                  .copyWith(color: kTextColor),
             ),
             const Icon(
               Icons.search_rounded,

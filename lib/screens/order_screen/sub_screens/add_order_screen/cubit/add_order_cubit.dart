@@ -46,8 +46,6 @@ class AddOrderCubit extends Cubit<AddOrderState> {
   /// so we can use that product object on our [Order] object.
   ///
   /// Just read the code for better understanding...
-  ///
-  /// #### code speaks louder than comments . . .
   Future<void> addOrder(String product, String customer) async {
     if (product.isNotEmpty && customer.isNotEmpty) {
       Product? productObject = _getProductObjectFromDatabase(product);

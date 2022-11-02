@@ -95,7 +95,7 @@ class PendingInterfaceStateManger extends StatelessWidget
             ),
           );
         }
-        return Container();
+        return const Center(child: CircularProgressIndicator());
       },
     );
   }
