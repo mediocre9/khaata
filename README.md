@@ -32,7 +32,7 @@
 
 ## Bugs:
 ***If you have found and bugs, please document below here.***
-- [] found issue/bug
+- [ ] found issue/bug
 
 ## 2. **Project Structure and Guidelines:**
 
