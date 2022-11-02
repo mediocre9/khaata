@@ -31,7 +31,7 @@
 - flutter_bloc: 8.0.1.0
 
 ## Bugs:
-***If you have found and bugs, please document below here.***
+***If you have found any bugs, please document below here.***
 - [ ] found issue/bug
 
 ## 2. **Project Structure and Guidelines:**
