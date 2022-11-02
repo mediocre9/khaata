@@ -1,19 +1,19 @@
 # KHAATA 
 - **Status:** under-development
-- **Version:** 1.0.3
+- **Version:** 1.0.3 (ALPHA)
 - **Description:** *Project Description here. . .*
 
 ## **Development Branches**
-- update-1.2.3 (in-progress)
+- update-1.2.4 (in-progress)
 
 ## **Development Progress :**
-![Progress](https://progress-bar.dev/90/?title=progress)
+![Progress](https://progress-bar.dev/70/?title=progress)
 
 ## **Task-List**
-- [x] **Bloc Pattern Implementation** 
+- [x] Bloc Pattern
 - [ ] Refactoring
-- [ ] Testing
-- [x] Profiling and Optimization
+- [ ] Unit Testing
+- [ ] Profiling and Optimization
 - [ ] Documentation 
 
 ## 1. **Project Dependencies:**
@@ -30,35 +30,14 @@
 - bloc: 8.1
 - flutter_bloc: 8.0.1.0
 
-## 2. **Build Preview:**
-![](preview/1.jpg?raw=true "")
-<br/>
-<br/>
-![](preview/2.jpg?raw=true "")
-<br/>
-<br/>
-![](preview/3.jpg?raw=true "")
-<br/>
-<br/>
-![](preview/4.jpg?raw=true "")
-<br/>
-<br/>
-![](preview/5.jpg?raw=true "")
-<br/>
-<br/>
-![](preview/6.jpg?raw=true "")
-<br/>
-<br/>
-![](preview/7.jpg?raw=true "")
-<br/>
-<br/>
-![](preview/8.jpg?raw=true "")
+## Bugs:
+***If you have found and bugs, please document below here.***
+- [] found issue/bug
 
-## 3. **Project Structure and Guidelines:**
-- `snake_case` naming convention for files and folder **e.g** `sub_screen`.
-- **camelCase** `kConstantValue` for constant values.
-- `camelCase` for variables naming convention.
-- According to flutter docs, prefer **classes** over **methods** for widget separation and for better widget tree optimization.
+## 2. **Project Structure and Guidelines:**
+
+- <a href="https://dart.dev/guides/language/effective-dart/style" target="_blank">Coding Guidelines</a>
+- **According to flutter docs, prefer **classes** over **methods** for widget separation and for better widget tree optimization.**
 
 ## 4. **Custom widget classes:**
 #### 1. CustomOutlinedButton :
@@ -95,3 +74,31 @@ CustomTextField(
             onChanged: (value) {},
           );
 ```
+
+
+## 3. **Build Preview:**
+
+<img src="preview/1.jpg" width="370">
+<br/>
+<br/>
+<img src="preview/2.jpg" width="370">
+<br/>
+<br/>
+<img src="preview/3.jpg" width="370">
+<br/>
+<br/>
+<img src="preview/4.jpg" width="370">
+<br/>
+<br/>
+<img src="preview/5.jpg" width="370">
+<br/>
+<br/>
+<img src="preview/6.jpg" width="370">
+<br/>
+<br/>
+<img src="preview/7.jpg" width="370">
+<br/>
+<br/>
+<img src="preview/8.jpg" width="370">
+
+
