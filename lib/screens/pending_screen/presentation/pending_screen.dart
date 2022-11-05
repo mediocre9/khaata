@@ -161,7 +161,7 @@ class TotalPendingGain extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "${BlocProvider.of<PendingCubit>(context).pendingMoney.toString()} PKR",
+                  "${BlocProvider.of<PendingCubit>(context).pendingMoney} PKR",
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 25,
@@ -194,7 +194,7 @@ class PendingOrderCard extends StatelessWidget with GradientDecoration {
         decoration: gradientDecoration(),
         child: ListTile(
           title: Text(
-            order.productName!.trim().toUpperCase(),
+            order.productName!,
             style: Theme.of(context).textTheme.titleLarge,
           ),
           subtitle: Column(
@@ -211,7 +211,7 @@ class PendingOrderCard extends StatelessWidget with GradientDecoration {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    order.customerName!.trim().toUpperCase(),
+                    order.customerName!,
                     style: Theme.of(context)
                         .textTheme
                         .titleSmall!

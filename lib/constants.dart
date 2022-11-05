@@ -15,12 +15,12 @@ const Color kDrawerItemColor = Color.fromRGBO(255, 255, 255, 1.0);
 const Color kDrawerSplashColor = Color.fromARGB(61, 215, 216, 255);
 const Color kSnackBarSuccessColor = Color.fromARGB(255, 69, 189, 85);
 const Color kSnackBarErrorColor = Color.fromARGB(255, 223, 71, 71);
-const double kDrawerItemFontSize = 16.5;
-const double kDrawerSubItemFontSize = 12.0;
+const double kDrawerItemFontSize = 14.0;
+const double kDrawerSubItemFontSize = 10.0;
 
 Box<Customer>? customerBox;
 Box<Product>? productBox;
 Box<Order>? orderBox;
 
 const String kAppName = "KHAATA";
-const String kCompany = "SMART ALPHA SOFTWARE";
+const String kCompany = "SMART ALPHA SOFTWARE HOUSE";
