@@ -17,11 +17,12 @@ class AppTheme {
 
       /// [TextTheme] for search area as caaption
       textTheme: const TextTheme(
+        titleLarge: TextStyle(color: Colors.white),
         labelMedium: TextStyle(
           fontSize: 11,
           letterSpacing: 0.8,
           fontWeight: FontWeight.bold,
-          color: kTextColor,
+          color: Colors.white,
         ),
       ),
 

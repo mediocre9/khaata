@@ -13,19 +13,19 @@ class CustomerInitialState extends CustomerState {
 }
 
 class LoadCustomersState extends CustomerState {
-  final List<Customer> users;
-  const LoadCustomersState({required this.users});
+  final List<Customer> customers;
+  const LoadCustomersState({required this.customers});
 
   @override
-  List<Object> get props => [users];
+  List<Object> get props => [customers];
 }
 
 class CustomerFoundState extends CustomerState {
-  final List<Customer> searchUser;
-  const CustomerFoundState({required this.searchUser});
+  final List<Customer> searchResult;
+  const CustomerFoundState({required this.searchResult});
 
   @override
-  List<Object> get props => [searchUser];
+  List<Object> get props => [searchResult];
 }
 
 class CustomerNotFoundState extends CustomerState {

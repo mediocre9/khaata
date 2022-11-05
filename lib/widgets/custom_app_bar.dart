@@ -29,13 +29,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title.data!.toUpperCase()),
+            Text(title.data!),
             Text(
-              subtitle.data!.toUpperCase(),
+              subtitle.data!,
               style: TextStyle(
                 fontSize: 17.0,
                 fontWeight: FontWeight.normal,
-                fontFamily: Theme.of(context).appBarTheme.toolbarTextStyle?.fontFamily,
+                fontFamily:
+                    Theme.of(context).appBarTheme.toolbarTextStyle?.fontFamily,
               ),
             ),
           ],

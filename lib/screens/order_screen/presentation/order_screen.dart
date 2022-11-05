@@ -38,13 +38,13 @@ class OrderScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SubScreenNavigatorWidget(
+              const SubScreenNavigatorButton(
                 label: "ADD ORDER",
                 route: '/AddOrderScreen',
               ),
               const SearchFieldAreaWidget(),
+              const SizedBox(height: 10),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: const [
                   TotalOrders(),
                   PendingOrders(),
@@ -155,9 +155,7 @@ class OrderInterfaceStateManager extends StatelessWidget
             },
           );
         } else if (state is OrderFoundState) {
-          return RecordNotFoundWidget(
-            message: state.message,
-          );
+          return RecordNotFoundWidget(message: state.message);
         }
         return const Center(child: CircularProgressIndicator());
       },
@@ -310,7 +308,7 @@ class OrderCard extends StatelessWidget with GradientDecoration {
         decoration: gradientDecoration(),
         child: ListTile(
           title: Text(
-            order.productName!.toUpperCase(),
+            order.productName!,
             style: Theme.of(context).textTheme.titleLarge,
           ),
           subtitle: Column(
@@ -325,13 +323,13 @@ class OrderCard extends StatelessWidget with GradientDecoration {
               ),
               if (order.pendingStatus!) ...[
                 OrderStatusIcon(
-                  data: order.customerName!,
+                  name: order.customerName!,
                   icon: CupertinoIcons.exclamationmark_circle,
                   color: Colors.yellow,
                 ),
               ] else ...[
                 OrderStatusIcon(
-                  data: order.customerName!,
+                  name: order.customerName!,
                   icon: Icons.check_circle_rounded,
                   color: Colors.lightGreenAccent,
                 ),
@@ -370,13 +368,13 @@ class OrderCard extends StatelessWidget with GradientDecoration {
 class OrderStatusIcon extends StatelessWidget {
   final Color color;
   final IconData icon;
-  final String data;
+  final String name;
 
   const OrderStatusIcon({
     Key? key,
     required this.color,
     required this.icon,
-    required this.data,
+    required this.name,
   }) : super(key: key);
 
   @override
@@ -385,7 +383,7 @@ class OrderStatusIcon extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          data.trim().toUpperCase(),
+          name,
           style: Theme.of(context)
               .textTheme
               .titleSmall!

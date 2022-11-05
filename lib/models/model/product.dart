@@ -13,5 +13,9 @@ class Product {
   @HiveField(2)
   int? cost;
 
-  Product({required this.name, required this.stock, required this.cost});
+  Product({
+    required this.name,
+    required this.stock,
+    required this.cost,
+  });
 }

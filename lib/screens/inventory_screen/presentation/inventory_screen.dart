@@ -36,7 +36,7 @@ class InventoryScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: const [
-              SubScreenNavigatorWidget(
+              SubScreenNavigatorButton(
                 label: "ADD ITEM",
                 route: '/AddItemScreen',
               ),
@@ -166,14 +166,14 @@ class ProductCardWidget extends StatelessWidget with GradientDecoration {
         decoration: gradientDecoration(),
         child: ListTile(
           title: Text(
-            product.name!.trim().toUpperCase(),
+            product.name!,
             style: Theme.of(context).textTheme.titleLarge,
           ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "RS. ${product.cost.toString().trim()}",
+                "RS. ${product.cost}",
                 style: Theme.of(context)
                     .textTheme
                     .titleLarge!

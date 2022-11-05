@@ -19,8 +19,8 @@ class AddOrderScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(
-        title: Text("Order"),
-        subtitle: Text("Book"),
+        title: Text("ORDER"),
+        subtitle: Text("BOOK"),
       ),
       endDrawer: const CustomDrawer(),
       endDrawerEnableOpenDragGesture: true,

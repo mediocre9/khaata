@@ -21,6 +21,12 @@ class Order {
   @HiveField(5)
   final bool? pendingStatus;
 
-  Order(this.customerName, this.productName, this.cost, this.createdDate,
-      this.completedDate, this.pendingStatus);
+  Order(
+    this.customerName,
+    this.productName,
+    this.cost,
+    this.createdDate,
+    this.completedDate,
+    this.pendingStatus,
+  );
 }

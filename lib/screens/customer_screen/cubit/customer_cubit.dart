@@ -2,18 +2,18 @@ import 'customer_cubit_exports.dart';
 part 'customer_state.dart';
 
 class CustomerCubit extends Cubit<CustomerState> {
-  final List<Customer> _userList = [];
+  final List<Customer> _listOfCustomers = [];
   CustomerCubit() : super(const CustomerInitialState("EMPTY LIST")) {
-    _loadUsersList();
+    _loadCustomers();
   }
 
-  void _loadUsersList() {
+  void _loadCustomers() {
     for (int i = 0; i < customerBox!.values.length; i++) {
-      _userList.add(customerBox!.getAt(i)!);
+      _listOfCustomers.add(customerBox!.getAt(i)!);
     }
 
-    if (_userList.isNotEmpty) {
-      emit(LoadCustomersState(users: _userList));
+    if (_listOfCustomers.isNotEmpty) {
+      emit(LoadCustomersState(customers: _listOfCustomers));
     } else {
       emit(const CustomerInitialState("RECORD LIST IS EMPTY!"));
     }
@@ -32,14 +32,14 @@ class CustomerCubit extends Cubit<CustomerState> {
   }
 
   void searchUser(String user) {
-    List<Customer> searchList = [];
-    searchList = _userList
+    List<Customer> searchedCustomers = [];
+    searchedCustomers = _listOfCustomers
         .where((customer) =>
             customer.username!.toLowerCase().startsWith(user.toLowerCase()))
         .toList();
 
-    if (searchList.isNotEmpty) {
-      emit(CustomerFoundState(searchUser: searchList));
+    if (searchedCustomers.isNotEmpty) {
+      emit(CustomerFoundState(searchResult: searchedCustomers));
     } else {
       emit(const CustomerNotFoundState("CUSTOMER NOT FOUND!"));
     }

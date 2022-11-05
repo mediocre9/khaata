@@ -29,10 +29,10 @@ class AppRouteGenerator {
           ),
         );
 
-      case '/AddUserScreen':
+      case '/AddCustomerScreen':
         return _pageRoute(
           BlocProvider(
-            create: (context) => AddUserCubit(),
+            create: (context) => AddCustomerCubit(),
             child: const AddCustomerScreen(),
           ),
         );

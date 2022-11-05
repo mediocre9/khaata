@@ -71,7 +71,7 @@ class SaveUserData extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: EdgeInsets.zero,
-      child: BlocListener<AddUserCubit, CustomerSaveState>(
+      child: BlocListener<AddCustomerCubit, CustomerSaveState>(
         listener: (context, state) {
           if (state is CustomerSavedState) {
             _clearController();
@@ -133,7 +133,7 @@ class SaveUserData extends StatelessWidget {
               child: OutlinedButton(
                 child: const Text("ADD USER"),
                 onPressed: () {
-                  BlocProvider.of<AddUserCubit>(context).addUser(
+                  BlocProvider.of<AddCustomerCubit>(context).addUser(
                     _username.text,
                     _address.text,
                   );

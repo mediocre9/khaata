@@ -3,15 +3,15 @@ import 'package:khata/constants.dart';
 import 'package:khata/models/model/customer.dart';
 import 'package:khata/screens/customer_screen/add_customer_screen/cubit/add_customer_state.dart';
 
-class AddUserCubit extends Cubit<CustomerSaveState> {
-  AddUserCubit() : super(CustomerSaveInitialState());
+class AddCustomerCubit extends Cubit<CustomerSaveState> {
+  AddCustomerCubit() : super(CustomerSaveInitialState());
 
   void addUser(String username, String address) async {
     if (username.isNotEmpty && address.isNotEmpty) {
       await customerBox!.add(
         Customer(
-          username: username.trim(),
-          address: address.trim(),
+          username: username.trim().toUpperCase(),
+          address: address.trim().toUpperCase(),
         ),
       );
       emit(
