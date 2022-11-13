@@ -1,7 +1,7 @@
 # KHAATA 
 - **Status:** under-development
 - **Version:** 1.0.4 (ALPHA)
-- **Description:** *Project Description here. . .*
+- **Description:** _Khaata is a simple inventory tracking and stock management application for small businesses and shops to manage their stocks, customers and orders._
 
 ## **Development Branches**
 - update-1.2.4 (in-progress)
