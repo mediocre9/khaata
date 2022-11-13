@@ -14,7 +14,7 @@ import 'package:khata/widgets/sub_screen_navigator_widget.dart';
 
 /// UserScreen Widget Tree Flow:
 /// 1). [CustomerScreen] is a parent node.
-/// 2). Button Widget [SubScreenNavigatorWidget] for next
+/// 2). Button Widget [SubScreenNavigatorButton] for next
 ///     (subscreen) navigation.
 /// 3). Search textfield [SearchFieldAreaWidget] to search
 ///     the customers.
@@ -41,7 +41,7 @@ class CustomerScreen extends StatelessWidget {
          */
         appBar: const CustomAppBar(
           title: Text("MANAGE"),
-          subtitle: Text("USER"),
+          subtitle: Text("CUSTOMER"),
         ),
         endDrawer: const CustomDrawer(),
         body: Padding(
@@ -52,9 +52,9 @@ class CustomerScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: const [
-              SubScreenNavigatorWidget(
-                label: "Add User",
-                route: '/AddUserScreen',
+              SubScreenNavigatorButton(
+                label: "ADD CUSTOMER",
+                route: '/AddCustomerScreen',
               ),
               SearchFieldAreaWidget(),
               TrayContainer(
@@ -82,7 +82,10 @@ class SearchFieldAreaWidget extends StatelessWidget {
           children: [
             Text(
               "SEARCH CUSTOMER",
-              style: Theme.of(context).textTheme.labelMedium,
+              style: Theme.of(context)
+                  .textTheme
+                  .labelMedium!
+                  .copyWith(color: kTextColor),
             ),
             const Icon(
               Icons.search_rounded,
@@ -150,7 +153,7 @@ class UserInterfaceStateManager extends StatelessWidget
               physics: const AlwaysScrollableScrollPhysics(
                 parent: BouncingScrollPhysics(),
               ),
-              itemCount: state.users.length,
+              itemCount: state.customers.length,
               shrinkWrap: true,
               itemBuilder: (_, index) {
                 return Dismissible(
@@ -160,9 +163,9 @@ class UserInterfaceStateManager extends StatelessWidget
                     await BlocProvider.of<CustomerCubit>(_).deleteUser(index);
                   },
                   child: UserCardWidget(
-                    customer: state.users[index],
+                    customer: state.customers[index],
                     placedOrders: BlocProvider.of<CustomerCubit>(context)
-                        .placedOrders(state.users[index].username!),
+                        .placedOrders(state.customers[index].username!),
                   ),
                 );
               },
@@ -170,13 +173,13 @@ class UserInterfaceStateManager extends StatelessWidget
           );
         } else if (state is CustomerFoundState) {
           return ListView.builder(
-            itemCount: state.searchUser.length,
+            itemCount: state.searchResult.length,
             shrinkWrap: true,
             itemBuilder: (_, index) {
               return UserCardWidget(
-                customer: state.searchUser[index],
+                customer: state.searchResult[index],
                 placedOrders: BlocProvider.of<CustomerCubit>(context)
-                    .placedOrders(state.searchUser[index].username!),
+                    .placedOrders(state.searchResult[index].username!),
               );
             },
           );
@@ -208,7 +211,7 @@ class UserCardWidget extends StatelessWidget with GradientDecoration {
           children: [
             ListTile(
               title: Text(
-                customer.username!.toUpperCase(),
+                customer.username!,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               subtitle: Column(
@@ -234,7 +237,7 @@ class UserCardWidget extends StatelessWidget with GradientDecoration {
                 vertical: 10,
               ),
               title: Text(
-                "DETAILS",
+                "ADDRESS",
                 style: Theme.of(context)
                     .textTheme
                     .labelLarge!
@@ -242,7 +245,7 @@ class UserCardWidget extends StatelessWidget with GradientDecoration {
               ),
               children: [
                 Text(
-                  customer.address!.toUpperCase(),
+                  customer.address!,
                   style: Theme.of(context)
                       .textTheme
                       .titleSmall!

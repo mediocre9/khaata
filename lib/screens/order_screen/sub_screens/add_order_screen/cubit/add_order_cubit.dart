@@ -45,9 +45,7 @@ class AddOrderCubit extends Cubit<AddOrderState> {
   /// get an actual product object by finding it through product name.
   /// so we can use that product object on our [Order] object.
   ///
-  /// Just read the code for better understanding...
-  ///
-  /// #### code speaks louder than comments . . .
+  /// Read the code for better understanding...
   Future<void> addOrder(String product, String customer) async {
     if (product.isNotEmpty && customer.isNotEmpty) {
       Product? productObject = _getProductObjectFromDatabase(product);
@@ -61,8 +59,8 @@ class AddOrderCubit extends Cubit<AddOrderState> {
        */
         await orderBox!.add(
           Order(
-            customer.trim(),
-            product.trim(),
+            customer.trim().toUpperCase(),
+            product.trim().toUpperCase(),
             productObject.cost,
             DateTime.now(),
             DateTime.now(),

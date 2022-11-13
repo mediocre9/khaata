@@ -122,9 +122,7 @@ class TotalCompletedOrder extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              BlocProvider.of<CompletedCubit>(context)
-                  .totalCompletedOrders
-                  .toString(),
+              BlocProvider.of<CompletedCubit>(context).totalCompletedOrders.toString(),
               style: const TextStyle(
                 fontSize: 30,
                 color: Colors.white,
@@ -172,7 +170,7 @@ class TotalCompletedGain extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "${BlocProvider.of<CompletedCubit>(context).completedGainMoney.toString()} PKR",
+                  "${BlocProvider.of<CompletedCubit>(context).completedGainMoney} PKR",
                   style: const TextStyle(
                     fontSize: 25,
                     color: Colors.white,
@@ -205,7 +203,7 @@ class CompletedOrderCard extends StatelessWidget with GradientDecoration {
         decoration: gradientDecoration(),
         child: ListTile(
           title: Text(
-            product.trim().toUpperCase(),
+            product,
             style: Theme.of(context).textTheme.titleLarge,
           ),
           subtitle: Column(
@@ -222,7 +220,7 @@ class CompletedOrderCard extends StatelessWidget with GradientDecoration {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    username.trim().toUpperCase(),
+                    username,
                     style: Theme.of(context)
                         .textTheme
                         .titleSmall!

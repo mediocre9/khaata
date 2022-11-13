@@ -1,6 +1,6 @@
 # KHAATA 
 - **Status:** under-development
-- **Version:** 1.0.3
+- **Version:** 1.0.4 (ALPHA)
 - **Description:** *Project Description here. . .*
 
 ## **Development Branches**
@@ -11,9 +11,10 @@
 
 ## **Task-List**
 - [x] Bloc Pattern
+- [ ] UI Responsiveness
+- [ ] Profiling and Optimization
 - [ ] Refactoring
 - [ ] Unit Testing
-- [x] Profiling and Optimization
 - [ ] Documentation 
 
 ## 1. **Project Dependencies:**

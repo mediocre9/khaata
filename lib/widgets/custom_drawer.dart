@@ -45,6 +45,7 @@ class CustomDrawerHeader extends StatelessWidget {
         children: [
           ListTile(
             textColor: kDrawerItemColor,
+            iconColor: kDrawerItemColor,
             trailing: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
@@ -56,7 +57,6 @@ class CustomDrawerHeader extends StatelessWidget {
                 icon: const Icon(Icons.arrow_back_rounded),
               ),
             ),
-            iconColor: kDrawerItemColor,
             leading: TextButton.icon(
               icon: const Icon(
                 Icons.home_sharp,
@@ -83,11 +83,12 @@ class CustomDrawerHeader extends StatelessWidget {
 class CustomDrawerItems extends StatefulWidget {
   const CustomDrawerItems({Key? key}) : super(key: key);
   static List<String> drawerItems = [
-    "Order",
-    "Inventory",
-    "Users",
-    "Finance",
-    "About",
+    "ORDER",
+    "INVENTORY",
+    "CUSTOMER",
+    "FINANCE",
+    "SETTINGS",
+    "ABOUT",
   ];
 
   @override
@@ -107,7 +108,7 @@ class _CustomDrawerItemsState extends State<CustomDrawerItems> {
             collapsedTextColor: kDrawerItemColor,
             initiallyExpanded: true,
             title: Text(
-              CustomDrawerItems.drawerItems[0].toUpperCase(),
+              CustomDrawerItems.drawerItems[0],
               style: const TextStyle(fontSize: kDrawerItemFontSize),
             ),
             children: const [
@@ -122,11 +123,11 @@ class _CustomDrawerItemsState extends State<CustomDrawerItems> {
             child: ListTile(
               textColor: kDrawerItemColor,
               title: Text(
-                CustomDrawerItems.drawerItems[index].toUpperCase(),
+                CustomDrawerItems.drawerItems[index],
                 style: const TextStyle(fontSize: kDrawerItemFontSize),
               ),
               onTap: () {
-                switch (CustomDrawerItems.drawerItems[index].toUpperCase()) {
+                switch (CustomDrawerItems.drawerItems[index]) {
                   case 'INVENTORY':
                     Navigator.pushNamedAndRemoveUntil(
                       context,
@@ -135,7 +136,7 @@ class _CustomDrawerItemsState extends State<CustomDrawerItems> {
                     );
                     break;
 
-                  case 'USERS':
+                  case 'CUSTOMER':
                     Navigator.pushNamedAndRemoveUntil(
                       context,
                       '/UserScreen',
@@ -152,10 +153,7 @@ class _CustomDrawerItemsState extends State<CustomDrawerItems> {
                     break;
 
                   case 'ABOUT':
-                    showAboutDialog(
-                      context: context,
-                      applicationIcon: const FlutterLogo(),
-                    );
+                    break;
                 }
               },
             ),
@@ -176,7 +174,8 @@ class DrawerSubItems extends StatelessWidget {
 
   static int get _pendingOrders {
     int count = 0;
-    for (int i = 0; i < orderBox!.values.length; i++) {
+    int totalPending = orderBox!.values.length;
+    for (int i = 0; i < totalPending; i++) {
       if (orderBox!.getAt(i)!.pendingStatus! == true) {
         count++;
       }
@@ -218,7 +217,7 @@ class DrawerSubItems extends StatelessWidget {
                     : Text(subItems[index])),
                 textColor: kDrawerItemColor,
                 onTap: () {
-                  switch (subItems[index].toUpperCase()) {
+                  switch (subItems[index]) {
                     case 'MANAGE':
                       Navigator.pushNamedAndRemoveUntil(
                         context,
@@ -263,7 +262,7 @@ class CustomDrawerFooter extends StatelessWidget {
         child: const Align(
           alignment: FractionalOffset.bottomCenter,
           child: Text(
-            "SMART ALPHA SOFTWARE HOUSE",
+            kCompany,
             style: TextStyle(color: Color.fromRGBO(154, 188, 213, 1.0)),
           ),
         ),

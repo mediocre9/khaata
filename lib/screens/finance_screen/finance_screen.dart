@@ -60,8 +60,6 @@ class _FinanceScreenState extends State<FinanceScreen> with GradientDecoration {
         }
       }
 
-      // index++;
-
       points.add(GraphData(moneyPerDay, day));
       moneyPerDay *= 0;
     }

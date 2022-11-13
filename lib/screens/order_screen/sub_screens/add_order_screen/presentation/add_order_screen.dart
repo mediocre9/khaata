@@ -19,8 +19,8 @@ class AddOrderScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(
-        title: Text("Order"),
-        subtitle: Text("Book"),
+        title: Text("ORDER"),
+        subtitle: Text("BOOK"),
       ),
       endDrawer: const CustomDrawer(),
       endDrawerEnableOpenDragGesture: true,
@@ -59,8 +59,6 @@ class AddOrderScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   const SizedBox(height: 25),
-
-// // username textfield....
                   const Text(
                     "CUSTOMER",
                     style: TextStyle(
@@ -69,7 +67,6 @@ class AddOrderScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-
                   RawAutocomplete(
                     focusNode: FocusNode(),
                     key: GlobalKey(),
@@ -125,9 +122,7 @@ class AddOrderScreen extends StatelessWidget {
                       );
                     },
                   ),
-
                   const SizedBox(height: 25),
-// ID textfield.....
                   const Text(
                     "PRODUCT",
                     style: TextStyle(
@@ -173,9 +168,7 @@ class AddOrderScreen extends StatelessWidget {
                               itemCount: options.length,
                               itemBuilder: (context, index) {
                                 return GestureDetector(
-                                  onTap: () {
-                                    // onSelected(options.elementAt(index));
-                                  },
+                                  onTap: () {},
                                   child: ListTile(
                                     title: Text(
                                       options.elementAt(index).name!.toString(),
@@ -200,12 +193,10 @@ class AddOrderScreen extends StatelessWidget {
                       );
                     },
                   ),
-
                   const SizedBox(height: 25),
                   Center(
                     child: OutlinedButton(
                       child: const Text("ADD ORDER"),
-                      // textColor: Colors.white,
                       onPressed: () async {
                         await BlocProvider.of<AddOrderCubit>(context).addOrder(
                           productController.text,

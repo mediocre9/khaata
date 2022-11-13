@@ -36,7 +36,7 @@ class InventoryScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: const [
-              SubScreenNavigatorWidget(
+              SubScreenNavigatorButton(
                 label: "ADD ITEM",
                 route: '/AddItemScreen',
               ),
@@ -64,7 +64,13 @@ class SearchFieldAreaWidget extends StatelessWidget {
       children: [
         Row(
           children: [
-            Text("SEARCH PRODUCT", style: Theme.of(context).textTheme.labelMedium),
+            Text(
+              "SEARCH PRODUCT",
+              style: Theme.of(context)
+                  .textTheme
+                  .labelMedium!
+                  .copyWith(color: kTextColor),
+            ),
             const Icon(Icons.search_rounded, size: 14),
           ],
         ),
@@ -81,7 +87,8 @@ class SearchFieldAreaWidget extends StatelessWidget {
   }
 }
 
-class ProductInterfaceStateManager extends StatelessWidget implements InterfaceStateManager {
+class ProductInterfaceStateManager extends StatelessWidget
+    implements InterfaceStateManager {
   const ProductInterfaceStateManager({super.key});
 
   @override
@@ -112,7 +119,8 @@ class ProductInterfaceStateManager extends StatelessWidget implements InterfaceS
                 return ProductCardWidget(
                   product: state.products[index],
                   index: index,
-                  isItemInStock: BlocProvider.of<InventoryCubit>(context).getStockStatus(index),
+                  isItemInStock:
+                      BlocProvider.of<InventoryCubit>(context).getStockStatus(index),
                 );
               },
             ),
@@ -124,7 +132,8 @@ class ProductInterfaceStateManager extends StatelessWidget implements InterfaceS
             itemBuilder: (_, index) {
               return ProductCardWidget(
                 product: state.products[index],
-                isItemInStock: BlocProvider.of<InventoryCubit>(context).getStockStatus(index),
+                isItemInStock:
+                    BlocProvider.of<InventoryCubit>(context).getStockStatus(index),
                 index: index,
               );
             },
@@ -157,20 +166,26 @@ class ProductCardWidget extends StatelessWidget with GradientDecoration {
         decoration: gradientDecoration(),
         child: ListTile(
           title: Text(
-            product.name!.trim().toUpperCase(),
+            product.name!,
             style: Theme.of(context).textTheme.titleLarge,
           ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "RS. ${product.cost.toString().trim()}",
-                style: Theme.of(context).textTheme.titleLarge!.copyWith(color: const Color.fromARGB(255, 218, 224, 236)),
+                "RS. ${product.cost}",
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge!
+                    .copyWith(color: const Color.fromARGB(255, 218, 224, 236)),
               ),
               if (isItemInStock!) ...[
                 Text(
                   "STOCK : ${product.stock}",
-                  style: Theme.of(context).textTheme.titleSmall!.copyWith(color: const Color.fromARGB(255, 218, 224, 236)),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleSmall!
+                      .copyWith(color: const Color.fromARGB(255, 218, 224, 236)),
                 )
               ] else ...[
                 Row(
@@ -178,7 +193,10 @@ class ProductCardWidget extends StatelessWidget with GradientDecoration {
                   children: [
                     Text(
                       "OUT OF STOCK",
-                      style: Theme.of(context).textTheme.titleSmall!.copyWith(color: const Color.fromARGB(255, 218, 224, 236)),
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleSmall!
+                          .copyWith(color: const Color.fromARGB(255, 218, 224, 236)),
                     ),
                     const Icon(
                       Icons.warning_amber_outlined,

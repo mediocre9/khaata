@@ -32,7 +32,7 @@ class AddItemCubit extends Cubit<AddItemState> {
       } else {
         productBox!.add(
           Product(
-            name: product.trim(),
+            name: product.trim().toUpperCase(),
             stock: int.parse(stock.trim()),
             cost: int.parse(cost.trim()),
           ),
@@ -53,6 +53,4 @@ class AddItemCubit extends Cubit<AddItemState> {
       );
     }
   }
-
-
 }
