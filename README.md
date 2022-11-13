@@ -1,6 +1,6 @@
 # KHAATA 
 - **Status:** under-development
-- **Version:** 1.0.3 (ALPHA)
+- **Version:** 1.0.4 (ALPHA)
 - **Description:** *Project Description here. . .*
 
 ## **Development Branches**
@@ -11,9 +11,10 @@
 
 ## **Task-List**
 - [x] Bloc Pattern
+- [ ] UI Responsiveness
+- [ ] Profiling and Optimization
 - [ ] Refactoring
 - [ ] Unit Testing
-- [ ] Profiling and Optimization
 - [ ] Documentation 
 
 ## 1. **Project Dependencies:**
@@ -29,10 +30,6 @@
 - badges: 2.0.3
 - bloc: 8.1
 - flutter_bloc: 8.0.1.0
-
-## Bugs:
-***If you have found any bugs, please document below here.***
-- [ ] found issue/bug
 
 ## 2. **Project Structure and Guidelines:**
 
