@@ -74,7 +74,6 @@ CustomTextField(
 
 
 ## 3. **Build Preview:**
-
 <img src="preview/1.jpg" width="370">
 <br/>
 <br/>

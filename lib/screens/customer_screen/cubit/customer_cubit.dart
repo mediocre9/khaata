@@ -34,6 +34,7 @@ class CustomerCubit extends Cubit<CustomerState> {
   void searchUser(String user) {
     List<Customer> searchedCustomers = [];
     searchedCustomers = _listOfCustomers
+
         .where((customer) =>
             customer.username!.toLowerCase().startsWith(user.toLowerCase()))
         .toList();
