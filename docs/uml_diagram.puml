@@ -1,0 +1,908 @@
+@startuml Khaata
+set namespaceSeparator ::
+
+class "khata::models::model::customer.dart::Customer" {
+  +String? username
+  +String? address
+}
+
+class "khata::models::model::customer.dart::CustomerAdapter" {
+  +int typeId
+  +int hashCode
+  +Customer read()
+  +void write()
+  +bool ==()
+}
+
+"hive::hive.dart::TypeAdapter" <|-- "khata::models::model::customer.dart::CustomerAdapter"
+
+class "khata::models::model::order.dart::Order" {
+  +String? customerName
+  +String? productName
+  +int? cost
+  +DateTime? createdDate
+  +DateTime? completedDate
+  +bool? pendingStatus
+}
+
+class "khata::models::model::order.dart::OrderAdapter" {
+  +int typeId
+  +int hashCode
+  +Order read()
+  +void write()
+  +bool ==()
+}
+
+"hive::hive.dart::TypeAdapter" <|-- "khata::models::model::order.dart::OrderAdapter"
+
+class "khata::models::model::product.dart::Product" {
+  +String? name
+  +int? stock
+  +int? cost
+}
+
+class "khata::models::model::product.dart::ProductAdapter" {
+  +int typeId
+  +int hashCode
+  +Product read()
+  +void write()
+  +bool ==()
+}
+
+"hive::hive.dart::TypeAdapter" <|-- "khata::models::model::product.dart::ProductAdapter"
+
+class "khata::routes::route_generator.dart::AppRouteGenerator" {
+  {static} -dynamic _undefinedRouteScreen
+  {static} +Route<dynamic> generate()
+  {static} -dynamic _pageRoute()
+}
+
+class "khata::screens::completed_screen::cubit::completed_cubit.dart::CompletedCubit" {
+  +List<Order> orders
+  -bool _isOrderPending
+  +dynamic totalCompletedOrders
+  +dynamic completedGainMoney
+  -dynamic _loadCompletedOrders()
+}
+
+"bloc::src::cubit.dart::Cubit" <|-- "khata::screens::completed_screen::cubit::completed_cubit.dart::CompletedCubit"
+
+abstract class "khata::screens::completed_screen::cubit::completed_cubit.dart::CompletedState" {
+  +List<Object> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "khata::screens::completed_screen::cubit::completed_cubit.dart::CompletedState"
+
+class "khata::screens::completed_screen::cubit::completed_cubit.dart::OrderCompleteInitial" {
+  +String message
+  +IconData iconData
+}
+
+"khata::screens::completed_screen::cubit::completed_cubit.dart::OrderCompleteInitial" o-- "flutter::src::widgets::icon_data.dart::IconData"
+"khata::screens::completed_screen::cubit::completed_cubit.dart::CompletedState" <|-- "khata::screens::completed_screen::cubit::completed_cubit.dart::OrderCompleteInitial"
+
+class "khata::screens::completed_screen::cubit::completed_cubit.dart::CompletedOrdersState" {
+  +List<Order> orders
+  +List<Object> props
+}
+
+"khata::screens::completed_screen::cubit::completed_cubit.dart::CompletedState" <|-- "khata::screens::completed_screen::cubit::completed_cubit.dart::CompletedOrdersState"
+
+class "khata::screens::completed_screen::presentation::completed_screen.dart::CompletedScreen" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::completed_screen::presentation::completed_screen.dart::CompletedScreen"
+
+class "khata::screens::completed_screen::presentation::completed_screen.dart::CompletedOrderInterfaceStateManager" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::completed_screen::presentation::completed_screen.dart::CompletedOrderInterfaceStateManager"
+"khata::widgets::tray_container.dart::InterfaceStateManager" <|-- "khata::screens::completed_screen::presentation::completed_screen.dart::CompletedOrderInterfaceStateManager"
+
+class "khata::screens::completed_screen::presentation::completed_screen.dart::TotalCompletedOrder" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::completed_screen::presentation::completed_screen.dart::TotalCompletedOrder"
+
+class "khata::screens::completed_screen::presentation::completed_screen.dart::TotalCompletedGain" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::completed_screen::presentation::completed_screen.dart::TotalCompletedGain"
+
+class "khata::screens::completed_screen::presentation::completed_screen.dart::CompletedOrderCard" {
+  +String product
+  +String cost
+  +String username
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::completed_screen::presentation::completed_screen.dart::CompletedOrderCard"
+"khata::themes::decorations.dart::GradientDecoration" <|-- "khata::screens::completed_screen::presentation::completed_screen.dart::CompletedOrderCard"
+
+class "khata::screens::customer_screen::add_customer_screen::cubit::add_customer_cubit.dart::AddCustomerCubit" {
+  +void addUser()
+}
+
+"bloc::src::cubit.dart::Cubit" <|-- "khata::screens::customer_screen::add_customer_screen::cubit::add_customer_cubit.dart::AddCustomerCubit"
+
+abstract class "khata::screens::customer_screen::add_customer_screen::cubit::add_customer_state.dart::CustomerSaveState" {
+}
+
+class "khata::screens::customer_screen::add_customer_screen::cubit::add_customer_state.dart::CustomerSaveInitialState" {
+}
+
+"khata::screens::customer_screen::add_customer_screen::cubit::add_customer_state.dart::CustomerSaveState" <|-- "khata::screens::customer_screen::add_customer_screen::cubit::add_customer_state.dart::CustomerSaveInitialState"
+
+class "khata::screens::customer_screen::add_customer_screen::cubit::add_customer_state.dart::CustomerSavedState" {
+  +String message
+  +Color color
+}
+
+"khata::screens::customer_screen::add_customer_screen::cubit::add_customer_state.dart::CustomerSavedState" o-- "dart::ui::Color"
+"khata::screens::customer_screen::add_customer_screen::cubit::add_customer_state.dart::CustomerSaveState" <|-- "khata::screens::customer_screen::add_customer_screen::cubit::add_customer_state.dart::CustomerSavedState"
+
+class "khata::screens::customer_screen::add_customer_screen::cubit::add_customer_state.dart::CustomerNotSavedState" {
+  +String message
+  +Color color
+}
+
+"khata::screens::customer_screen::add_customer_screen::cubit::add_customer_state.dart::CustomerNotSavedState" o-- "dart::ui::Color"
+"khata::screens::customer_screen::add_customer_screen::cubit::add_customer_state.dart::CustomerSaveState" <|-- "khata::screens::customer_screen::add_customer_screen::cubit::add_customer_state.dart::CustomerNotSavedState"
+
+class "khata::screens::customer_screen::add_customer_screen::presentation::add_customer_screen.dart::AddCustomerScreen" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::customer_screen::add_customer_screen::presentation::add_customer_screen.dart::AddCustomerScreen"
+
+class "khata::screens::customer_screen::add_customer_screen::presentation::add_customer_screen.dart::SaveUserData" {
+  {static} -TextEditingController _username
+  {static} -TextEditingController _address
+  +Widget build()
+  -void _clearController()
+  -SnackBar _showSnackBar()
+}
+
+"khata::screens::customer_screen::add_customer_screen::presentation::add_customer_screen.dart::SaveUserData" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::customer_screen::add_customer_screen::presentation::add_customer_screen.dart::SaveUserData"
+
+class "khata::screens::customer_screen::cubit::customer_cubit.dart::CustomerCubit" {
+  -List<Customer> _listOfCustomers
+  -void _loadCustomers()
+  +int placedOrders()
+  +void searchUser()
+  +Future<void> deleteUser()
+}
+
+"bloc::src::cubit.dart::Cubit" <|-- "khata::screens::customer_screen::cubit::customer_cubit.dart::CustomerCubit"
+
+abstract class "khata::screens::customer_screen::cubit::customer_cubit.dart::CustomerState" {
+  +List<Object> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "khata::screens::customer_screen::cubit::customer_cubit.dart::CustomerState"
+
+class "khata::screens::customer_screen::cubit::customer_cubit.dart::CustomerInitialState" {
+  +String message
+}
+
+"khata::screens::customer_screen::cubit::customer_cubit.dart::CustomerState" <|-- "khata::screens::customer_screen::cubit::customer_cubit.dart::CustomerInitialState"
+
+class "khata::screens::customer_screen::cubit::customer_cubit.dart::LoadCustomersState" {
+  +List<Customer> customers
+  +List<Object> props
+}
+
+"khata::screens::customer_screen::cubit::customer_cubit.dart::CustomerState" <|-- "khata::screens::customer_screen::cubit::customer_cubit.dart::LoadCustomersState"
+
+class "khata::screens::customer_screen::cubit::customer_cubit.dart::CustomerFoundState" {
+  +List<Customer> searchResult
+  +List<Object> props
+}
+
+"khata::screens::customer_screen::cubit::customer_cubit.dart::CustomerState" <|-- "khata::screens::customer_screen::cubit::customer_cubit.dart::CustomerFoundState"
+
+class "khata::screens::customer_screen::cubit::customer_cubit.dart::CustomerNotFoundState" {
+  +String message
+  +List<Object> props
+}
+
+"khata::screens::customer_screen::cubit::customer_cubit.dart::CustomerState" <|-- "khata::screens::customer_screen::cubit::customer_cubit.dart::CustomerNotFoundState"
+
+class "khata::screens::customer_screen::cubit::customer_cubit.dart::CustomerLoadingState" {
+}
+
+"khata::screens::customer_screen::cubit::customer_cubit.dart::CustomerState" <|-- "khata::screens::customer_screen::cubit::customer_cubit.dart::CustomerLoadingState"
+
+class "khata::screens::customer_screen::presentation::customer_screen.dart::CustomerScreen" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::customer_screen::presentation::customer_screen.dart::CustomerScreen"
+
+class "khata::screens::customer_screen::presentation::customer_screen.dart::SearchFieldAreaWidget" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::customer_screen::presentation::customer_screen.dart::SearchFieldAreaWidget"
+
+class "khata::screens::customer_screen::presentation::customer_screen.dart::UserInterfaceStateManager" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::customer_screen::presentation::customer_screen.dart::UserInterfaceStateManager"
+"khata::widgets::tray_container.dart::InterfaceStateManager" <|-- "khata::screens::customer_screen::presentation::customer_screen.dart::UserInterfaceStateManager"
+
+class "khata::screens::customer_screen::presentation::customer_screen.dart::UserCardWidget" {
+  +Customer customer
+  +int placedOrders
+  +Widget build()
+}
+
+"khata::screens::customer_screen::presentation::customer_screen.dart::UserCardWidget" o-- "khata::models::model::customer.dart::Customer"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::customer_screen::presentation::customer_screen.dart::UserCardWidget"
+"khata::themes::decorations.dart::GradientDecoration" <|-- "khata::screens::customer_screen::presentation::customer_screen.dart::UserCardWidget"
+
+class "khata::screens::finance_screen::finance_screen.dart::GraphData" {
+  +int moneyPerDay
+  +int day
+}
+
+class "khata::screens::finance_screen::finance_screen.dart::FinanceScreen" {
+  +State<FinanceScreen> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "khata::screens::finance_screen::finance_screen.dart::FinanceScreen"
+
+class "khata::screens::finance_screen::finance_screen.dart::_FinanceScreenState" {
+  +List<Order> listOfCompletedOrders
+  +List<int> days
+  +List<GraphData> points
+  +int currentGain
+  +dynamic fetchAllData()
+  +void initState()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "khata::screens::finance_screen::finance_screen.dart::_FinanceScreenState"
+"khata::themes::decorations.dart::GradientDecoration" <|-- "khata::screens::finance_screen::finance_screen.dart::_FinanceScreenState"
+
+class "khata::screens::finance_screen::finance_screen.dart::CurrentGain" {
+  +int currentGain
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::finance_screen::finance_screen.dart::CurrentGain"
+
+class "khata::screens::inventory_screen::cubit::inventory_cubit.dart::InventoryCubit" {
+  -List<Product> _products
+  -List<Product> _searchedProducts
+  +dynamic getStockStatus()
+  -void _loadInventory()
+  +dynamic searchProduct()
+}
+
+"bloc::src::cubit.dart::Cubit" <|-- "khata::screens::inventory_screen::cubit::inventory_cubit.dart::InventoryCubit"
+
+abstract class "khata::screens::inventory_screen::cubit::inventory_cubit.dart::InventoryState" {
+}
+
+class "khata::screens::inventory_screen::cubit::inventory_cubit.dart::InventoryInititalState" {
+  +String message
+}
+
+"khata::screens::inventory_screen::cubit::inventory_cubit.dart::InventoryState" <|-- "khata::screens::inventory_screen::cubit::inventory_cubit.dart::InventoryInititalState"
+
+class "khata::screens::inventory_screen::cubit::inventory_cubit.dart::LoadInventoryDataState" {
+  +List<Product> products
+}
+
+"khata::screens::inventory_screen::cubit::inventory_cubit.dart::InventoryState" <|-- "khata::screens::inventory_screen::cubit::inventory_cubit.dart::LoadInventoryDataState"
+
+class "khata::screens::inventory_screen::cubit::inventory_cubit.dart::ProductInStockState" {
+  +String message
+}
+
+"khata::screens::inventory_screen::cubit::inventory_cubit.dart::InventoryState" <|-- "khata::screens::inventory_screen::cubit::inventory_cubit.dart::ProductInStockState"
+
+class "khata::screens::inventory_screen::cubit::inventory_cubit.dart::ProductOutOfStockState" {
+  +String message
+  +IconData iconData
+  +Color color
+}
+
+"khata::screens::inventory_screen::cubit::inventory_cubit.dart::ProductOutOfStockState" o-- "flutter::src::widgets::icon_data.dart::IconData"
+"khata::screens::inventory_screen::cubit::inventory_cubit.dart::ProductOutOfStockState" o-- "dart::ui::Color"
+"khata::screens::inventory_screen::cubit::inventory_cubit.dart::InventoryState" <|-- "khata::screens::inventory_screen::cubit::inventory_cubit.dart::ProductOutOfStockState"
+
+class "khata::screens::inventory_screen::cubit::inventory_cubit.dart::ProductFoundState" {
+  +List<Product> products
+}
+
+"khata::screens::inventory_screen::cubit::inventory_cubit.dart::InventoryState" <|-- "khata::screens::inventory_screen::cubit::inventory_cubit.dart::ProductFoundState"
+
+class "khata::screens::inventory_screen::cubit::inventory_cubit.dart::ProductNotFoundState" {
+  +String message
+}
+
+"khata::screens::inventory_screen::cubit::inventory_cubit.dart::InventoryState" <|-- "khata::screens::inventory_screen::cubit::inventory_cubit.dart::ProductNotFoundState"
+
+class "khata::screens::inventory_screen::presentation::inventory_screen.dart::InventoryScreen" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::inventory_screen::presentation::inventory_screen.dart::InventoryScreen"
+
+class "khata::screens::inventory_screen::presentation::inventory_screen.dart::SearchFieldAreaWidget" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::inventory_screen::presentation::inventory_screen.dart::SearchFieldAreaWidget"
+
+class "khata::screens::inventory_screen::presentation::inventory_screen.dart::ProductInterfaceStateManager" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::inventory_screen::presentation::inventory_screen.dart::ProductInterfaceStateManager"
+"khata::widgets::tray_container.dart::InterfaceStateManager" <|-- "khata::screens::inventory_screen::presentation::inventory_screen.dart::ProductInterfaceStateManager"
+
+class "khata::screens::inventory_screen::presentation::inventory_screen.dart::ProductCardWidget" {
+  +Product product
+  +bool? isItemInStock
+  +int index
+  +Widget build()
+}
+
+"khata::screens::inventory_screen::presentation::inventory_screen.dart::ProductCardWidget" o-- "khata::models::model::product.dart::Product"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::inventory_screen::presentation::inventory_screen.dart::ProductCardWidget"
+"khata::themes::decorations.dart::GradientDecoration" <|-- "khata::screens::inventory_screen::presentation::inventory_screen.dart::ProductCardWidget"
+
+class "khata::screens::inventory_screen::sub_screens::add_item_screen::cubit::add_item_cubit.dart::AddItemCubit" {
+  -bool _checkProductInInventory()
+  +void addItem()
+}
+
+"bloc::src::cubit.dart::Cubit" <|-- "khata::screens::inventory_screen::sub_screens::add_item_screen::cubit::add_item_cubit.dart::AddItemCubit"
+
+abstract class "khata::screens::inventory_screen::sub_screens::add_item_screen::cubit::add_item_cubit.dart::AddItemState" {
+}
+
+class "khata::screens::inventory_screen::sub_screens::add_item_screen::cubit::add_item_cubit.dart::AddItemInitial" {
+}
+
+"khata::screens::inventory_screen::sub_screens::add_item_screen::cubit::add_item_cubit.dart::AddItemState" <|-- "khata::screens::inventory_screen::sub_screens::add_item_screen::cubit::add_item_cubit.dart::AddItemInitial"
+
+class "khata::screens::inventory_screen::sub_screens::add_item_screen::cubit::add_item_cubit.dart::ItemAddedState" {
+  +String message
+  +Color color
+}
+
+"khata::screens::inventory_screen::sub_screens::add_item_screen::cubit::add_item_cubit.dart::ItemAddedState" o-- "dart::ui::Color"
+"khata::screens::inventory_screen::sub_screens::add_item_screen::cubit::add_item_cubit.dart::AddItemState" <|-- "khata::screens::inventory_screen::sub_screens::add_item_screen::cubit::add_item_cubit.dart::ItemAddedState"
+
+class "khata::screens::inventory_screen::sub_screens::add_item_screen::cubit::add_item_cubit.dart::ItemAlreadyExist" {
+  +String message
+  +Color color
+}
+
+"khata::screens::inventory_screen::sub_screens::add_item_screen::cubit::add_item_cubit.dart::ItemAlreadyExist" o-- "dart::ui::Color"
+"khata::screens::inventory_screen::sub_screens::add_item_screen::cubit::add_item_cubit.dart::AddItemState" <|-- "khata::screens::inventory_screen::sub_screens::add_item_screen::cubit::add_item_cubit.dart::ItemAlreadyExist"
+
+class "khata::screens::inventory_screen::sub_screens::add_item_screen::cubit::add_item_cubit.dart::ItemNotAddedState" {
+  +String message
+  +Color color
+}
+
+"khata::screens::inventory_screen::sub_screens::add_item_screen::cubit::add_item_cubit.dart::ItemNotAddedState" o-- "dart::ui::Color"
+"khata::screens::inventory_screen::sub_screens::add_item_screen::cubit::add_item_cubit.dart::AddItemState" <|-- "khata::screens::inventory_screen::sub_screens::add_item_screen::cubit::add_item_cubit.dart::ItemNotAddedState"
+
+class "khata::screens::inventory_screen::sub_screens::add_item_screen::presentation::add_item_screen.dart::AddItemScreen" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::inventory_screen::sub_screens::add_item_screen::presentation::add_item_screen.dart::AddItemScreen"
+
+class "khata::screens::inventory_screen::sub_screens::add_item_screen::presentation::add_item_screen.dart::SaveItemData" {
+  {static} -TextEditingController _itemNameController
+  {static} -TextEditingController _stockControlller
+  {static} -TextEditingController _costController
+  +Widget build()
+  +void clearController()
+  -SnackBar _showSnackBar()
+}
+
+"khata::screens::inventory_screen::sub_screens::add_item_screen::presentation::add_item_screen.dart::SaveItemData" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::inventory_screen::sub_screens::add_item_screen::presentation::add_item_screen.dart::SaveItemData"
+
+class "khata::screens::inventory_screen::sub_screens::item_detail_screen::cubit::add_more_cubit.dart::AddMoreCubit" {
+  -Product? _productObject
+  -int _stockValue
+  -int _productIndex
+  +void addMore()
+  -Product? _findProduct()
+  -void _increaseStock()
+  -void _updateProduct()
+}
+
+"khata::screens::inventory_screen::sub_screens::item_detail_screen::cubit::add_more_cubit.dart::AddMoreCubit" o-- "khata::models::model::product.dart::Product"
+"bloc::src::cubit.dart::Cubit" <|-- "khata::screens::inventory_screen::sub_screens::item_detail_screen::cubit::add_more_cubit.dart::AddMoreCubit"
+
+abstract class "khata::screens::inventory_screen::sub_screens::item_detail_screen::cubit::add_more_cubit.dart::AddMoreState" {
+  +List<Object> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "khata::screens::inventory_screen::sub_screens::item_detail_screen::cubit::add_more_cubit.dart::AddMoreState"
+
+class "khata::screens::inventory_screen::sub_screens::item_detail_screen::cubit::add_more_cubit.dart::AddMoreInitial" {
+}
+
+"khata::screens::inventory_screen::sub_screens::item_detail_screen::cubit::add_more_cubit.dart::AddMoreState" <|-- "khata::screens::inventory_screen::sub_screens::item_detail_screen::cubit::add_more_cubit.dart::AddMoreInitial"
+
+class "khata::screens::inventory_screen::sub_screens::item_detail_screen::cubit::add_more_cubit.dart::AddMoreToStockState" {
+}
+
+"khata::screens::inventory_screen::sub_screens::item_detail_screen::cubit::add_more_cubit.dart::AddMoreState" <|-- "khata::screens::inventory_screen::sub_screens::item_detail_screen::cubit::add_more_cubit.dart::AddMoreToStockState"
+
+class "khata::screens::inventory_screen::sub_screens::item_detail_screen::cubit::add_more_cubit.dart::DeleteProductFromInventoryState" {
+}
+
+"khata::screens::inventory_screen::sub_screens::item_detail_screen::cubit::add_more_cubit.dart::AddMoreState" <|-- "khata::screens::inventory_screen::sub_screens::item_detail_screen::cubit::add_more_cubit.dart::DeleteProductFromInventoryState"
+
+class "khata::screens::inventory_screen::sub_screens::item_detail_screen::presentation::item_detail_screen.dart::ItemDetailScreen" {
+  +int index
+  +Product product
+  {static} -TextEditingController _stockController
+  +Widget build()
+  +Future<dynamic> deleteItemDialogBox()
+  +Future<dynamic> addMoreDialogBox()
+}
+
+"khata::screens::inventory_screen::sub_screens::item_detail_screen::presentation::item_detail_screen.dart::ItemDetailScreen" o-- "khata::models::model::product.dart::Product"
+"khata::screens::inventory_screen::sub_screens::item_detail_screen::presentation::item_detail_screen.dart::ItemDetailScreen" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::inventory_screen::sub_screens::item_detail_screen::presentation::item_detail_screen.dart::ItemDetailScreen"
+
+class "khata::screens::order_screen::cubit::order_cubit.dart::OrderCubit" {
+  +List<Order> orders
+  +dynamic totalPendingOrders
+  +dynamic totalGainedMoney
+  +dynamic totalOrders
+  -void _loadOrdersfromDatabase()
+  +void searchOrder()
+}
+
+"bloc::src::cubit.dart::Cubit" <|-- "khata::screens::order_screen::cubit::order_cubit.dart::OrderCubit"
+
+abstract class "khata::screens::order_screen::cubit::order_cubit.dart::OrderState" {
+  +List<Object> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "khata::screens::order_screen::cubit::order_cubit.dart::OrderState"
+
+class "khata::screens::order_screen::cubit::order_cubit.dart::OrderInitialState" {
+  +String message
+  +IconData icon
+}
+
+"khata::screens::order_screen::cubit::order_cubit.dart::OrderInitialState" o-- "flutter::src::widgets::icon_data.dart::IconData"
+"khata::screens::order_screen::cubit::order_cubit.dart::OrderState" <|-- "khata::screens::order_screen::cubit::order_cubit.dart::OrderInitialState"
+
+class "khata::screens::order_screen::cubit::order_cubit.dart::OrderLoadState" {
+  +List<Order> listOfOrders
+  +List<Object> props
+}
+
+"khata::screens::order_screen::cubit::order_cubit.dart::OrderState" <|-- "khata::screens::order_screen::cubit::order_cubit.dart::OrderLoadState"
+
+class "khata::screens::order_screen::cubit::order_cubit.dart::OrderSearchState" {
+  +List<Order> listOfOrders
+  +List<Object> props
+}
+
+"khata::screens::order_screen::cubit::order_cubit.dart::OrderState" <|-- "khata::screens::order_screen::cubit::order_cubit.dart::OrderSearchState"
+
+class "khata::screens::order_screen::cubit::order_cubit.dart::OrderFoundState" {
+  +String message
+  +IconData icon
+}
+
+"khata::screens::order_screen::cubit::order_cubit.dart::OrderFoundState" o-- "flutter::src::widgets::icon_data.dart::IconData"
+"khata::screens::order_screen::cubit::order_cubit.dart::OrderState" <|-- "khata::screens::order_screen::cubit::order_cubit.dart::OrderFoundState"
+
+class "khata::screens::order_screen::cubit::order_cubit.dart::OrderCompletedState" {
+  +IconData iconData
+}
+
+"khata::screens::order_screen::cubit::order_cubit.dart::OrderCompletedState" o-- "flutter::src::widgets::icon_data.dart::IconData"
+"khata::screens::order_screen::cubit::order_cubit.dart::OrderState" <|-- "khata::screens::order_screen::cubit::order_cubit.dart::OrderCompletedState"
+
+class "khata::screens::order_screen::cubit::order_cubit.dart::OrderNotCompletedState" {
+  +IconData iconData
+}
+
+"khata::screens::order_screen::cubit::order_cubit.dart::OrderNotCompletedState" o-- "flutter::src::widgets::icon_data.dart::IconData"
+"khata::screens::order_screen::cubit::order_cubit.dart::OrderState" <|-- "khata::screens::order_screen::cubit::order_cubit.dart::OrderNotCompletedState"
+
+class "khata::screens::order_screen::presentation::order_screen.dart::OrderScreen" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::order_screen::presentation::order_screen.dart::OrderScreen"
+
+class "khata::screens::order_screen::presentation::order_screen.dart::SearchFieldAreaWidget" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::order_screen::presentation::order_screen.dart::SearchFieldAreaWidget"
+
+class "khata::screens::order_screen::presentation::order_screen.dart::OrderInterfaceStateManager" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::order_screen::presentation::order_screen.dart::OrderInterfaceStateManager"
+"khata::widgets::tray_container.dart::InterfaceStateManager" <|-- "khata::screens::order_screen::presentation::order_screen.dart::OrderInterfaceStateManager"
+
+class "khata::screens::order_screen::presentation::order_screen.dart::TotalOrders" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::order_screen::presentation::order_screen.dart::TotalOrders"
+
+class "khata::screens::order_screen::presentation::order_screen.dart::PendingOrders" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::order_screen::presentation::order_screen.dart::PendingOrders"
+
+class "khata::screens::order_screen::presentation::order_screen.dart::TotalGain" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::order_screen::presentation::order_screen.dart::TotalGain"
+
+class "khata::screens::order_screen::presentation::order_screen.dart::OrderCard" {
+  +int index
+  +Order order
+  +Widget build()
+}
+
+"khata::screens::order_screen::presentation::order_screen.dart::OrderCard" o-- "khata::models::model::order.dart::Order"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::order_screen::presentation::order_screen.dart::OrderCard"
+"khata::themes::decorations.dart::GradientDecoration" <|-- "khata::screens::order_screen::presentation::order_screen.dart::OrderCard"
+
+class "khata::screens::order_screen::presentation::order_screen.dart::OrderStatusIcon" {
+  +Color color
+  +IconData icon
+  +String name
+  +Widget build()
+}
+
+"khata::screens::order_screen::presentation::order_screen.dart::OrderStatusIcon" o-- "dart::ui::Color"
+"khata::screens::order_screen::presentation::order_screen.dart::OrderStatusIcon" o-- "flutter::src::widgets::icon_data.dart::IconData"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::order_screen::presentation::order_screen.dart::OrderStatusIcon"
+
+class "khata::screens::order_screen::sub_screens::add_order_screen::cubit::add_order_cubit.dart::AddOrderCubit" {
+  -List<Product> _listOfSuggestedProducts
+  -List<Customer> _listOfSuggestedCustomers
+  -void _loadAndInitDataFromDatabase()
+  +Future<void> addOrder()
+  -Product? _getProductObjectFromDatabase()
+  +List<T> search()
+}
+
+"bloc::src::cubit.dart::Cubit" <|-- "khata::screens::order_screen::sub_screens::add_order_screen::cubit::add_order_cubit.dart::AddOrderCubit"
+
+abstract class "khata::screens::order_screen::sub_screens::add_order_screen::cubit::add_order_cubit.dart::AddOrderState" {
+}
+
+class "khata::screens::order_screen::sub_screens::add_order_screen::cubit::add_order_cubit.dart::AddOrderInitial" {
+}
+
+"khata::screens::order_screen::sub_screens::add_order_screen::cubit::add_order_cubit.dart::AddOrderState" <|-- "khata::screens::order_screen::sub_screens::add_order_screen::cubit::add_order_cubit.dart::AddOrderInitial"
+
+class "khata::screens::order_screen::sub_screens::add_order_screen::cubit::add_order_cubit.dart::ProductSearchResultsState" {
+  +List<Product> listOfProducts
+}
+
+"khata::screens::order_screen::sub_screens::add_order_screen::cubit::add_order_cubit.dart::AddOrderState" <|-- "khata::screens::order_screen::sub_screens::add_order_screen::cubit::add_order_cubit.dart::ProductSearchResultsState"
+
+class "khata::screens::order_screen::sub_screens::add_order_screen::cubit::add_order_cubit.dart::CustomerSearchResultsState" {
+  +List<Customer> listOfCustomers
+}
+
+"khata::screens::order_screen::sub_screens::add_order_screen::cubit::add_order_cubit.dart::AddOrderState" <|-- "khata::screens::order_screen::sub_screens::add_order_screen::cubit::add_order_cubit.dart::CustomerSearchResultsState"
+
+class "khata::screens::order_screen::sub_screens::add_order_screen::cubit::add_order_cubit.dart::OrderSelectedState" {
+}
+
+"khata::screens::order_screen::sub_screens::add_order_screen::cubit::add_order_cubit.dart::AddOrderState" <|-- "khata::screens::order_screen::sub_screens::add_order_screen::cubit::add_order_cubit.dart::OrderSelectedState"
+
+class "khata::screens::order_screen::sub_screens::add_order_screen::cubit::add_order_cubit.dart::CustomerSelectedState" {
+}
+
+"khata::screens::order_screen::sub_screens::add_order_screen::cubit::add_order_cubit.dart::AddOrderState" <|-- "khata::screens::order_screen::sub_screens::add_order_screen::cubit::add_order_cubit.dart::CustomerSelectedState"
+
+class "khata::screens::order_screen::sub_screens::add_order_screen::presentation::add_order_screen.dart::AddOrderScreen" {
+  {static} +TextEditingController productController
+  {static} +TextEditingController customerController
+  +Widget build()
+}
+
+"khata::screens::order_screen::sub_screens::add_order_screen::presentation::add_order_screen.dart::AddOrderScreen" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::order_screen::sub_screens::add_order_screen::presentation::add_order_screen.dart::AddOrderScreen"
+
+class "khata::screens::order_screen::sub_screens::order_detail_screen::cubit::order_detail_cubit.dart::OrderDetailCubit" {
+  -Order? _order
+  -Product? _productObject
+  -int _productInitialStock
+  -int _productIndexInDatabase
+  -int _orderIndexInDatabase
+  +void init()
+  +void completeOrder()
+  +Future<void> deleteOrder()
+  -Product? _getProductObjectFromDatabase()
+}
+
+"khata::screens::order_screen::sub_screens::order_detail_screen::cubit::order_detail_cubit.dart::OrderDetailCubit" o-- "khata::models::model::order.dart::Order"
+"khata::screens::order_screen::sub_screens::order_detail_screen::cubit::order_detail_cubit.dart::OrderDetailCubit" o-- "khata::models::model::product.dart::Product"
+"bloc::src::cubit.dart::Cubit" <|-- "khata::screens::order_screen::sub_screens::order_detail_screen::cubit::order_detail_cubit.dart::OrderDetailCubit"
+
+abstract class "khata::screens::order_screen::sub_screens::order_detail_screen::cubit::order_detail_cubit.dart::OrderDetailState" {
+}
+
+class "khata::screens::order_screen::sub_screens::order_detail_screen::cubit::order_detail_cubit.dart::OrderDetailInitialState" {
+}
+
+"khata::screens::order_screen::sub_screens::order_detail_screen::cubit::order_detail_cubit.dart::OrderDetailState" <|-- "khata::screens::order_screen::sub_screens::order_detail_screen::cubit::order_detail_cubit.dart::OrderDetailInitialState"
+
+class "khata::screens::order_screen::sub_screens::order_detail_screen::cubit::order_detail_cubit.dart::MarkOrderState" {
+}
+
+"khata::screens::order_screen::sub_screens::order_detail_screen::cubit::order_detail_cubit.dart::OrderDetailState" <|-- "khata::screens::order_screen::sub_screens::order_detail_screen::cubit::order_detail_cubit.dart::MarkOrderState"
+
+class "khata::screens::order_screen::sub_screens::order_detail_screen::cubit::order_detail_cubit.dart::UnMarkedOrderState" {
+}
+
+"khata::screens::order_screen::sub_screens::order_detail_screen::cubit::order_detail_cubit.dart::OrderDetailState" <|-- "khata::screens::order_screen::sub_screens::order_detail_screen::cubit::order_detail_cubit.dart::UnMarkedOrderState"
+
+class "khata::screens::order_screen::sub_screens::order_detail_screen::presentation::order_detail_screen.dart::OrderDetailScreen" {
+  +Order order
+  +int index
+  +Widget build()
+}
+
+"khata::screens::order_screen::sub_screens::order_detail_screen::presentation::order_detail_screen.dart::OrderDetailScreen" o-- "khata::models::model::order.dart::Order"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::order_screen::sub_screens::order_detail_screen::presentation::order_detail_screen.dart::OrderDetailScreen"
+
+class "khata::screens::order_screen::sub_screens::order_detail_screen::presentation::order_detail_screen.dart::OrderStatusWidget" {
+  +bool status
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::order_screen::sub_screens::order_detail_screen::presentation::order_detail_screen.dart::OrderStatusWidget"
+
+class "khata::screens::pending_screen::cubit::pending_cubit.dart::PendingCubit" {
+  +List<Order> pendingOrders
+  +bool isOrderPending
+  +dynamic totalPendingOrders
+  +dynamic pendingMoney
+  -dynamic _loadPendingOrders()
+}
+
+"bloc::src::cubit.dart::Cubit" <|-- "khata::screens::pending_screen::cubit::pending_cubit.dart::PendingCubit"
+
+abstract class "khata::screens::pending_screen::cubit::pending_cubit.dart::PendingState" {
+  +List<Object> props
+}
+
+"equatable::src::equatable.dart::Equatable" <|-- "khata::screens::pending_screen::cubit::pending_cubit.dart::PendingState"
+
+class "khata::screens::pending_screen::cubit::pending_cubit.dart::PendingOrderInitial" {
+  +String message
+  +IconData iconData
+}
+
+"khata::screens::pending_screen::cubit::pending_cubit.dart::PendingOrderInitial" o-- "flutter::src::widgets::icon_data.dart::IconData"
+"khata::screens::pending_screen::cubit::pending_cubit.dart::PendingState" <|-- "khata::screens::pending_screen::cubit::pending_cubit.dart::PendingOrderInitial"
+
+class "khata::screens::pending_screen::cubit::pending_cubit.dart::PendingStateCard" {
+  +List<Order> orders
+  +List<Object> props
+}
+
+"khata::screens::pending_screen::cubit::pending_cubit.dart::PendingState" <|-- "khata::screens::pending_screen::cubit::pending_cubit.dart::PendingStateCard"
+
+class "khata::screens::pending_screen::presentation::pending_screen.dart::PendingScreen" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::pending_screen::presentation::pending_screen.dart::PendingScreen"
+
+class "khata::screens::pending_screen::presentation::pending_screen.dart::PendingInterfaceStateManger" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::pending_screen::presentation::pending_screen.dart::PendingInterfaceStateManger"
+"khata::widgets::tray_container.dart::InterfaceStateManager" <|-- "khata::screens::pending_screen::presentation::pending_screen.dart::PendingInterfaceStateManger"
+
+class "khata::screens::pending_screen::presentation::pending_screen.dart::TotalPendingOrder" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::pending_screen::presentation::pending_screen.dart::TotalPendingOrder"
+
+class "khata::screens::pending_screen::presentation::pending_screen.dart::TotalPendingGain" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::pending_screen::presentation::pending_screen.dart::TotalPendingGain"
+
+class "khata::screens::pending_screen::presentation::pending_screen.dart::PendingOrderCard" {
+  +Order order
+  +int index
+  +Widget build()
+}
+
+"khata::screens::pending_screen::presentation::pending_screen.dart::PendingOrderCard" o-- "khata::models::model::order.dart::Order"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::screens::pending_screen::presentation::pending_screen.dart::PendingOrderCard"
+"khata::themes::decorations.dart::GradientDecoration" <|-- "khata::screens::pending_screen::presentation::pending_screen.dart::PendingOrderCard"
+
+abstract class "khata::themes::decorations.dart::NeumorphicDecoration" {
+  +BoxDecoration neumorphic()
+}
+
+abstract class "khata::themes::decorations.dart::GradientDecoration" {
+  +BoxDecoration gradientDecoration()
+}
+
+class "khata::themes::themes.dart::AppTheme" {
+  {static} +ThemeData lightTheme()
+}
+
+class "khata::widgets::custom_app_bar.dart::CustomAppBar" {
+  +Text title
+  +Text subtitle
+  +double? height
+  +double? elevationLevel
+  +Size preferredSize
+  +Widget build()
+}
+
+"khata::widgets::custom_app_bar.dart::CustomAppBar" o-- "flutter::src::widgets::text.dart::Text"
+"khata::widgets::custom_app_bar.dart::CustomAppBar" o-- "dart::ui::Size"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::widgets::custom_app_bar.dart::CustomAppBar"
+"flutter::src::widgets::preferred_size.dart::PreferredSizeWidget" <|-- "khata::widgets::custom_app_bar.dart::CustomAppBar"
+
+class "khata::widgets::custom_card.dart::CustomCard" {
+  +bool? shadow
+  +Widget? child
+  +double? width
+  +double? height
+  +double? borderRadius
+  +double? elevationLevel
+  +double? verticalMargin
+  +double? horizontalMargin
+  +MainAxisAlignment? innerMainAlignment
+  +CrossAxisAlignment? innerCrossAlignment
+  -BoxDecoration _cardDecoration()
+  +Widget build()
+}
+
+"khata::widgets::custom_card.dart::CustomCard" o-- "flutter::src::widgets::framework.dart::Widget"
+"khata::widgets::custom_card.dart::CustomCard" o-- "flutter::src::rendering::flex.dart::MainAxisAlignment"
+"khata::widgets::custom_card.dart::CustomCard" o-- "flutter::src::rendering::flex.dart::CrossAxisAlignment"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::widgets::custom_card.dart::CustomCard"
+
+class "khata::widgets::custom_drawer.dart::CustomDrawer" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::widgets::custom_drawer.dart::CustomDrawer"
+
+class "khata::widgets::custom_drawer.dart::CustomDrawerHeader" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::widgets::custom_drawer.dart::CustomDrawerHeader"
+
+class "khata::widgets::custom_drawer.dart::CustomDrawerItems" {
+  {static} +List<String> drawerItems
+  +State<CustomDrawerItems> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "khata::widgets::custom_drawer.dart::CustomDrawerItems"
+
+class "khata::widgets::custom_drawer.dart::_CustomDrawerItemsState" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "khata::widgets::custom_drawer.dart::_CustomDrawerItemsState"
+
+class "khata::widgets::custom_drawer.dart::DrawerSubItems" {
+  {static} +List<String> subItems
+  {static} -int _pendingOrders
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::widgets::custom_drawer.dart::DrawerSubItems"
+
+class "khata::widgets::custom_drawer.dart::CustomDrawerFooter" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::widgets::custom_drawer.dart::CustomDrawerFooter"
+
+class "khata::widgets::custom_outlined_button.dart::CustomOutlinedButton" {
+  +String text
+  +void Function() onPressed
+  +Widget build()
+}
+
+"khata::widgets::custom_outlined_button.dart::CustomOutlinedButton" o-- "null::void Function()"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::widgets::custom_outlined_button.dart::CustomOutlinedButton"
+
+class "khata::widgets::custom_text_field.dart::CustomTextField" {
+  +String? hintText
+  +Color? fillColor
+  +Color? color
+  +double? contentPadding
+  +bool? isDense
+  +TextInputType? inputType
+  +TextEditingController? controller
+  +FocusNode? focusNode
+  +int? maxLength
+  +void Function(String) onChanged
+  +Widget build()
+}
+
+"khata::widgets::custom_text_field.dart::CustomTextField" o-- "dart::ui::Color"
+"khata::widgets::custom_text_field.dart::CustomTextField" o-- "flutter::src::services::text_input.dart::TextInputType"
+"khata::widgets::custom_text_field.dart::CustomTextField" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"khata::widgets::custom_text_field.dart::CustomTextField" o-- "flutter::src::widgets::focus_manager.dart::FocusNode"
+"khata::widgets::custom_text_field.dart::CustomTextField" o-- "null::void Function(String)"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::widgets::custom_text_field.dart::CustomTextField"
+
+class "khata::widgets::empty_record.dart::EmptyRecordsWidget" {
+  +IconData icon
+  +String message
+  +Widget build()
+}
+
+"khata::widgets::empty_record.dart::EmptyRecordsWidget" o-- "flutter::src::widgets::icon_data.dart::IconData"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::widgets::empty_record.dart::EmptyRecordsWidget"
+
+class "khata::widgets::record_not_found.dart::RecordNotFoundWidget" {
+  +String message
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::widgets::record_not_found.dart::RecordNotFoundWidget"
+
+class "khata::widgets::sub_screen_navigator_widget.dart::SubScreenNavigatorButton" {
+  +String label
+  +String route
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::widgets::sub_screen_navigator_widget.dart::SubScreenNavigatorButton"
+
+abstract class "khata::widgets::tray_container.dart::InterfaceStateManager" {
+}
+
+"flutter::src::widgets::framework.dart::Widget" <|-- "khata::widgets::tray_container.dart::InterfaceStateManager"
+
+class "khata::widgets::tray_container.dart::TrayContainer" {
+  +InterfaceStateManager stateManager
+  +Widget build()
+}
+
+"khata::widgets::tray_container.dart::TrayContainer" o-- "khata::widgets::tray_container.dart::InterfaceStateManager"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "khata::widgets::tray_container.dart::TrayContainer"
+"khata::themes::decorations.dart::NeumorphicDecoration" <|-- "khata::widgets::tray_container.dart::TrayContainer"
+"khata::widgets::tray_container.dart::InterfaceStateManager" <|-- "khata::widgets::tray_container.dart::TrayContainer"
+
+
+@enduml
