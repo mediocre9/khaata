@@ -1,19 +1,3 @@
-/* 
-*  Application: KHAATA
-*  Status: ALPHA
-*  Version: 1.0.3
-*  Description: project description here . . .
-* 
-*  Developers:
-*   Liaqat Ali    (CEO)
-*   Alyaan Sohail (Lead Programmer)
-*   Zaheer        (Programmer)
-*   Kazim         (Programmer)
-*   Aimal         (Programmer)
-*   Jaanas        (Programmer)
-*   Fahad Zia     (Programmer)
-*/
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
