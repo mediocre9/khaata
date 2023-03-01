@@ -1,16 +1,11 @@
 # KHAATA 
-- **Status:** under-development
-- **Version:** 1.0.4 (ALPHA)
-- **Description:** _Khaata is a simple inventory tracking and stock management application for small businesses and shops to manage their stocks, customers and orders._
-
-## **Development Branches**
-- update-1.2.4 (in-progress)
+> A simple inventory tracking and stock management application for small businesses and shops to manage their stocks, customers and orders.
 
 ## **Development Progress :**
 ![Progress](https://progress-bar.dev/70/?title=progress)
 
 ## **Task-List**
-- [x] Bloc Pattern
+- [x] Bloc (Cubit)
 - [ ] UI Responsiveness
 - [ ] Profiling and Optimization
 - [ ] Refactoring
@@ -32,9 +27,7 @@
 - flutter_bloc: 8.0.1.0
 
 ## 2. **Project Structure and Guidelines:**
-
-- <a href="https://dart.dev/guides/language/effective-dart/style" target="_blank">Coding Guidelines</a>
-- **According to flutter docs, prefer **classes** over **methods** for widget separation and for better widget tree optimization.**
+**According to flutter docs, prefer **classes** over **methods** for widget separation and for better widget tree optimization.**
 
 ## 4. **Custom widget classes:**
 #### 1. CustomOutlinedButton :
@@ -74,27 +67,13 @@ CustomTextField(
 
 
 ## 3. **Build Preview:**
-<img src="preview/1.jpg" width="370">
-<br/>
-<br/>
-<img src="preview/2.jpg" width="370">
-<br/>
-<br/>
-<img src="preview/3.jpg" width="370">
-<br/>
-<br/>
-<img src="preview/4.jpg" width="370">
-<br/>
-<br/>
-<img src="preview/5.jpg" width="370">
-<br/>
-<br/>
-<img src="preview/6.jpg" width="370">
-<br/>
-<br/>
-<img src="preview/7.jpg" width="370">
-<br/>
-<br/>
-<img src="preview/8.jpg" width="370">
+<img src="preview/1.jpg" width="300">
+<img src="preview/2.jpg" width="300">
+<img src="preview/3.jpg" width="300">
+<img src="preview/4.jpg" width="300">
+<img src="preview/5.jpg" width="300">
+<img src="preview/6.jpg" width="300">
+<img src="preview/7.jpg" width="300">
+<img src="preview/8.jpg" width="300">
 
 
