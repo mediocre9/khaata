@@ -44,7 +44,7 @@ dependencies:
   flutter_bloc: ^8.0.1
   equatable: ^2.0.3
   flutter_inset_box_shadow: ^1.0.8
-  fl_chart: ^0.55.2
+  fl_chart: ^0.61.0
 
   
 
