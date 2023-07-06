@@ -2,7 +2,7 @@
 > Khaata is an inventory tracking and stock management application designed for local small businesses and shops to manage their stocks, customers and their orders.
 
 ## **Development Progress :**
-![Progress](https://progress-bar.dev/70/?title=progress)
+![Progress](https://progress-bar.dev/40/?title=progress)
 
 ## Task-List
 - [x] Bloc (Cubit)
