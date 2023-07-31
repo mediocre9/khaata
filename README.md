@@ -1,5 +1,6 @@
 # KHAATA 
-> Khaata is an inventory tracking and stock management application designed for local small businesses and shops to manage their stocks, customers and their orders.
+> **Khaata** is an inventory tracking and stock management application designed for local small businesses and shops to manage their stocks, customers and their orders.
+
 
 ## Task-List
 - [x] Bloc (Cubit)
@@ -27,36 +28,36 @@
 #### 1. CustomOutlinedButton :
 ```dart
 CustomOutlinedButton(
-              text: "Click",
-              onPressed: () {},
-            );
+    text: "Click",
+    onPressed: () {},
+);
 ```
 #### 2. CustomAppBar
 ```dart
-    CustomAppBar(
-      title: Text("Title"),
-      subtitle: Text("subTitle"),
-    );
+CustomAppBar(
+    title: Text("Title"),
+    subtitle: Text("subTitle"),
+);
 ```
 #### 3. CustomCard
 ```dart
-    CustomCard(
-      height: 50,
-      width: 100,
-      shadow: true,
-      child: Text("Card Text"),
-    );
+CustomCard(
+    height: 50,
+    width: 100,
+    shadow: true,
+    child: Text("Card Text"),
+);
 ```
 #### 4. CustomTextField
 ```dart
 CustomTextField(
-            controller: controller,
-            contentPadding: 10,
-            color: Colors.black,
-            inputType: TextInputType.number,
-            isDense: true,
-            onChanged: (value) {},
-          );
+    controller: controller,
+    contentPadding: 10,
+    color: Colors.black,
+    inputType: TextInputType.number,
+    isDense: true,
+    onChanged: (value) {},
+);
 ```
 
 
