@@ -1,10 +1,17 @@
 # KHAATA 
 > **Khaata** is an inventory tracking and stock management application designed for local small businesses and shops to manage their stocks, customers and their orders.
 
+## Features
+-[x] Customer and Stock Inventory Manager
+-[x] Search Support
+-[x] Finance Records Graph
+-[] Cloud Backup Support (JSON)
 
 ## Task-List
+
 - [x] Bloc (Cubit)
-- [ ] UI Responsiveness
+- [x] Hive (No SQL) Database
+- [ ] Multi-platform UI Responsiveness
 - [ ] Profiling and Optimization
 - [ ] Refactoring
 - [ ] Unit Testing
