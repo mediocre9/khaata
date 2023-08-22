@@ -1,11 +1,13 @@
 # KHAATA 
-> **Khaata** is an inventory tracking and stock management application designed for local small businesses and shops to manage their stocks, customers and their orders.
+> **Khaata (_"an urdu word for ledger"_)** is an inventory tracking and stock management application designed for local small businesses and shops to manage their stocks, customers and their orders.
 
 ## Features
-- [x] Customer and Stock Inventory Manager
+- [x] Customer, Order and Stock Inventory Manager
+- [x] Pending Orders Log
+- [x] Completed Orders Log
 - [x] Search Support
-- [x] Finance Records Graph
-- [] Cloud Backup Support (JSON)
+- [x] Finance Record Graph
+- [ ] Cloud Backup Support
 
 ## Task-List
 
@@ -79,5 +81,3 @@ CustomTextField(
   <img src="preview/7.jpg" width="220">
   <img src="preview/8.jpg" width="220">
 </div>
-
-
